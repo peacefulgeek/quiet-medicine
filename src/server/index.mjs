@@ -71,8 +71,10 @@ function loadArticles() {
 
 function filterPublished(articles) {
   const now = new Date();
-  return articles.filter(a => new Date(a.dateISO) <= now)
-    .sort((a, b) => new Date(b.dateISO) - new Date(a.dateISO));
+  return articles.filter(a => {
+    if (a.status === 'scheduled') return false;
+    return a.status === 'published' || new Date(a.dateISO) <= now;
+  }).sort((a, b) => new Date(b.dateISO) - new Date(a.dateISO));
 }
 
 function getPublishedArticles() {
@@ -1073,7 +1075,7 @@ ${cookieBannerHTML()}
 
 // Legal Check interactive page
 app.get('/legal-check', (req, res) => {
-  res.send(`${htmlHead('What\\'s Legal Where You Are — The Quiet Medicine', 'Check the legal status of psychedelic substances in your state or country.', 'https://thequietmedicine.com/legal-check')}
+  res.send(`${htmlHead("What's Legal Where You Are — The Quiet Medicine", 'Check the legal status of psychedelic substances in your state or country.', 'https://thequietmedicine.com/legal-check')}
 <body>
 ${navHTML()}
 <div class="legal-check">
@@ -1377,7 +1379,7 @@ function renderQ() {
   document.getElementById('progressBar').style.width = ((current/questions.length)*100)+'%';
   document.getElementById('quizContent').innerHTML =
     '<div class="quiz-question"><h3>Question ' + (current+1) + ' of ' + questions.length + '</h3><p>' + q.q + '</p>' +
-    q.opts.map((o,i) => '<div class="quiz-option" tabindex="0" role="button" onclick="selectOpt('+i+')" onkeydown="if(event.key===\\'Enter\\')selectOpt('+i+')">' + o + '</div>').join('') + '</div>';
+    q.opts.map((o,i) => '<div class="quiz-option" tabindex="0" role="button" onclick="selectOpt('+i+')" onkeydown="if(event.key===\x27Enter\x27)selectOpt('+i+')">' + o + '</div>').join('') + '</div>';
 }
 function selectOpt(i) { scores.push(i); current++; renderQ(); }
 function showResult() {
