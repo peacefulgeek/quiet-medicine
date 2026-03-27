@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+scripts/gen_parallel.py
+scripts/gen_fal_images.py
+scripts/upload_fonts.py
+scripts/gen_articles.py
+scripts/gen_content.mjs
+data/

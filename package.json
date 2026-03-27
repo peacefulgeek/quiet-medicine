@@ -1,0 +1,30 @@
+{
+  "name": "quiet-medicine",
+  "version": "1.0.0",
+  "description": "The Quiet Medicine — Microdosing, Psychedelics, and Conscious Healing",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/server/index.mjs",
+    "build": "vite build",
+    "start": "NODE_ENV=production node scripts/start-with-cron.mjs",
+    "generate": "node scripts/generate-articles.mjs"
+  },
+  "keywords": [],
+  "author": "The Quiet Medicine Editorial",
+  "license": "ISC",
+  "homepage": "https://thequietmedicine.com",
+  "packageManager": "pnpm@10.32.1",
+  "dependencies": {
+    "compression": "^1.8.1",
+    "express": "^5.2.1",
+    "node-cron": "^4.2.1",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3"
+  }
+}

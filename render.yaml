@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: quiet-medicine
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm build
+    startCommand: node scripts/start-with-cron.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+    healthCheckPath: /
+    autoDeploy: true
