@@ -30,6 +30,7 @@ const SITE = {
   advisorTitle: 'Consciousness Teacher & Writer',
   advisorBio: 'Kalesh is a consciousness teacher and writer whose work explores the intersection of ancient contemplative traditions and modern neuroscience. With decades of practice in meditation, breathwork, and somatic inquiry, he guides others toward embodied awareness.',
   advisorLink: 'https://kalesh.love',
+  advisorImage: 'https://quiet-medicine.b-cdn.net/images/kalesh-author.webp',
   categories: [
     { slug: 'the-science', name: 'The Science', icon: '&#9883;', color: '#7C4DFF' },
     { slug: 'the-microdose', name: 'The Microdose', icon: '&#10047;', color: '#00BFA5' },
@@ -645,6 +646,33 @@ async function handleSubscribe(e, source) {
   return false;
 }
 </script>`;
+}
+
+function articleHasAmazonLinks(article) {
+  return (article.body || '').indexOf('amazon.com') !== -1 || (article.body || '').indexOf('amzn.to') !== -1;
+}
+
+function sidebarBioHTML() {
+  return '<div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:24px;margin-bottom:24px;text-align:center;">\n' +
+    '<img src="' + SITE.advisorImage + '" alt="Kalesh" width="100" height="100" style="border-radius:50%;margin-bottom:12px;" loading="lazy">\n' +
+    '<h4 style="margin-bottom:4px;">Kalesh</h4>\n' +
+    '<p style="font-size:13px;color:var(--text-dim);margin-bottom:12px;">Consciousness Teacher &amp; Writer</p>\n' +
+    '<p style="font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:16px;">' + SITE.advisorBio + '</p>\n' +
+    '<a href="' + SITE.advisorLink + '" style="display:inline-block;padding:10px 24px;border-radius:20px;background:var(--accent-1);color:white;font-size:14px;font-weight:600;text-decoration:none;">Book a Session</a>\n' +
+    '</div>';
+}
+
+function healthDisclaimerHTML() {
+  return '<div style="background:rgba(255,82,82,0.08);border:1px solid rgba(255,82,82,0.2);border-radius:var(--radius);padding:20px;margin:32px 0;">\n' +
+    '<p style="font-size:14px;color:#FF8A80;font-weight:600;margin-bottom:8px;">Health Disclaimer</p>\n' +
+    '<p style="font-size:13px;color:var(--text-dim);line-height:1.7;">This article is for educational purposes only and does not constitute medical advice. Psychedelic substances carry real risks and are illegal in many jurisdictions. Always consult a qualified healthcare provider before making decisions about your health. If you are in crisis, contact the 988 Suicide &amp; Crisis Lifeline (call or text 988).</p>\n' +
+    '</div>';
+}
+
+function affiliateDisclosureHTML() {
+  return '<div class="affiliate-disclosure" style="background:rgba(124,77,255,0.08);border:1px solid rgba(124,77,255,0.2);border-radius:var(--radius);padding:16px;margin-bottom:24px;">\n' +
+    '<p style="font-size:13px;color:var(--text-dim);line-height:1.6;">This article contains affiliate links. If you purchase through these links, we may earn a small commission at no extra cost to you. We only recommend products we genuinely trust. <span style="font-size:12px;">(paid link)</span></p>\n' +
+    '</div>';
 }
 
 function articleCard(a) {
@@ -1296,200 +1324,547 @@ ${cookieBannerHTML()}
 </body></html>`);
 });
 
-// Legal Check interactive page
-app.get('/legal-check', (req, res) => {
-  res.send(htmlHead("What's Legal Where You Are — The Quiet Medicine", 'Check the legal status of psychedelic substances in your state or country.', 'https://thequietmedicine.com/legal-check') + `
-<body>
-${navHTML()}
-<div class="legal-wrap">
-  <h1>What's Legal Where You Are</h1>
-  <p style="margin:16px 0 28px;color:var(--text-dim);">Select your location to see the current legal status of psychedelic substances. This information is for educational purposes only and is updated quarterly.</p>
-
-  <select class="legal-select" id="locationSelect" onchange="showLegalStatus()" aria-label="Select your location">
-    <option value="">Select your state or country...</option>
-    <optgroup label="United States">
-      <option value="us-or">Oregon</option>
-      <option value="us-co">Colorado</option>
-      <option value="us-ca">California</option>
-      <option value="us-wa">Washington</option>
-      <option value="us-ma">Massachusetts</option>
-      <option value="us-ny">New York</option>
-      <option value="us-tx">Texas</option>
-      <option value="us-fl">Florida</option>
-      <option value="us-other">Other US States</option>
-    </optgroup>
-    <optgroup label="International">
-      <option value="ca">Canada</option>
-      <option value="nl">Netherlands</option>
-      <option value="pt">Portugal</option>
-      <option value="br">Brazil</option>
-      <option value="jm">Jamaica</option>
-      <option value="cr">Costa Rica</option>
-      <option value="pe">Peru</option>
-      <option value="uk">United Kingdom</option>
-      <option value="au">Australia</option>
-      <option value="other">Other Countries</option>
-    </optgroup>
-  </select>
-
-  <div id="legalResults"></div>
-</div>
-${footerHTML()}
-${cookieBannerHTML()}
-<script>
-var legalData = {
-  "us-or": { name: "Oregon", substances: [{ name: "Psilocybin", status: "legal", note: "Legal for supervised therapeutic use under Measure 109 (2023)." }, { name: "Ketamine", status: "medical", note: "Legal with prescription. Multiple clinics statewide." }, { name: "MDMA", status: "illegal", note: "Schedule I federally. FDA breakthrough therapy designation for PTSD." }, { name: "Cannabis", status: "legal", note: "Recreational and medical use legal since 2014." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I. Religious exemptions exist." }] },
-  "us-co": { name: "Colorado", substances: [{ name: "Psilocybin", status: "decriminalized", note: "Proposition 122 (2022) decriminalized personal use." }, { name: "Ketamine", status: "medical", note: "Legal with prescription." }, { name: "MDMA", status: "illegal", note: "Schedule I federally." }, { name: "Cannabis", status: "legal", note: "Recreational and medical use legal since 2012." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I." }] },
-  "us-ca": { name: "California", substances: [{ name: "Psilocybin", status: "illegal", note: "Schedule I. Decriminalized in Oakland, Santa Cruz, San Francisco." }, { name: "Ketamine", status: "medical", note: "Legal with prescription. Major hub for clinics." }, { name: "MDMA", status: "illegal", note: "Schedule I. Active clinical trial sites." }, { name: "Cannabis", status: "legal", note: "Recreational and medical use legal." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I." }] },
-  "us-wa": { name: "Washington", substances: [{ name: "Psilocybin", status: "illegal", note: "Therapeutic framework legislation under consideration." }, { name: "Ketamine", status: "medical", note: "Legal with prescription." }, { name: "MDMA", status: "illegal", note: "Schedule I federally." }, { name: "Cannabis", status: "legal", note: "Recreational and medical use legal since 2012." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I." }] },
-  "us-ma": { name: "Massachusetts", substances: [{ name: "Psilocybin", status: "decriminalized", note: "Decriminalized in Somerville, Cambridge, Northampton." }, { name: "Ketamine", status: "medical", note: "Legal with prescription." }, { name: "MDMA", status: "illegal", note: "Schedule I federally." }, { name: "Cannabis", status: "legal", note: "Recreational and medical use legal." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I." }] },
-  "us-ny": { name: "New York", substances: [{ name: "Psilocybin", status: "illegal", note: "Therapeutic use bills introduced. Not yet passed." }, { name: "Ketamine", status: "medical", note: "Legal with prescription. Many clinics in NYC." }, { name: "MDMA", status: "illegal", note: "Schedule I federally." }, { name: "Cannabis", status: "legal", note: "Recreational and medical use legal." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I." }] },
-  "us-tx": { name: "Texas", substances: [{ name: "Psilocybin", status: "illegal", note: "HB 1802 funded research for veterans. Personal use illegal." }, { name: "Ketamine", status: "medical", note: "Legal with prescription." }, { name: "MDMA", status: "illegal", note: "Schedule I." }, { name: "Cannabis", status: "illegal", note: "Limited medical program. Recreational illegal." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I." }] },
-  "us-fl": { name: "Florida", substances: [{ name: "Psilocybin", status: "illegal", note: "No decriminalization. Research interest growing." }, { name: "Ketamine", status: "medical", note: "Legal with prescription. Multiple clinics." }, { name: "MDMA", status: "illegal", note: "Schedule I." }, { name: "Cannabis", status: "medical", note: "Medical use legal. Recreational remains illegal." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I." }] },
-  "us-other": { name: "Other US States", substances: [{ name: "Psilocybin", status: "illegal", note: "Schedule I in most states." }, { name: "Ketamine", status: "medical", note: "Legal with prescription nationwide." }, { name: "MDMA", status: "illegal", note: "Schedule I federally." }, { name: "Cannabis", status: "illegal", note: "Varies by state." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule I." }] },
-  "ca": { name: "Canada", substances: [{ name: "Psilocybin", status: "medical", note: "Special Access Programme allows therapeutic use." }, { name: "Ketamine", status: "medical", note: "Legal with prescription." }, { name: "MDMA", status: "illegal", note: "Schedule I. Clinical trials active." }, { name: "Cannabis", status: "legal", note: "Fully legal since 2018." }, { name: "Ayahuasca", status: "illegal", note: "DMT is Schedule III." }] },
-  "nl": { name: "Netherlands", substances: [{ name: "Psilocybin Truffles", status: "legal", note: "Magic truffles legal and sold in smart shops." }, { name: "Ketamine", status: "medical", note: "Available by prescription." }, { name: "MDMA", status: "illegal", note: "Illegal but widely available. Pill testing services operate legally." }, { name: "Cannabis", status: "decriminalized", note: "Tolerated in licensed coffee shops." }, { name: "Ayahuasca", status: "decriminalized", note: "Legal grey area. Ceremonies operate openly." }] },
-  "pt": { name: "Portugal", substances: [{ name: "All Substances", status: "decriminalized", note: "All drugs decriminalized for personal use since 2001." }] },
-  "br": { name: "Brazil", substances: [{ name: "Psilocybin", status: "illegal", note: "Legal grey area." }, { name: "Ketamine", status: "medical", note: "Available by prescription." }, { name: "Ayahuasca", status: "legal", note: "Legal for religious use. CONAD resolution protects ceremonial use." }, { name: "Cannabis", status: "illegal", note: "Medical use recently authorized." }] },
-  "jm": { name: "Jamaica", substances: [{ name: "Psilocybin", status: "legal", note: "Not controlled. Retreat centers operate legally." }, { name: "Cannabis", status: "decriminalized", note: "Decriminalized for personal use." }] },
-  "cr": { name: "Costa Rica", substances: [{ name: "Psilocybin", status: "legal", note: "Not explicitly controlled. Retreat centers operate." }, { name: "Ayahuasca", status: "legal", note: "Not explicitly controlled." }] },
-  "pe": { name: "Peru", substances: [{ name: "Ayahuasca", status: "legal", note: "Protected as cultural patrimony. Retreat centers operate legally." }, { name: "Psilocybin", status: "illegal", note: "Technically illegal but not enforced." }] },
-  "uk": { name: "United Kingdom", substances: [{ name: "Psilocybin", status: "illegal", note: "Class A drug. Research exemptions available." }, { name: "Ketamine", status: "medical", note: "Class B. Available by prescription for treatment-resistant depression." }, { name: "MDMA", status: "illegal", note: "Class A. Clinical trials active." }, { name: "Cannabis", status: "medical", note: "Medical cannabis legal since 2018." }] },
-  "au": { name: "Australia", substances: [{ name: "Psilocybin", status: "medical", note: "TGA rescheduled for treatment-resistant depression (July 2023)." }, { name: "MDMA", status: "medical", note: "TGA rescheduled for treatment-resistant PTSD (July 2023)." }, { name: "Ketamine", status: "medical", note: "Available by prescription." }, { name: "Cannabis", status: "medical", note: "Medical cannabis legal." }] },
-  "other": { name: "Other Countries", substances: [{ name: "General", status: "illegal", note: "Most countries classify psilocybin, MDMA, and DMT as controlled substances. Ketamine is typically available by prescription. Laws are changing rapidly." }] }
-};
-
-function showLegalStatus() {
-  var select = document.getElementById('locationSelect');
-  var results = document.getElementById('legalResults');
-  var loc = legalData[select.value];
-  if (!loc) { results.innerHTML = ''; return; }
-  results.innerHTML = '<h2 style="margin:28px 0 16px;font-family:Newsreader,Georgia,serif;color:#fff;">' + loc.name + '</h2>' +
-    loc.substances.map(function(s) {
-      return '<div class="legal-substance"><div style="display:flex;justify-content:space-between;align-items:center;"><strong style="color:#E8E4F0;">' + s.name + '</strong><span class="legal-badge ' + s.status + '">' + s.status.charAt(0).toUpperCase() + s.status.slice(1) + '</span></div><p style="margin-top:10px;font-size:15px;color:#9B95AD;">' + s.note + '</p></div>';
-    }).join('');
-}
-</script>
-</body></html>`);
-});
-
-// 9 Quiz pages
-const QUIZZES = [
-  { slug: 'microdosing-readiness', title: 'Are You Ready to Microdose?', description: 'Assess your readiness for a microdosing practice.' },
-  { slug: 'psychedelic-integration-style', title: 'What Is Your Integration Style?', description: 'Discover how you naturally process psychedelic experiences.' },
-  { slug: 'which-modality', title: 'Which Psychedelic Modality Fits You?', description: 'Find the therapeutic approach that matches your needs.' },
-  { slug: 'set-and-setting', title: 'How Is Your Set and Setting?', description: 'Evaluate your mental and environmental readiness.' },
-  { slug: 'nervous-system-check', title: 'Nervous System Check-In', description: 'Understand your nervous system state before a journey.' },
-  { slug: 'meditation-psychedelics', title: 'Meditation or Psychedelics First?', description: 'Explore which path might serve you better right now.' },
-  { slug: 'shadow-work-readiness', title: 'Shadow Work Readiness Assessment', description: 'Are you prepared for what might surface?' },
-  { slug: 'ceremony-vs-clinic', title: 'Ceremony or Clinic?', description: 'Discover whether a ceremonial or clinical setting suits you.' },
-  { slug: 'integration-needs', title: 'What Do You Need to Integrate?', description: 'Identify the areas of your experience that need attention.' },
+// ─── TOOLS WE RECOMMEND ───
+const AMAZON_TAG = 'spankyspinola-20';
+const PRODUCTS = [
+  { name: 'Precision Milligram Scale', asin: 'B0B9HZ1599', price: '$12.99', cat: 'Microdosing Essentials', desc: 'Accurate to 0.001g. Essential for consistent microdosing protocols.' },
+  { name: 'Size 00 Vegetarian Capsules', asin: 'B09NBCNHXP', price: '$8.99', cat: 'Microdosing Essentials', desc: 'Empty capsules for precise, tasteless microdose preparation.' },
+  { name: 'Capsule Filling Machine (00)', asin: 'B07RXYNT9N', price: '$24.99', cat: 'Microdosing Essentials', desc: 'Fill 100 capsules at once. Saves hours of manual preparation.' },
+  { name: 'Coffee Grinder for Mushrooms', asin: 'B001804CLY', price: '$19.99', cat: 'Microdosing Essentials', desc: 'Dedicated grinder for consistent powder consistency.' },
+  { name: 'Amber Glass Storage Jars', asin: 'B07Y2KSFNJ', price: '$13.99', cat: 'Microdosing Essentials', desc: 'UV-protective storage to preserve potency.' },
+  { name: 'Moleskin Dot Grid Journal', asin: 'B015NG45GW', price: '$19.95', cat: 'Journaling & Integration', desc: 'Premium journal for tracking microdosing protocols and integration insights.' },
+  { name: 'Leuchtturm1917 A5 Notebook', asin: 'B002TSIMW4', price: '$21.50', cat: 'Journaling & Integration', desc: 'Numbered pages and index for organized reflection.' },
+  { name: 'Silk Eye Mask for Ceremonies', asin: 'B07KC5DWCC', price: '$9.99', cat: 'Ceremony & Journey', desc: 'Complete darkness for inward-focused psychedelic sessions.' },
+  { name: 'Bose QuietComfort Earbuds', asin: 'B0D5XM5M4M', price: '$179.00', cat: 'Ceremony & Journey', desc: 'Noise-cancelling earbuds for curated psychedelic playlists.' },
+  { name: 'Tibetan Singing Bowl Set', asin: 'B07V2JLHX4', price: '$29.99', cat: 'Ceremony & Journey', desc: 'Sound healing tool for ceremony opening and closing.' },
+  { name: 'Organic Cacao Ceremonial Grade', asin: 'B0BXMVHWMB', price: '$24.99', cat: 'Ceremony & Journey', desc: 'Heart-opening ceremonial cacao for intention-setting rituals.' },
+  { name: 'Meditation Cushion Zafu', asin: 'B01E6JR1CO', price: '$39.99', cat: 'Meditation & Breathwork', desc: 'Buckwheat-filled zafu for comfortable seated meditation.' },
+  { name: 'Insight Timer Premium', asin: 'B08YNQBFPX', price: '$59.99', cat: 'Meditation & Breathwork', desc: 'Timer and guided meditations for daily practice.' },
+  { name: 'Wim Hof Method Book', asin: 'B0916VWZCF', price: '$16.99', cat: 'Meditation & Breathwork', desc: 'Breathwork fundamentals that complement psychedelic practice.' },
+  { name: 'How to Change Your Mind', asin: 'B076GPJXWZ', price: '$14.99', cat: 'Books & Education', desc: 'Michael Pollan\'s essential guide to the psychedelic renaissance.' },
+  { name: 'The Psychedelic Explorer\'s Guide', asin: 'B005OSSI6C', price: '$13.99', cat: 'Books & Education', desc: 'James Fadiman\'s foundational text on safe psychedelic use.' },
+  { name: 'Stealing Fire', asin: 'B01HNJIJB2', price: '$15.99', cat: 'Books & Education', desc: 'Kotler & Wheal on altered states and peak performance.' },
+  { name: 'The Body Keeps the Score', asin: 'B00G3L1C2K', price: '$11.99', cat: 'Books & Education', desc: 'Bessel van der Kolk on trauma and the body — essential context for psychedelic healing.' },
+  { name: 'Waking Up by Sam Harris', asin: 'B00GEEB9YC', price: '$13.99', cat: 'Books & Education', desc: 'Spirituality without religion — a framework for understanding psychedelic insights.' },
+  { name: 'Lions Mane Mushroom Capsules', asin: 'B078SZX3ML', price: '$23.95', cat: 'Supplements & Stacking', desc: 'Organic lion\'s mane for the Stamets Stack protocol.' },
+  { name: 'Niacin (Vitamin B3) 500mg', asin: 'B00068TJIG', price: '$9.99', cat: 'Supplements & Stacking', desc: 'Flush niacin for the Stamets Stack microdosing protocol.' },
+  { name: 'Magnesium Glycinate', asin: 'B000BD0RT0', price: '$14.99', cat: 'Supplements & Stacking', desc: 'Calming magnesium form. Supports nervous system during integration.' },
+  { name: 'Weighted Blanket 15 lbs', asin: 'B07L2RGQL5', price: '$39.99', cat: 'Integration & Comfort', desc: 'Grounding comfort during integration days and difficult experiences.' },
+  { name: 'Essential Oil Diffuser', asin: 'B07L4LHSSP', price: '$15.99', cat: 'Integration & Comfort', desc: 'Aromatherapy support for set and setting preparation.' },
+  { name: 'Organic Peppermint Tea', asin: 'B000E63LFC', price: '$4.99', cat: 'Integration & Comfort', desc: 'Gentle stomach support during and after psychedelic experiences.' },
 ];
 
-QUIZZES.forEach(quiz => {
+app.get('/tools', (req, res) => {
+  const categories = [...new Set(PRODUCTS.map(p => p.cat))];
+  const productCards = categories.map(cat => {
+    const items = PRODUCTS.filter(p => p.cat === cat);
+    return '<div style="margin-bottom:48px;"><h2 style="font-family:Newsreader,Georgia,serif;font-size:28px;margin-bottom:24px;color:#E8E4F0;">' + cat + '</h2><div class="card-grid">' +
+      items.map(p => '<div class="card" style="padding:24px;"><h3 style="font-size:18px;margin-bottom:8px;"><a href="https://www.amazon.com/dp/' + p.asin + '?tag=' + AMAZON_TAG + '" target="_blank" rel="nofollow sponsored" style="color:var(--accent-2);">' + p.name + ' <span style="font-size:12px;color:var(--text-dim);">(paid link)</span></a></h3><p style="font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:12px;">' + p.desc + '</p><span style="font-size:15px;font-weight:600;color:var(--accent-1);">' + p.price + '</span></div>').join('') +
+      '</div></div>';
+  }).join('');
+
+  res.send(htmlHead('Tools We Recommend — The Quiet Medicine', 'Carefully selected tools, books, and supplies for microdosing, ceremony, integration, and contemplative practice.', SITE.domain + '/tools') +
+    '<body>' + navHTML() +
+    '<main class="container" style="padding:80px 24px 60px;">\n' +
+    '<h1 style="font-family:Newsreader,Georgia,serif;font-size:clamp(36px,5vw,52px);margin-bottom:16px;">Tools We Recommend</h1>\n' +
+    '<p style="font-size:17px;color:var(--text-dim);max-width:700px;line-height:1.7;margin-bottom:48px;">Every tool on this page has been personally vetted. We only recommend products we have used or would use ourselves. Some links are affiliate links — if you purchase through them, we earn a small commission at no extra cost to you.</p>\n' +
+    affiliateDisclosureHTML() +
+    productCards +
+    '</main>' + footerHTML() + cookieBannerHTML() +
+    '</body></html>');
+});
+
+// ─── QUIZZES INDEX ───
+var quizzes = [
+  { slug: 'microdosing-readiness', title: 'Microdosing Readiness Quiz', desc: 'Assess whether your current life circumstances, mental health, and intentions align with a microdosing practice.', questions: [
+    { q: 'How would you describe your current mental health baseline?', opts: ['Struggling significantly', 'Some challenges but managing', 'Generally stable', 'Strong and resilient'] },
+    { q: 'What is your primary intention for exploring microdosing?', opts: ['Escape from pain', 'Curiosity without direction', 'Specific personal growth goal', 'Deepening an existing practice'] },
+    { q: 'How comfortable are you with uncertainty and non-linear experiences?', opts: ['Very uncomfortable', 'Somewhat anxious about it', 'Open but cautious', 'Comfortable with ambiguity'] },
+    { q: 'Do you have a meditation or contemplative practice?', opts: ['No practice at all', 'Occasional and inconsistent', 'Regular but relatively new', 'Established daily practice'] },
+    { q: 'How would you rate your current support system?', opts: ['Minimal support', 'A few trusted people', 'Strong community', 'Professional support in place'] },
+    { q: 'Are you currently taking psychiatric medications?', opts: ['Yes, multiple', 'Yes, one medication', 'Recently discontinued', 'No psychiatric medications'] },
+  ], results: [
+    { title: 'Not Yet Ready', text: 'Your current circumstances suggest that now may not be the right time to begin a microdosing practice. Focus first on stabilizing your mental health foundation, building a support network, and developing a contemplative practice. The medicine will still be there when the timing is right.' },
+    { title: 'Approaching Readiness', text: 'You are moving toward readiness but would benefit from more preparation. Consider deepening your meditation practice, clarifying your intentions, and consulting with a healthcare provider about your specific situation before proceeding.' },
+    { title: 'Well Prepared', text: 'Your preparation, intentions, and support system suggest you are in a good position to explore microdosing thoughtfully. Remember that preparation is ongoing, not a checkbox. Continue building your practice alongside any protocol.' },
+    { title: 'Deeply Ready', text: 'You bring significant preparation, clarity of intention, and support to this exploration. Your challenge is not whether to begin but how to approach it with the reverence and rigor it deserves. Trust your preparation and stay curious.' },
+  ]},
+  { slug: 'substance-match', title: 'Which Substance Might Suit You?', desc: 'Based on your goals, temperament, and circumstances, discover which psychedelic modality aligns with your needs.', questions: [
+    { q: 'What draws you most to psychedelic exploration?', opts: ['Relief from depression or anxiety', 'Creative enhancement and flow', 'Spiritual depth and meaning', 'Processing trauma or grief'] },
+    { q: 'How do you prefer to explore consciousness?', opts: ['Gentle and gradual', 'Structured clinical setting', 'Deep ceremonial immersion', 'Self-directed with precision'] },
+    { q: 'What is your relationship with nature?', opts: ['Mostly indoors', 'Appreciate it occasionally', 'Regular time outdoors', 'Deep ecological connection'] },
+    { q: 'How long of a commitment feels right?', opts: ['A few hours maximum', 'A full day experience', 'Multiple days of ceremony', 'Ongoing daily practice'] },
+    { q: 'What matters most in your approach?', opts: ['Clinical safety and oversight', 'Ancient tradition and lineage', 'Scientific evidence base', 'Personal autonomy and control'] },
+  ], results: [
+    { title: 'Ketamine-Assisted Therapy', text: 'Your preferences point toward ketamine-assisted therapy. It offers clinical safety, shorter duration, and legal accessibility. The dissociative experience can provide profound perspective shifts while remaining in a controlled medical environment.' },
+    { title: 'Psilocybin Microdosing', text: 'A psilocybin microdosing protocol aligns well with your goals. The sub-perceptual approach allows integration into daily life while supporting creativity, emotional processing, and neuroplasticity over time.' },
+    { title: 'Ceremonial Ayahuasca', text: 'Your orientation toward depth, tradition, and transformative experience suggests ceremonial ayahuasca. This path requires significant preparation and the right ceremonial container, but offers unparalleled depth of insight.' },
+    { title: 'MDMA-Assisted Therapy', text: 'Your focus on emotional processing and trauma work aligns with MDMA-assisted therapy. The empathogenic qualities of MDMA create a unique window for processing difficult experiences with self-compassion and clarity.' },
+  ]},
+  { slug: 'integration-style', title: 'Your Integration Style', desc: 'Discover how you naturally process and integrate transformative experiences into daily life.', questions: [
+    { q: 'After a powerful experience, what do you do first?', opts: ['Talk to someone immediately', 'Write or journal about it', 'Sit in silence and feel', 'Move your body'] },
+    { q: 'How do you make sense of things that defy logic?', opts: ['Research and read about it', 'Create art or music', 'Meditate and sit with it', 'Discuss with others'] },
+    { q: 'What helps you feel grounded?', opts: ['Physical exercise', 'Time in nature', 'Structured routine', 'Creative expression'] },
+    { q: 'When insights arise, how do you capture them?', opts: ['Voice memos and notes', 'Drawing or visual art', 'Body-based practices', 'Conversation with a guide'] },
+    { q: 'What does integration mean to you?', opts: ['Understanding what happened', 'Changing daily habits', 'Deepening spiritual practice', 'Healing relationships'] },
+  ], results: [
+    { title: 'The Verbal Processor', text: 'You integrate through language and dialogue. Working with an integration therapist, joining a psychedelic integration circle, or maintaining a detailed journal will serve you well. Your insights crystallize through articulation.' },
+    { title: 'The Somatic Integrator', text: 'Your body is your primary integration tool. Yoga, breathwork, dance, and somatic experiencing will help you process what the mind cannot yet articulate. Trust the wisdom of your nervous system.' },
+    { title: 'The Contemplative', text: 'Silence and stillness are your integration allies. A deepened meditation practice, time in nature, and periods of deliberate solitude will allow your experiences to unfold at their own pace.' },
+    { title: 'The Creative Channel', text: 'You integrate through creation. Art, music, writing, and movement allow you to express what cannot be spoken. Your integration practice is inherently creative and non-linear.' },
+  ]},
+  { slug: 'set-and-setting', title: 'Set & Setting Assessment', desc: 'Evaluate whether your current mindset and environment are conducive to a meaningful psychedelic experience.', questions: [
+    { q: 'How would you describe your emotional state this week?', opts: ['Turbulent and unstable', 'Somewhat anxious', 'Calm and centered', 'Deeply peaceful'] },
+    { q: 'Is your physical space clean, safe, and comfortable?', opts: ['Chaotic environment', 'Somewhat cluttered', 'Clean and organized', 'Intentionally prepared'] },
+    { q: 'Do you have a trusted person available if needed?', opts: ['No one available', 'Someone I could call', 'A friend who understands', 'An experienced sitter confirmed'] },
+    { q: 'Have you set a clear intention?', opts: ['No intention set', 'Vague sense of purpose', 'Written intention', 'Intention refined through meditation'] },
+    { q: 'How is your physical health right now?', opts: ['Unwell or depleted', 'Minor issues', 'Generally healthy', 'Well-rested and nourished'] },
+    { q: 'Are there unresolved conflicts in your life right now?', opts: ['Major ongoing conflicts', 'Some tension present', 'Minor issues only', 'Relationships feel clear'] },
+  ], results: [
+    { title: 'Wait and Prepare', text: 'Your current set and setting suggest waiting. There is no rush. Use this time to resolve what can be resolved, prepare your space, secure support, and cultivate the inner stability that will serve as your foundation.' },
+    { title: 'Almost There', text: 'You are close but a few elements need attention. Focus on the specific areas that scored lower — whether that is your physical space, emotional state, or support system. Small adjustments can make a significant difference.' },
+    { title: 'Good Foundation', text: 'Your set and setting are solid. You have done the preparation work and your circumstances support a meaningful experience. Stay present with your intention and trust the container you have created.' },
+    { title: 'Optimal Conditions', text: 'Your preparation is thorough and your circumstances are aligned. The care you have taken with set and setting reflects the respect this work deserves. Proceed with confidence and surrender.' },
+  ]},
+  { slug: 'psychedelic-knowledge', title: 'Psychedelic Literacy Quiz', desc: 'Test your understanding of psychedelic science, history, and harm reduction principles.', questions: [
+    { q: 'What does "set and setting" refer to?', opts: ['Drug dosage and timing', 'Mindset and environment', 'Legal status and location', 'Music and lighting'] },
+    { q: 'Which researcher pioneered modern psilocybin research at Johns Hopkins?', opts: ['Timothy Leary', 'Roland Griffiths', 'Alexander Shulgin', 'Stanislav Grof'] },
+    { q: 'What is the default mode network?', opts: ['A social media platform', 'A brain network active during self-referential thought', 'A type of neural pathway', 'A meditation technique'] },
+    { q: 'What does "integration" mean in psychedelic therapy?', opts: ['Mixing substances together', 'Processing and applying insights from experiences', 'Combining therapy modalities', 'Returning to normal consciousness'] },
+    { q: 'Which substance is currently FDA-approved for treatment-resistant depression?', opts: ['Psilocybin', 'MDMA', 'Esketamine (Spravato)', 'LSD'] },
+    { q: 'What is a common microdose of psilocybin?', opts: ['5 grams', '0.1 to 0.3 grams', '1 to 2 grams', '3.5 grams'] },
+  ], results: [
+    { title: 'Beginner Explorer', text: 'You are at the beginning of your psychedelic education, and that is a perfectly valid place to be. Start with foundational reading — Michael Pollan\'s "How to Change Your Mind" is an excellent entry point. Knowledge is the first form of harm reduction.' },
+    { title: 'Developing Understanding', text: 'You have some foundational knowledge but there are gaps worth filling. Dive deeper into the neuroscience and harm reduction literature. Understanding the mechanisms helps you approach these experiences with appropriate respect.' },
+    { title: 'Well Informed', text: 'Your knowledge base is solid. You understand the key concepts, researchers, and principles that inform responsible psychedelic use. Continue staying current with emerging research and clinical developments.' },
+    { title: 'Deep Literacy', text: 'You demonstrate sophisticated understanding of psychedelic science and practice. Your knowledge positions you to be a resource for others in your community. Consider how you might share what you know responsibly.' },
+  ]},
+  { slug: 'harm-reduction', title: 'Harm Reduction Awareness', desc: 'Evaluate your understanding of safety practices and risk mitigation in psychedelic use.', questions: [
+    { q: 'What should you do if someone is having a difficult psychedelic experience?', opts: ['Give them more substances', 'Leave them alone', 'Stay calm, reassure them, change the setting', 'Call 911 immediately'] },
+    { q: 'Which combination is considered most dangerous?', opts: ['Psilocybin and meditation', 'MDMA and SSRIs', 'Cannabis and breathwork', 'Microdosing and journaling'] },
+    { q: 'How long should you wait between macro-dose experiences?', opts: ['No waiting needed', 'At least 24 hours', 'At least 2-4 weeks minimum', 'Exactly 7 days'] },
+    { q: 'What is the purpose of testing substances?', opts: ['To increase potency', 'To verify identity and detect adulterants', 'To measure exact dosage', 'Testing is unnecessary'] },
+    { q: 'When should you NOT use psychedelics?', opts: ['During a full moon', 'If you have a family history of psychosis', 'If you are over 40', 'If you have not fasted'] },
+  ], results: [
+    { title: 'Safety First', text: 'Your harm reduction knowledge needs strengthening before proceeding with any psychedelic use. This is not a judgment — it is an invitation to learn the practices that keep people safe. Start with resources from DanceSafe and the Zendo Project.' },
+    { title: 'Building Awareness', text: 'You have some safety awareness but important gaps remain. Focus on drug interactions, contraindications, and crisis support techniques. These are not abstract concepts — they are practical skills that matter.' },
+    { title: 'Safety Conscious', text: 'You demonstrate good harm reduction awareness. You understand the key risks and how to mitigate them. Continue refining your knowledge, especially around drug interactions and medical contraindications.' },
+    { title: 'Harm Reduction Advocate', text: 'Your understanding of harm reduction is thorough and practical. You are well-positioned to not only keep yourself safe but to support others. Consider training as a peer support volunteer or trip sitter.' },
+  ]},
+  { slug: 'meditation-depth', title: 'Meditation Practice Depth', desc: 'Assess the depth and consistency of your contemplative practice as it relates to psychedelic exploration.', questions: [
+    { q: 'How often do you meditate?', opts: ['Never or rarely', 'A few times per month', 'Several times per week', 'Daily practice'] },
+    { q: 'What is your typical session length?', opts: ['Under 5 minutes', '5-15 minutes', '15-30 minutes', '30+ minutes'] },
+    { q: 'Can you maintain focused attention for extended periods?', opts: ['Very difficult', 'Challenging but improving', 'Reasonably stable', 'Strong concentration ability'] },
+    { q: 'Have you experienced states of deep stillness or absorption?', opts: ['Never', 'Brief glimpses', 'Occasionally', 'Regularly'] },
+    { q: 'How do you relate to difficult emotions during meditation?', opts: ['Avoid or suppress them', 'Get caught up in them', 'Observe with some distance', 'Welcome them with equanimity'] },
+  ], results: [
+    { title: 'The Seed', text: 'Your meditation practice is just beginning, and that is beautiful. Even five minutes of daily sitting will transform your relationship with your own mind over time. Start small, be consistent, and let the practice teach you.' },
+    { title: 'The Sprout', text: 'Your practice is developing roots. The consistency you are building matters more than the depth of any single session. Consider working with a teacher or structured program to deepen your foundation.' },
+    { title: 'The Flowering', text: 'You have a meaningful practice that provides real stability and insight. This foundation will serve you well in psychedelic exploration, where the skills of observation and equanimity become profoundly relevant.' },
+    { title: 'The Fruit', text: 'Your contemplative practice is mature and deep. The qualities you have cultivated — concentration, equanimity, and open awareness — are precisely what allow psychedelic experiences to be most transformative.' },
+  ]},
+  { slug: 'psychedelic-personality', title: 'Your Psychedelic Personality', desc: 'Discover your natural orientation toward psychedelic experience based on your temperament and values.', questions: [
+    { q: 'What aspect of consciousness interests you most?', opts: ['How the brain creates experience', 'The nature of self and identity', 'Connection to something larger', 'Healing emotional wounds'] },
+    { q: 'How do you approach the unknown?', opts: ['With careful analysis', 'With creative curiosity', 'With spiritual reverence', 'With therapeutic intention'] },
+    { q: 'What would a breakthrough experience look like for you?', opts: ['Understanding a scientific mechanism', 'Dissolving creative blocks', 'Experiencing unity consciousness', 'Releasing stored trauma'] },
+    { q: 'Who would you most want to guide your experience?', opts: ['A neuroscientist', 'An artist or musician', 'A spiritual teacher', 'A trained therapist'] },
+    { q: 'What do you want to bring back from the experience?', opts: ['Knowledge and understanding', 'Inspiration and vision', 'Peace and connection', 'Healing and wholeness'] },
+  ], results: [
+    { title: 'The Scientist', text: 'You approach psychedelics through the lens of understanding. You want to know how and why these compounds work. Your path is through research, measurement, and careful observation. The mystery does not diminish with understanding — it deepens.' },
+    { title: 'The Artist', text: 'You approach psychedelics as a creative catalyst. You are drawn to the aesthetic dimensions of altered states — the visual, the musical, the poetic. Your integration is inherently creative, and your experiences want to be expressed.' },
+    { title: 'The Mystic', text: 'You approach psychedelics as a doorway to the sacred. You are drawn to the transpersonal dimensions of experience — unity, interconnection, and the dissolution of the separate self. Your path is devotional and contemplative.' },
+    { title: 'The Healer', text: 'You approach psychedelics as medicine for the soul. You are drawn to their therapeutic potential — the ability to process trauma, release patterns, and restore wholeness. Your path is through the body and the heart.' },
+  ]},
+];
+
+app.get('/quizzes', (req, res) => {
+  res.send(htmlHead('Quizzes — ' + SITE.title, 'Interactive quizzes to explore your readiness, preferences, and path in psychedelic wellness.', SITE.domain + '/quizzes') + '\n' +
+    '<body>\n' + navHTML() + '\n' +
+    '<div class="hero" style="padding:60px 24px 40px;">\n' +
+    '  <div class="hero-content"><h1>Quizzes</h1><p class="tagline">Explore your readiness, discover your path, and deepen your understanding.</p></div>\n' +
+    '</div>\n' +
+    '<main class="wide" style="padding-top:40px;">\n' +
+    '<div class="quiz-index-grid">\n' +
+    quizzes.map(function(q) {
+      return '<div class="quiz-index-card"><h3><a href="/quiz/' + q.slug + '">' + q.title + '</a></h3><p>' + q.desc + '</p></div>';
+    }).join('\n') + '\n' +
+    '</div>\n' +
+    '</main>\n' + footerHTML() + '\n' + cookieBannerHTML() + '\n' +
+    '</body></html>');
+});
+
+
+// ─── INDIVIDUAL QUIZ PAGES ───
+quizzes.forEach(function(quiz) {
   app.get('/quiz/' + quiz.slug, (req, res) => {
-    const articles = getPublishedArticles().slice(0, 3);
-    const recLinks = articles.map(a => '<div class="pillar"><h3><a href="/articles/' + a.slug + '">' + a.title + '</a></h3></div>').join('');
+    var questionsJson = JSON.stringify(quiz.questions);
+    var resultsJson = JSON.stringify(quiz.results);
 
-    res.send(htmlHead(quiz.title + ' — The Quiet Medicine', quiz.description, 'https://thequietmedicine.com/quiz/' + quiz.slug) + `
-<body>
-` + navHTML() + `
-<div class="quiz-wrap">
-  <h1>` + quiz.title + `</h1>
-  <p style="margin:16px 0 28px;color:var(--text-dim);">` + quiz.description + `</p>
-  <div class="quiz-progress"><div class="quiz-bar" id="progressBar" style="width:0%"></div></div>
-  <div id="quizContent"></div>
-  <div id="quizResult" style="display:none;">
-    <h2 id="resultTitle" style="margin-bottom:16px;"></h2>
-    <p id="resultText" style="line-height:1.85;color:var(--text);margin-bottom:24px;"></p>
-    <div class="share-row">
-      <a href="#" id="shareTwitter" rel="nofollow" class="share-btn" aria-label="Share on X">Share on X</a>
-      <a href="#" id="shareFB" rel="nofollow" class="share-btn" aria-label="Share on Facebook">Share on Facebook</a>
-      <a href="#" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='Copied!';return false;" class="share-btn" aria-label="Copy link">Copy Link</a>
-    </div>
-    ` + newsletterHTML('quiz-' + quiz.slug) + `
-    <h3 style="margin-top:32px;">Recommended Reading</h3>
-    ` + recLinks + `
-  </div>
-</div>
-` + footerHTML() + `
-` + cookieBannerHTML() + `
-` + subscribeScript() + `
-<script>
-var questions = [
-  { q: "How would you describe your current relationship with your inner life?", opts: ["I rarely think about it", "I am curious but have not explored much", "I have a regular contemplative practice", "I have done significant inner work"] },
-  { q: "When difficult emotions arise, what is your typical response?", opts: ["I avoid or distract", "I try to think my way through", "I can usually sit with them", "I welcome them as information"] },
-  { q: "How familiar are you with the research on this topic?", opts: ["Not at all", "I have read a few articles", "I have studied it seriously", "I am deeply informed"] },
-  { q: "What is your primary motivation?", opts: ["Curiosity", "Healing something specific", "Spiritual growth", "Professional development"] },
-  { q: "How would you rate your current support system?", opts: ["Minimal", "A few trusted people", "Strong community", "Professional support in place"] }
+    res.send(htmlHead(quiz.title + ' — ' + SITE.title, quiz.desc, SITE.domain + '/quiz/' + quiz.slug) + '\n' +
+      '<body>\n' + navHTML() + '\n' +
+      '<div class="quiz-wrap">\n' +
+      '  <h1 style="font-size:clamp(24px,4vw,36px);margin-bottom:8px;">' + quiz.title + '</h1>\n' +
+      '  <p style="color:var(--text-dim);margin-bottom:32px;">' + quiz.desc + '</p>\n' +
+      '  <div class="quiz-progress"><div class="quiz-bar" id="progressBar" style="width:0%;"></div></div>\n' +
+      '  <div id="quizContent"></div>\n' +
+      '  <div id="quizResult" style="display:none;">\n' +
+      '    <div style="background:var(--bg-card);border:1px solid rgba(124,77,255,0.3);border-radius:var(--radius);padding:40px;text-align:center;">\n' +
+      '      <h2 id="resultTitle" style="font-size:28px;margin-bottom:16px;"></h2>\n' +
+      '      <p id="resultText" style="color:var(--text-dim);font-size:17px;line-height:1.7;max-width:600px;margin:0 auto 24px;"></p>\n' +
+      '      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">\n' +
+      '        <a id="shareTwitter" href="#" class="share-btn" target="_blank" rel="noopener">Share on X</a>\n' +
+      '        <a id="shareFB" href="#" class="share-btn" target="_blank" rel="noopener">Share on Facebook</a>\n' +
+      '        <button class="pdf-btn" onclick="exportPDF()">Download PDF</button>\n' +
+      '      </div>\n' +
+      '    </div>\n' +
+      '  </div>\n' +
+      '</div>\n' +
+      footerHTML() + '\n' + cookieBannerHTML() + '\n' +
+      '<script>\n' +
+      'var questions = ' + questionsJson + ';\n' +
+      'var results = ' + resultsJson + ';\n' +
+      'var current = 0, scores = [];\n' +
+      'function renderQ() {\n' +
+      '  if (current >= questions.length) return showResult();\n' +
+      '  var q = questions[current];\n' +
+      '  document.getElementById("progressBar").style.width = ((current/questions.length)*100)+"%";\n' +
+      '  var html = \'<div class="quiz-q"><h3>Question \' + (current+1) + \' of \' + questions.length + \'</h3><p>\' + q.q + \'</p>\';\n' +
+      '  q.opts.forEach(function(o, i) {\n' +
+      '    html += \'<div class="quiz-opt" tabindex="0" role="button" onclick="selectOpt(\'+i+\')">\' + o + \'</div>\';\n' +
+      '  });\n' +
+      '  html += "</div>";\n' +
+      '  document.getElementById("quizContent").innerHTML = html;\n' +
+      '}\n' +
+      'function selectOpt(i) { scores.push(i); current++; renderQ(); }\n' +
+      'function showResult() {\n' +
+      '  document.getElementById("progressBar").style.width = "100%";\n' +
+      '  document.getElementById("quizContent").style.display = "none";\n' +
+      '  document.getElementById("quizResult").style.display = "block";\n' +
+      '  var avg = scores.reduce(function(a,b){return a+b;},0) / scores.length;\n' +
+      '  var idx = Math.min(Math.floor(avg), results.length - 1);\n' +
+      '  var r = results[idx];\n' +
+      '  document.getElementById("resultTitle").textContent = r.title;\n' +
+      '  document.getElementById("resultText").textContent = r.text;\n' +
+      '  var url = encodeURIComponent(window.location.href);\n' +
+      '  document.getElementById("shareTwitter").href = "https://twitter.com/intent/tweet?url="+url+"&text="+encodeURIComponent("I got \\\""+r.title+"\\\" on "+document.title);\n' +
+      '  document.getElementById("shareFB").href = "https://www.facebook.com/sharer/sharer.php?u="+url;\n' +
+      '}\n' +
+      'function exportPDF() {\n' +
+      '  var title = document.getElementById("resultTitle").textContent;\n' +
+      '  var text = document.getElementById("resultText").textContent;\n' +
+      '  var w = window.open("","_blank");\n' +
+      '  w.document.write("<html><head><title>"+document.title+" — Results</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;padding:20px;color:#333;line-height:1.8;}h1{font-size:28px;color:#4A148C;margin-bottom:8px;}h2{font-size:22px;color:#7C4DFF;margin:24px 0 12px;}p{font-size:16px;margin-bottom:16px;}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #ddd;font-size:12px;color:#999;}</style></head><body>");\n' +
+      '  w.document.write("<h1>' + escapeHtml(quiz.title) + '</h1>");\n' +
+      '  w.document.write("<p style=\\"color:#666;\\">The Quiet Medicine — thequietmedicine.com</p>");\n' +
+      '  w.document.write("<h2>Your Result: "+title+"</h2>");\n' +
+      '  w.document.write("<p>"+text+"</p>");\n' +
+      '  w.document.write("<div class=\\"footer\\">Generated by The Quiet Medicine. For educational purposes only. Visit <a href=\\"https://kalesh.love\\">kalesh.love</a> for guidance.</div>");\n' +
+      '  w.document.write("</body></html>");\n' +
+      '  w.document.close();\n' +
+      '  setTimeout(function(){ w.print(); }, 500);\n' +
+      '}\n' +
+      'renderQ();\n' +
+      '</script>\n' +
+      '</body></html>');
+  });
+});
+
+// ─── ASSESSMENTS ───
+var assessments = [
+  { slug: 'psychedelic-readiness', title: 'Psychedelic Readiness Assessment', desc: 'A comprehensive evaluation of your physical, psychological, and social readiness for a psychedelic experience.', questions: [
+    { q: 'How stable has your mood been over the past 3 months?', opts: ['Very unstable — frequent swings', 'Somewhat unstable', 'Mostly stable with occasional dips', 'Consistently stable'] },
+    { q: 'Do you have a personal or family history of psychotic disorders?', opts: ['Yes, personal history', 'Yes, close family history', 'Distant family history only', 'No known history'] },
+    { q: 'How would you rate your physical health?', opts: ['Significant health concerns', 'Some chronic issues', 'Generally healthy', 'Excellent health'] },
+    { q: 'Are you currently using any substances regularly?', opts: ['Heavy use of multiple substances', 'Regular use of one substance', 'Occasional recreational use', 'No substance use'] },
+    { q: 'How developed is your emotional regulation capacity?', opts: ['Frequently overwhelmed', 'Sometimes struggle with emotions', 'Usually able to self-regulate', 'Strong emotional regulation skills'] },
+    { q: 'Do you have access to professional mental health support?', opts: ['No access', 'Could find someone if needed', 'Have a therapist but not psychedelic-informed', 'Have a psychedelic-informed therapist'] },
+    { q: 'How clear are your intentions for this experience?', opts: ['No clear intention', 'Vague sense of wanting change', 'Specific but untested intention', 'Well-refined intention through reflection'] },
+    { q: 'How comfortable are you with surrendering control?', opts: ['Very uncomfortable', 'Anxious but willing', 'Reasonably comfortable', 'Practiced at letting go'] },
+  ], results: [
+    { title: 'Significant Preparation Needed', text: 'This assessment indicates several areas that need attention before proceeding with a psychedelic experience. This is not a failure — it is valuable information. Focus on building your foundation: stabilize your mental health, develop a contemplative practice, and establish professional support. The most courageous thing you can do right now is wait and prepare.' },
+    { title: 'Moderate Preparation Recommended', text: 'You have some foundation in place but important areas need strengthening. Consider working with a therapist to address the specific areas that scored lower. Building emotional regulation skills and clarifying your intentions will significantly improve both the safety and depth of any future experience.' },
+    { title: 'Good Readiness Level', text: 'Your assessment suggests a solid foundation for psychedelic exploration. You have addressed many of the key preparation areas and your circumstances support a meaningful experience. Continue refining your intentions and ensure your support system is in place before proceeding.' },
+    { title: 'High Readiness', text: 'Your preparation is thorough across physical, psychological, and social dimensions. You demonstrate the kind of thoughtful, informed approach that leads to the most meaningful experiences. Trust your preparation while remaining humble before the unknown.' },
+  ]},
+  { slug: 'integration-needs', title: 'Integration Needs Assessment', desc: 'Identify what kind of integration support would serve you best after a psychedelic experience.', questions: [
+    { q: 'How do you typically process intense emotional experiences?', opts: ['Suppress or avoid them', 'Ruminate and overthink', 'Talk them through with others', 'Sit with them in contemplation'] },
+    { q: 'What is your relationship with your body?', opts: ['Disconnected from body sensations', 'Aware but uncomfortable', 'Growing body awareness', 'Strong somatic awareness'] },
+    { q: 'How do you handle experiences that challenge your worldview?', opts: ['Reject and return to familiar', 'Feel destabilized for extended periods', 'Process gradually over time', 'Welcome paradigm shifts'] },
+    { q: 'What creative outlets do you have?', opts: ['None currently', 'Occasional creative activity', 'Regular creative practice', 'Multiple creative outlets'] },
+    { q: 'How is your relationship with sleep and rest?', opts: ['Chronic sleep issues', 'Irregular sleep patterns', 'Generally good sleep', 'Excellent sleep hygiene'] },
+    { q: 'Do you have a community that understands this work?', opts: ['No one who understands', 'One or two people', 'A small supportive circle', 'Active integration community'] },
+  ], results: [
+    { title: 'Intensive Support Recommended', text: 'Your integration needs are significant and would benefit from professional support. Consider working with a psychedelic integration therapist who can provide the structured container you need. Somatic therapy may be particularly valuable given your relationship with body awareness. Building community connections will also be essential.' },
+    { title: 'Structured Support Beneficial', text: 'You would benefit from a structured integration approach that combines professional guidance with personal practice. A regular therapy schedule, journaling practice, and gradual community building will create the support network your integration needs.' },
+    { title: 'Self-Directed with Check-ins', text: 'You have good internal resources for integration but would benefit from periodic check-ins with a therapist or integration circle. Your existing practices and awareness provide a solid foundation. Focus on deepening what is already working.' },
+    { title: 'Strong Self-Integration Capacity', text: 'You have well-developed integration resources — body awareness, creative outlets, community, and contemplative practice. Your integration path can be largely self-directed with the support of your existing network. Trust your process while remaining open to professional support when needed.' },
+  ]},
+  { slug: 'trauma-sensitivity', title: 'Trauma Sensitivity Screen', desc: 'A gentle assessment to help you understand how trauma may interact with psychedelic experiences.', questions: [
+    { q: 'Do you experience flashbacks or intrusive memories?', opts: ['Frequently and intensely', 'Sometimes', 'Rarely', 'Not at all'] },
+    { q: 'How do you respond to unexpected loud noises or surprises?', opts: ['Extreme startle response', 'Noticeable but manageable', 'Mild reaction', 'Calm response'] },
+    { q: 'Do you experience physical tension or pain without clear cause?', opts: ['Constant tension', 'Frequent unexplained tension', 'Occasional', 'Rarely'] },
+    { q: 'How safe do you generally feel in your body?', opts: ['Rarely feel safe', 'Safety comes and goes', 'Usually feel safe', 'Strong sense of embodied safety'] },
+    { q: 'Are you currently working with a trauma-informed therapist?', opts: ['No, and have significant trauma', 'No, but considering it', 'Yes, early in the process', 'Yes, with significant progress'] },
+    { q: 'How do you respond to loss of control?', opts: ['Panic or dissociation', 'Significant anxiety', 'Discomfort but manageable', 'Can surrender with practice'] },
+  ], results: [
+    { title: 'High Sensitivity — Professional Support Essential', text: 'This assessment suggests significant trauma sensitivity that requires professional support before considering psychedelic experiences. Psychedelics can amplify trauma responses, and without proper preparation and support, this could be retraumatizing rather than healing. Work with a trauma-informed therapist to build your window of tolerance before proceeding.' },
+    { title: 'Moderate Sensitivity — Careful Preparation Needed', text: 'You show moderate trauma sensitivity that warrants careful preparation. Working with a trauma-informed therapist to develop grounding techniques and expand your window of tolerance will be important. If you proceed with psychedelic work, ensure you have experienced, trauma-aware support present.' },
+    { title: 'Manageable Sensitivity — Proceed with Awareness', text: 'Your trauma sensitivity is present but manageable. You have developed some capacity to work with difficult material. Ensure your set and setting account for the possibility of trauma material arising, and have grounding techniques readily available.' },
+    { title: 'Low Sensitivity — Standard Preparation Sufficient', text: 'Your trauma sensitivity screen suggests a relatively stable baseline. Standard preparation practices — intention setting, set and setting optimization, and having support available — should be sufficient. Remain aware that psychedelics can surface material you did not know was there.' },
+  ]},
+  { slug: 'microdosing-protocol', title: 'Microdosing Protocol Assessment', desc: 'Determine which microdosing protocol and approach best fits your lifestyle and goals.', questions: [
+    { q: 'What is your primary goal for microdosing?', opts: ['Treating depression or anxiety', 'Enhancing creativity and flow', 'Improving focus and productivity', 'Spiritual development'] },
+    { q: 'How structured is your daily routine?', opts: ['Very unstructured', 'Somewhat flexible', 'Moderately structured', 'Highly structured'] },
+    { q: 'How sensitive are you to substances in general?', opts: ['Very sensitive', 'Somewhat sensitive', 'Average sensitivity', 'Low sensitivity'] },
+    { q: 'How much time can you dedicate to tracking your experience?', opts: ['Minimal time', 'A few minutes daily', '10-15 minutes daily', 'Detailed daily journaling'] },
+    { q: 'What is your experience with psychedelics?', opts: ['No experience', 'One or two experiences', 'Several experiences', 'Extensive experience'] },
+    { q: 'How important is scientific evidence in your decision-making?', opts: ['Not very important', 'Somewhat important', 'Important', 'Essential'] },
+  ], results: [
+    { title: 'Fadiman Protocol Recommended', text: 'Based on your goals and circumstances, the Fadiman Protocol (one day on, two days off) is your best starting point. It is the most researched protocol, provides clear structure, and allows adequate time to observe effects. Start with the lowest effective dose and adjust gradually. Your sensitivity profile suggests beginning conservatively.' },
+    { title: 'Stamets Stack Recommended', text: 'Your goals and experience level align well with the Stamets Stack (psilocybin + lion\'s mane + niacin). This protocol emphasizes neurogenesis and is taken five days on, two days off. The combination may support your cognitive and creative goals while the niacin helps with distribution.' },
+    { title: 'Intuitive Protocol Recommended', text: 'Your experience and self-awareness suggest you may benefit from an intuitive approach — dosing when you feel called to rather than on a fixed schedule. This requires honest self-assessment and strong tracking habits, both of which you appear to have. Listen to your body and adjust accordingly.' },
+    { title: 'Custom Protocol Recommended', text: 'Your specific goals and circumstances suggest a customized approach. Consider working with a knowledgeable guide to design a protocol tailored to your needs. Your extensive experience and structured approach position you well for a more nuanced protocol.' },
+  ]},
+  { slug: 'emotional-baseline', title: 'Emotional Baseline Assessment', desc: 'Establish a clear picture of your current emotional landscape before beginning any psychedelic practice.', questions: [
+    { q: 'How often do you feel genuinely content?', opts: ['Rarely or never', 'Occasionally', 'Often', 'Most of the time'] },
+    { q: 'How do you handle disappointment?', opts: ['Devastated for extended periods', 'Significantly affected', 'Process and move through it', 'Accept and adapt quickly'] },
+    { q: 'How connected do you feel to others?', opts: ['Deeply isolated', 'Somewhat disconnected', 'Reasonably connected', 'Deeply connected'] },
+    { q: 'How present are you in daily activities?', opts: ['Constantly distracted or dissociated', 'Frequently lost in thought', 'Usually present', 'Deeply present and engaged'] },
+    { q: 'How do you relate to anxiety?', opts: ['Overwhelming and constant', 'Frequent and disruptive', 'Occasional and manageable', 'Rare and informative'] },
+    { q: 'How meaningful does your life feel?', opts: ['Deeply meaningless', 'Searching for meaning', 'Sense of emerging purpose', 'Clear sense of meaning'] },
+    { q: 'How well do you sleep?', opts: ['Severe insomnia', 'Frequent sleep disruption', 'Generally adequate', 'Consistently restorative'] },
+  ], results: [
+    { title: 'Baseline: Struggling', text: 'Your emotional baseline suggests you are currently in a difficult period. This is important information — not a judgment. Before exploring psychedelics, focus on stabilizing your foundation: sleep, nutrition, movement, and professional support. These basics matter more than any substance.' },
+    { title: 'Baseline: Rebuilding', text: 'You are in a period of rebuilding and growth. Your emotional landscape shows both challenges and emerging strengths. This is a good time to deepen your self-awareness practices and build the support systems that will serve you in any future exploration.' },
+    { title: 'Baseline: Stable', text: 'Your emotional baseline is stable and provides a good foundation for psychedelic exploration. You have the emotional resources to navigate challenging experiences and the self-awareness to recognize when you need support.' },
+    { title: 'Baseline: Flourishing', text: 'Your emotional baseline reflects genuine well-being and resilience. From this foundation, psychedelic experiences are more likely to deepen what is already working rather than attempting to fix what is broken. This is the ideal starting point.' },
+  ]},
+  { slug: 'relationship-impact', title: 'Relationship Impact Assessment', desc: 'Understand how psychedelic experiences might affect your relationships and how to navigate that.', questions: [
+    { q: 'Does your partner or close family know about your interest in psychedelics?', opts: ['No, and they would disapprove', 'No, unsure how they would react', 'Yes, they are cautiously supportive', 'Yes, they are fully supportive'] },
+    { q: 'How do your relationships handle periods of personal change?', opts: ['Poorly — change creates conflict', 'With difficulty', 'Reasonably well', 'Growth is welcomed and supported'] },
+    { q: 'Do you have relationships that feel authentic and honest?', opts: ['Very few or none', 'One or two', 'Several', 'Most of my relationships'] },
+    { q: 'How do you handle disagreements about values?', opts: ['Avoid or suppress', 'Argue and defend', 'Discuss with some difficulty', 'Navigate with mutual respect'] },
+    { q: 'Are there relationships you are avoiding dealing with?', opts: ['Several significant ones', 'One or two important ones', 'Minor avoidances only', 'Relationships feel current'] },
+  ], results: [
+    { title: 'High Relationship Risk', text: 'Your relationship landscape suggests that psychedelic experiences could create significant interpersonal challenges. Consider addressing relationship dynamics before proceeding. Couples therapy or honest conversations about your interests may be necessary first steps.' },
+    { title: 'Moderate Relationship Considerations', text: 'There are relationship dynamics that deserve attention before or alongside any psychedelic exploration. Having honest conversations with key people in your life about your interests and intentions will reduce the risk of misunderstanding and conflict.' },
+    { title: 'Supportive Relationship Context', text: 'Your relationships provide a generally supportive context for psychedelic exploration. Continue nurturing open communication with your close circle and be prepared for the ways that personal transformation can shift relationship dynamics.' },
+    { title: 'Strong Relational Foundation', text: 'Your relationships are characterized by honesty, support, and mutual growth. This relational foundation is one of the most important factors in having positive psychedelic experiences and successful integration.' },
+  ]},
+  { slug: 'spiritual-orientation', title: 'Spiritual Orientation Assessment', desc: 'Explore your relationship with spirituality and how it might inform your psychedelic journey.', questions: [
+    { q: 'How would you describe your relationship with spirituality?', opts: ['Skeptical or dismissive', 'Curious but uncommitted', 'Active personal practice', 'Deep devotional life'] },
+    { q: 'Have you had experiences that felt transcendent or mystical?', opts: ['Never', 'Once or twice', 'Several times', 'Regularly'] },
+    { q: 'How do you relate to the concept of ego dissolution?', opts: ['Frightening', 'Intellectually interesting', 'Curious and open', 'Familiar territory'] },
+    { q: 'What role does gratitude play in your daily life?', opts: ['Rarely think about it', 'Occasional appreciation', 'Regular gratitude practice', 'Pervasive sense of gratitude'] },
+    { q: 'How do you relate to suffering?', opts: ['Avoid it at all costs', 'Endure it reluctantly', 'Accept it as part of life', 'See it as a teacher'] },
+    { q: 'Do you have a relationship with silence?', opts: ['Uncomfortable with silence', 'Tolerate it briefly', 'Enjoy periods of silence', 'Silence is home'] },
+  ], results: [
+    { title: 'The Rational Explorer', text: 'You approach these territories through reason and evidence, and that is a perfectly valid orientation. You do not need to adopt spiritual language to benefit from psychedelic experiences. The neuroscience alone is profound. Your skepticism can serve as a grounding force.' },
+    { title: 'The Curious Seeker', text: 'You are in a beautiful place of openness without attachment to any particular framework. This flexibility allows you to receive whatever arises without forcing it into a predetermined narrative. Stay curious and let your experience inform your understanding.' },
+    { title: 'The Practicing Devotee', text: 'Your existing spiritual practice provides a rich container for psychedelic exploration. The skills you have developed — presence, surrender, devotion — are precisely what allow these experiences to reach their deepest potential.' },
+    { title: 'The Mystic', text: 'You have a mature and deep spiritual orientation that will profoundly inform your psychedelic experiences. The territory of ego dissolution and unity consciousness is not foreign to you. Your challenge is integration — bringing the transcendent into the ordinary.' },
+  ]},
+  { slug: 'lifestyle-readiness', title: 'Lifestyle Readiness Assessment', desc: 'Evaluate whether your current lifestyle supports safe and meaningful psychedelic exploration.', questions: [
+    { q: 'How would you rate your current diet?', opts: ['Poor — mostly processed food', 'Inconsistent', 'Generally healthy', 'Intentional and nourishing'] },
+    { q: 'How much physical exercise do you get?', opts: ['Sedentary', 'Occasional movement', 'Regular exercise', 'Daily movement practice'] },
+    { q: 'How much screen time do you have daily?', opts: ['Excessive — 8+ hours non-work', 'High — 4-8 hours non-work', 'Moderate — 2-4 hours', 'Minimal — under 2 hours'] },
+    { q: 'How often do you spend time in nature?', opts: ['Rarely or never', 'Monthly', 'Weekly', 'Daily'] },
+    { q: 'How would you describe your work-life balance?', opts: ['Severely imbalanced', 'Struggling', 'Mostly balanced', 'Well balanced'] },
+    { q: 'Do you have a regular sleep schedule?', opts: ['Very irregular', 'Somewhat irregular', 'Mostly consistent', 'Consistent and prioritized'] },
+    { q: 'How much unstructured time do you have?', opts: ['None — constantly busy', 'Very little', 'Some free time', 'Adequate spaciousness'] },
+  ], results: [
+    { title: 'Lifestyle Overhaul Recommended', text: 'Your current lifestyle may not support the kind of experience you are seeking. Psychedelics amplify what is already present, and a depleted foundation leads to depleted experiences. Focus on the basics first: sleep, nutrition, movement, and reducing overstimulation. These changes alone can be transformative.' },
+    { title: 'Lifestyle Adjustments Needed', text: 'Your lifestyle has some supportive elements but key areas need attention. Focus on the lowest-scoring areas — they represent the weakest links in your preparation. Even small improvements in sleep, diet, or nature time can significantly impact the quality of psychedelic experiences.' },
+    { title: 'Supportive Lifestyle', text: 'Your lifestyle provides a good foundation for psychedelic exploration. You have established many of the habits that support both preparation and integration. Continue strengthening these practices and consider them part of your ongoing integration work.' },
+    { title: 'Optimal Lifestyle Foundation', text: 'Your lifestyle reflects the kind of intentional living that creates the best conditions for psychedelic work. The care you take with your body, mind, and daily rhythms is itself a form of practice. This foundation will serve you well.' },
+  ]},
 ];
-var current = 0, scores = [];
-function renderQ() {
-  if (current >= questions.length) return showResult();
-  var q = questions[current];
-  document.getElementById('progressBar').style.width = ((current/questions.length)*100)+'%';
-  var html = '<div class="quiz-q"><h3>Question ' + (current+1) + ' of ' + questions.length + '</h3><p>' + q.q + '</p>';
-  q.opts.forEach(function(o, i) {
-    html += '<div class="quiz-opt" tabindex="0" role="button" onclick="selectOpt('+i+')">' + o + '</div>';
-  });
-  html += '</div>';
-  document.getElementById('quizContent').innerHTML = html;
-}
-function selectOpt(i) { scores.push(i); current++; renderQ(); }
-function showResult() {
-  document.getElementById('progressBar').style.width = '100%';
-  document.getElementById('quizContent').style.display = 'none';
-  document.getElementById('quizResult').style.display = 'block';
-  var avg = scores.reduce(function(a,b){return a+b;},0) / scores.length;
-  var title, text;
-  if (avg < 1) { title = "The Beginning"; text = "You are at the start of this exploration, and that is exactly where you should be. The most important thing right now is not action but education. Read widely, talk to people who have walked this path, and trust that readiness has its own timeline."; }
-  else if (avg < 2) { title = "The Threshold"; text = "You are standing at the edge of something, curious enough to look but wise enough to pause. This is the territory where preparation matters most. Consider deepening your contemplative practice before going further."; }
-  else if (avg < 3) { title = "The Practitioner"; text = "You have done meaningful inner work and you understand that these experiences are not shortcuts but amplifiers. Your preparation positions you well, but remember: the most transformative experiences often come when we think we are ready and discover we are not."; }
-  else { title = "The Integrator"; text = "You bring depth, experience, and a mature relationship with consciousness to this work. Your challenge is not preparation but integration. The question for you is not whether to go deeper, but how to bring what you have already seen into the fabric of daily life."; }
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultText').textContent = text;
-  var url = encodeURIComponent(window.location.href);
-  document.getElementById('shareTwitter').href = 'https://twitter.com/intent/tweet?url='+url+'&text='+encodeURIComponent('I got "'+title+'" on The Quiet Medicine quiz');
-  document.getElementById('shareFB').href = 'https://www.facebook.com/sharer/sharer.php?u='+url;
-}
-renderQ();
-</script>
-</body></html>`);
+
+app.get('/assessments', (req, res) => {
+  res.send(htmlHead('Assessments — ' + SITE.title, 'In-depth self-assessments with downloadable PDF results for your psychedelic wellness journey.', SITE.domain + '/assessments') + '\n' +
+    '<body>\n' + navHTML() + '\n' +
+    '<div class="hero" style="padding:60px 24px 40px;">\n' +
+    '  <div class="hero-content"><h1>Assessments</h1><p class="tagline">In-depth evaluations with detailed results you can download and keep.</p></div>\n' +
+    '</div>\n' +
+    '<main class="wide" style="padding-top:40px;">\n' +
+    '<div class="quiz-index-grid">\n' +
+    assessments.map(function(a) {
+      return '<div class="quiz-index-card"><h3><a href="/assessment/' + a.slug + '">' + a.title + '</a></h3><p>' + a.desc + '</p></div>';
+    }).join('\n') + '\n' +
+    '</div>\n' +
+    '</main>\n' + footerHTML() + '\n' + cookieBannerHTML() + '\n' +
+    '</body></html>');
+});
+
+// ─── INDIVIDUAL ASSESSMENT PAGES ───
+assessments.forEach(function(assess) {
+  app.get('/assessment/' + assess.slug, (req, res) => {
+    var questionsJson = JSON.stringify(assess.questions);
+    var resultsJson = JSON.stringify(assess.results);
+
+    res.send(htmlHead(assess.title + ' — ' + SITE.title, assess.desc, SITE.domain + '/assessment/' + assess.slug) + '\n' +
+      '<body>\n' + navHTML() + '\n' +
+      '<div class="quiz-wrap">\n' +
+      '  <h1 style="font-size:clamp(24px,4vw,36px);margin-bottom:8px;">' + assess.title + '</h1>\n' +
+      '  <p style="color:var(--text-dim);margin-bottom:32px;">' + assess.desc + '</p>\n' +
+      '  <div class="quiz-progress"><div class="quiz-bar" id="progressBar" style="width:0%;"></div></div>\n' +
+      '  <div id="quizContent"></div>\n' +
+      '  <div id="quizResult" style="display:none;">\n' +
+      '    <div style="background:var(--bg-card);border:1px solid rgba(124,77,255,0.3);border-radius:var(--radius);padding:40px;">\n' +
+      '      <h2 id="resultTitle" style="font-size:28px;margin-bottom:16px;text-align:center;"></h2>\n' +
+      '      <p id="resultText" style="color:var(--text-dim);font-size:17px;line-height:1.7;max-width:600px;margin:0 auto 24px;"></p>\n' +
+      '      <div id="scoreBreakdown" style="margin:24px 0;"></div>\n' +
+      '      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">\n' +
+      '        <button class="pdf-btn" onclick="exportAssessmentPDF()">Download Detailed PDF Report</button>\n' +
+      '        <a id="shareTwitter" href="#" class="share-btn" target="_blank" rel="noopener">Share on X</a>\n' +
+      '      </div>\n' +
+      '    </div>\n' +
+      '  </div>\n' +
+      '</div>\n' +
+      footerHTML() + '\n' + cookieBannerHTML() + '\n' +
+      '<script>\n' +
+      'var questions = ' + questionsJson + ';\n' +
+      'var results = ' + resultsJson + ';\n' +
+      'var current = 0, scores = [], answers = [];\n' +
+      'function renderQ() {\n' +
+      '  if (current >= questions.length) return showResult();\n' +
+      '  var q = questions[current];\n' +
+      '  document.getElementById("progressBar").style.width = ((current/questions.length)*100)+"%";\n' +
+      '  var html = \'<div class="quiz-q"><h3>Question \' + (current+1) + \' of \' + questions.length + \'</h3><p>\' + q.q + \'</p>\';\n' +
+      '  q.opts.forEach(function(o, i) {\n' +
+       '    html += \'<div class="quiz-opt" tabindex="0" role="button" onclick="selectOpt(\'+i+\')">\'+ o + \'</div>\';\n' + +
+      '  });\n' +
+      '  html += "</div>";\n' +
+      '  document.getElementById("quizContent").innerHTML = html;\n' +
+      '}\n' +
+      'function selectOpt(i) { scores.push(i); answers.push({q: questions[current].q, a: questions[current].opts[i], score: i}); current++; renderQ(); }\n' +
+      'function showResult() {\n' +
+      '  document.getElementById("progressBar").style.width = "100%";\n' +
+      '  document.getElementById("quizContent").style.display = "none";\n' +
+      '  document.getElementById("quizResult").style.display = "block";\n' +
+      '  var avg = scores.reduce(function(a,b){return a+b;},0) / scores.length;\n' +
+      '  var idx = Math.min(Math.floor(avg), results.length - 1);\n' +
+      '  var r = results[idx];\n' +
+      '  document.getElementById("resultTitle").textContent = r.title;\n' +
+      '  document.getElementById("resultText").textContent = r.text;\n' +
+      '  var breakdown = "<h3 style=\\"font-size:18px;margin-bottom:16px;color:#00E5FF;\\">Your Responses</h3>";\n' +
+      '  answers.forEach(function(a, i) {\n' +
+      '    var pct = (a.score / 3) * 100;\n' +
+      '    breakdown += "<div style=\\"margin-bottom:16px;\\"><p style=\\"font-size:14px;color:#9B95AD;margin-bottom:4px;\\">" + a.q + "</p><p style=\\"font-size:15px;color:#E8E4F0;margin-bottom:6px;\\">" + a.a + "</p><div style=\\"height:4px;background:rgba(255,255,255,0.08);border-radius:2px;\\"><div style=\\"height:100%;width:" + pct + "%;background:linear-gradient(90deg,#7C4DFF,#00E5FF);border-radius:2px;\\"></div></div></div>";\n' +
+      '  });\n' +
+      '  document.getElementById("scoreBreakdown").innerHTML = breakdown;\n' +
+      '  var url = encodeURIComponent(window.location.href);\n' +
+      '  document.getElementById("shareTwitter").href = "https://twitter.com/intent/tweet?url="+url+"&text="+encodeURIComponent("My result: "+r.title+" — "+document.title);\n' +
+      '}\n' +
+      'function exportAssessmentPDF() {\n' +
+      '  var title = document.getElementById("resultTitle").textContent;\n' +
+      '  var text = document.getElementById("resultText").textContent;\n' +
+      '  var w = window.open("","_blank");\n' +
+      '  w.document.write("<html><head><title>' + escapeHtml(assess.title) + ' — Results</title><style>body{font-family:Georgia,serif;max-width:650px;margin:40px auto;padding:20px;color:#333;line-height:1.8;}h1{font-size:24px;color:#4A148C;margin-bottom:4px;}h2{font-size:20px;color:#7C4DFF;margin:24px 0 12px;}h3{font-size:16px;color:#666;margin:20px 0 8px;}p{font-size:15px;margin-bottom:12px;}.q-item{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #eee;}.q-label{font-size:13px;color:#999;}.q-answer{font-size:15px;color:#333;font-weight:600;}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #ddd;font-size:12px;color:#999;}</style></head><body>");\n' +
+      '  w.document.write("<h1>' + escapeHtml(assess.title) + '</h1>");\n' +
+      '  w.document.write("<p style=\\"color:#666;font-size:13px;\\">The Quiet Medicine — thequietmedicine.com<br>Date: " + new Date().toLocaleDateString() + "</p>");\n' +
+      '  w.document.write("<h2>Result: " + title + "</h2>");\n' +
+      '  w.document.write("<p>" + text + "</p>");\n' +
+      '  w.document.write("<h3>Detailed Responses</h3>");\n' +
+      '  answers.forEach(function(a) {\n' +
+      '    w.document.write("<div class=\\"q-item\\"><p class=\\"q-label\\">" + a.q + "</p><p class=\\"q-answer\\">" + a.a + "</p></div>");\n' +
+      '  });\n' +
+      '  w.document.write("<div class=\\"footer\\"><p>This assessment is for educational purposes only and does not constitute medical or psychological advice. For professional guidance, visit <a href=\\"https://kalesh.love\\">kalesh.love</a></p><p>Generated by The Quiet Medicine &copy; " + new Date().getFullYear() + "</p></div>");\n' +
+      '  w.document.write("</body></html>");\n' +
+      '  w.document.close();\n' +
+      '  setTimeout(function(){ w.print(); }, 500);\n' +
+      '}\n' +
+      'renderQ();\n' +
+      '</script>\n' +
+      '</body></html>');
   });
 });
 
-// 404 handler
+
+// ─── LEGAL CHECK PAGE ───
+app.get('/legal-check', (req, res) => {
+  var jurisdictions = {
+    "United States (Federal)": { psilocybin: "Schedule I — Illegal", mdma: "Schedule I — Illegal (FDA breakthrough therapy)", ketamine: "Schedule III — Legal with prescription", lsd: "Schedule I — Illegal", ayahuasca: "Schedule I — Illegal (religious exemptions exist)" },
+    "Oregon, USA": { psilocybin: "Legal — regulated therapeutic use (Measure 109)", mdma: "Schedule I — Illegal federally", ketamine: "Legal with prescription", lsd: "Schedule I — Illegal", ayahuasca: "Schedule I — Illegal federally" },
+    "Colorado, USA": { psilocybin: "Decriminalized — regulated access in development", mdma: "Schedule I — Illegal federally", ketamine: "Legal with prescription", lsd: "Schedule I — Illegal", ayahuasca: "Schedule I — Illegal federally" },
+    "California, USA": { psilocybin: "Decriminalized in several cities", mdma: "Schedule I — Illegal", ketamine: "Legal with prescription", lsd: "Schedule I — Illegal", ayahuasca: "Legal for religious use (specific churches)" },
+    "Canada": { psilocybin: "Controlled — Special Access Program available", mdma: "Controlled — Special Access Program", ketamine: "Legal with prescription", lsd: "Controlled substance", ayahuasca: "Legal — not specifically scheduled" },
+    "Netherlands": { psilocybin: "Truffles legal — mushrooms illegal", mdma: "Illegal but tolerated in research", ketamine: "Prescription only", lsd: "Illegal", ayahuasca: "Legal gray area" },
+    "Portugal": { psilocybin: "Decriminalized (personal use)", mdma: "Decriminalized (personal use)", ketamine: "Prescription only", lsd: "Decriminalized (personal use)", ayahuasca: "Decriminalized" },
+    "Jamaica": { psilocybin: "Legal — not scheduled", mdma: "Illegal", ketamine: "Prescription only", lsd: "Illegal", ayahuasca: "Not specifically regulated" },
+    "Brazil": { psilocybin: "Legal gray area", mdma: "Illegal", ketamine: "Prescription only", lsd: "Illegal", ayahuasca: "Legal for religious use" },
+    "Costa Rica": { psilocybin: "Legal gray area — not enforced", mdma: "Illegal", ketamine: "Prescription only", lsd: "Illegal", ayahuasca: "Not specifically regulated" },
+    "United Kingdom": { psilocybin: "Class A — Illegal", mdma: "Class A — Illegal", ketamine: "Class B — Prescription available", lsd: "Class A — Illegal", ayahuasca: "Class A — Illegal" },
+    "Australia": { psilocybin: "Schedule 8 — Authorized prescribers only (2023)", mdma: "Schedule 8 — Authorized prescribers only (2023)", ketamine: "Prescription only", lsd: "Prohibited", ayahuasca: "Prohibited" },
+    "Germany": { psilocybin: "Illegal — research permitted", mdma: "Illegal — clinical trials active", ketamine: "Prescription (esketamine approved)", lsd: "Illegal", ayahuasca: "Illegal" },
+    "Switzerland": { psilocybin: "Illegal — compassionate use exceptions", mdma: "Illegal — compassionate use exceptions", ketamine: "Prescription only", lsd: "Illegal — compassionate use exceptions", ayahuasca: "Illegal" },
+    "Mexico": { psilocybin: "Traditional use tolerated", mdma: "Illegal", ketamine: "Prescription only", lsd: "Illegal", ayahuasca: "Traditional use tolerated" },
+    "Peru": { psilocybin: "Not specifically regulated", mdma: "Illegal", ketamine: "Prescription only", lsd: "Illegal", ayahuasca: "Legal — cultural heritage" },
+    "Thailand": { psilocybin: "Illegal", mdma: "Illegal — severe penalties", ketamine: "Controlled", lsd: "Illegal — severe penalties", ayahuasca: "Not specifically regulated" },
+  };
+
+  var optionsHTML = Object.keys(jurisdictions).map(function(j) { return '<option value="' + j + '">' + j + '</option>'; }).join('');
+
+  res.send(htmlHead('Legal Status Check — ' + SITE.title, 'Check the legal status of psychedelic substances in your jurisdiction. Educational reference only.', SITE.domain + '/legal-check') + '\n' +
+    '<body>\n' + navHTML() + '\n' +
+    '<div class="hero" style="padding:60px 24px 40px;">\n' +
+    '  <div class="hero-content"><h1>Legal Status Check</h1><p class="tagline">Educational reference for psychedelic substance legality across jurisdictions. This is not legal advice.</p></div>\n' +
+    '</div>\n' +
+    '<main class="container" style="padding-top:40px;max-width:800px;">\n' +
+    '<div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:32px;">\n' +
+    '  <label for="jurisdictionSelect" style="display:block;font-size:14px;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Select Jurisdiction</label>\n' +
+    '  <select id="jurisdictionSelect" onchange="showLegal()" style="width:100%;padding:12px 16px;background:var(--bg-deep);color:var(--text);border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:16px;font-family:Inter,sans-serif;cursor:pointer;">\n' +
+    '    <option value="">Choose a location...</option>\n' +
+    '    ' + optionsHTML + '\n' +
+    '  </select>\n' +
+    '  <div id="legalResults" style="margin-top:24px;"></div>\n' +
+    '</div>\n' +
+    healthDisclaimerHTML() + '\n' +
+    '</main>\n' + footerHTML() + '\n' + cookieBannerHTML() + '\n' +
+    '<script>\n' +
+    'var data = ' + JSON.stringify(jurisdictions) + ';\n' +
+    'function showLegal() {\n' +
+    '  var sel = document.getElementById("jurisdictionSelect").value;\n' +
+    '  if (!sel || !data[sel]) { document.getElementById("legalResults").innerHTML = ""; return; }\n' +
+    '  var d = data[sel];\n' +
+    '  var html = "<table style=\\"width:100%;border-collapse:collapse;margin-top:16px;\\">";\n' +
+    '  html += "<tr style=\\"border-bottom:1px solid rgba(255,255,255,0.08);\\"><th style=\\"text-align:left;padding:12px 8px;color:#00E5FF;font-size:14px;\\">Substance</th><th style=\\"text-align:left;padding:12px 8px;color:#00E5FF;font-size:14px;\\">Status</th></tr>";\n' +
+    '  var substances = {psilocybin:"Psilocybin",mdma:"MDMA",ketamine:"Ketamine",lsd:"LSD",ayahuasca:"Ayahuasca"};\n' +
+    '  Object.keys(substances).forEach(function(k) {\n' +
+    '    var status = d[k] || "Unknown";\n' +
+    '    var color = status.toLowerCase().indexOf("legal") === 0 ? "#00E676" : status.toLowerCase().indexOf("decrim") === 0 ? "#FFD740" : status.toLowerCase().indexOf("schedule") >= 0 || status.toLowerCase().indexOf("illegal") >= 0 || status.toLowerCase().indexOf("class") >= 0 || status.toLowerCase().indexOf("prohibited") >= 0 ? "#FF5252" : "#B0BEC5";\n' +
+    '    html += "<tr style=\\"border-bottom:1px solid rgba(255,255,255,0.04);\\"><td style=\\"padding:12px 8px;font-weight:600;\\">" + substances[k] + "</td><td style=\\"padding:12px 8px;color:" + color + ";\\">" + status + "</td></tr>";\n' +
+    '  });\n' +
+    '  html += "</table>";\n' +
+    '  html += "<p style=\\"margin-top:16px;font-size:13px;color:#9B95AD;line-height:1.6;\\">This information is for educational purposes only and may not reflect the most current legal status. Laws change frequently. Always verify with a qualified legal professional in your jurisdiction before making any decisions.</p>";\n' +
+    '  document.getElementById("legalResults").innerHTML = html;\n' +
+    '}\n' +
+    '</script>\n' +
+    '</body></html>');
+});
+
+// ─── 404 HANDLER ───
 function render404(req, res) {
-  const articles = getPublishedArticles().slice(0, 6);
-  const links = articles.map(a => '<div class="pillar"><h3><a href="/articles/' + a.slug + '">' + a.title + '</a></h3></div>').join('');
-
-  res.status(404).send(htmlHead('Page Not Found — The Quiet Medicine', 'The page you are looking for does not exist.', 'https://thequietmedicine.com/404') + `
-<body>
-${navHTML()}
-<div class="container" style="padding-top:80px;text-align:center;">
-  <h1 style="font-size:clamp(36px,5vw,56px);margin-bottom:24px;">Page Not Found</h1>
-  <blockquote style="font-family:Newsreader,Georgia,serif;font-size:22px;color:var(--accent-2);margin:32px auto;max-width:600px;font-style:italic;border:none;background:none;padding:0;">The most important things in life cannot be understood — only experienced.</blockquote>
-  <p style="margin:24px 0;color:var(--text-dim);">The page you are looking for does not exist, but these might be what you need:</p>
-  <div style="max-width:600px;margin:32px auto;text-align:left;">` + links + `</div>
-  <p style="margin:40px 0;"><a href="/" style="font-weight:600;">Return Home &rarr;</a></p>
-</div>
-${footerHTML()}
-${cookieBannerHTML()}
-</body></html>`);
+  var articles = getPublishedArticles();
+  var suggested = articles.sort(function() { return 0.5 - Math.random(); }).slice(0, 6);
+  res.status(404).send(htmlHead('Page Not Found — ' + SITE.title, 'The page you are looking for does not exist.', SITE.domain) + '\n' +
+    '<body>\n' + navHTML() + '\n' +
+    '<main class="container" style="padding:80px 24px;text-align:center;">\n' +
+    '  <h1 style="font-size:clamp(48px,8vw,96px);background:var(--grad-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;">404</h1>\n' +
+    '  <h2 style="font-size:24px;margin-bottom:16px;">The path you sought is not here</h2>\n' +
+    '  <p style="color:var(--text-dim);font-size:17px;max-width:500px;margin:0 auto 40px;line-height:1.7;">Sometimes the most valuable discoveries happen when we wander off the expected path. These articles might be what you were actually looking for.</p>\n' +
+    '  <div class="card-grid">\n' +
+    suggested.map(function(a) { return articleCard(a); }).join('\n') + '\n' +
+    '  </div>\n' +
+    '  <a href="/" style="display:inline-block;margin-top:40px;padding:14px 32px;background:var(--accent-1);color:white;border-radius:24px;font-weight:600;text-decoration:none;">Return Home</a>\n' +
+    '</main>\n' + footerHTML() + '\n' + cookieBannerHTML() + '\n' +
+    '</body></html>');
 }
 
-// Static files from dist
-if (fs.existsSync(DIST)) {
-  app.use(express.static(DIST));
-}
+app.use(function(req, res) { render404(req, res); });
 
-app.use((req, res) => render404(req, res));
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log('[quiet-medicine] Server running on port ' + PORT);
-  const articles = loadArticles();
-  const published = filterPublished(articles);
-  console.log('[quiet-medicine] ' + articles.length + ' total articles, ' + published.length + ' published');
+// ─── START SERVER ───
+app.listen(PORT, '0.0.0.0', function() {
+  console.log('The Quiet Medicine running on port ' + PORT);
+  console.log('Published articles: ' + getPublishedArticles().length + ' / ' + loadArticles().length);
 });
-
-export default app;

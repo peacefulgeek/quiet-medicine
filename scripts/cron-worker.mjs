@@ -28,15 +28,15 @@ function publishScheduledArticles() {
           data.status = 'published';
           fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
           published++;
-          console.log(`  [cron] Published: ${data.slug}`);
+          console.log('  [cron] Published:', data.slug);
         }
       }
     } catch (err) {
-      console.error(`  [cron] Error processing ${file}:`, err.message);
+      console.error('  [cron] Error processing ' + file + ':', err.message);
     }
   }
 
-  console.log(`[cron] Published ${published} articles this run.`);
+  console.log('[cron] Published ' + published + ' articles this run.');
 }
 
 /** Run the auto-gen pipeline (when enabled) */
@@ -49,11 +49,29 @@ function runGenerator() {
   });
 
   child.on('close', (code) => {
-    console.log(`[cron] Generator exited with code ${code}`);
+    console.log('[cron] Generator exited with code ' + code);
   });
 
   child.on('error', (err) => {
     console.error('[cron] Generator error:', err);
+  });
+}
+
+/** Run the product spotlight generator on Saturdays */
+function runSpotlightGenerator() {
+  console.log('[cron] Running product spotlight generator at', new Date().toISOString());
+  const child = spawn('node', [path.join(__dirname, 'generate-spotlight.mjs')], {
+    stdio: 'inherit',
+    env: { ...process.env },
+    timeout: 600000,
+  });
+
+  child.on('close', (code) => {
+    console.log('[cron] Spotlight generator exited with code ' + code);
+  });
+
+  child.on('error', (err) => {
+    console.error('[cron] Spotlight generator error:', err);
   });
 }
 
@@ -74,9 +92,16 @@ if (runNow) {
     runGenerator();
   }, { timezone: 'UTC' });
 
+  // ── Phase 3: Product spotlight every Saturday ──
+  // Saturdays at 14:00 UTC — generates 1 product spotlight article
+  cron.schedule('0 14 * * 6', () => {
+    runSpotlightGenerator();
+  }, { timezone: 'UTC' });
+
   console.log('[cron] Scheduled:');
   console.log('  Phase 1: Hourly publish check (5/day for 54 days)');
   console.log('  Phase 2: Mon-Fri 12:00 UTC auto-gen (5/week, when enabled)');
+  console.log('  Phase 3: Saturday 14:00 UTC product spotlight');
 
   // Run publish check immediately on startup
   publishScheduledArticles();
