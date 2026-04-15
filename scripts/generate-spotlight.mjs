@@ -2,7 +2,7 @@
 // Runs every Saturday via cron — generates 1 product spotlight article
 // Uses same env vars as generate-articles.mjs
 
-const AUTO_GEN_ENABLED = false; // Wildman flips to true on GitHub when ready
+const AUTO_GEN_ENABLED = true; // Flipped to true - autogen active
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const FAL_KEY = process.env.FAL_API_KEY;
