@@ -108,34 +108,34 @@ print(f"  5 FAQs: {faq_counts.get(5, 0)} articles (target: ~30 = 10%)")
 print(f"  {'✓' if fix4_pass else '✗'} FAQ distribution verified across {total} articles")
 
 # ─── FIX 5: BACKLINK DISTRIBUTION ───
-print("\n[FIX 5] BACKLINK DISTRIBUTION (14% kalesh / 33% amazon / 23% external / 30% internal)")
+print("\n[FIX 5] BACKLINK & AMAZON LINK DISTRIBUTION")
 kalesh_links = 0
 amazon_links = 0
 external_links = 0
-internal_only = 0
+internal_links = 0
+amazon_min3 = 0
 ext_domains = ['maps.org', 'hopkinsmedicine.org', 'nature.com', 'pubmed.ncbi', 'thelancet.com', 'scientificamerican.com', 'apa.org', 'ncbi.nlm.nih.gov']
 
 for a in articles:
     body = a.get("body", "")
-    has_kalesh = "kalesh.love" in body
-    has_amazon = "amazon.com" in body
-    has_ext_org = any(d in body for d in ext_domains)
-    
-    if has_kalesh:
+    # Count independently (not mutually exclusive)
+    if "kalesh.love" in body:
         kalesh_links += 1
-    elif has_amazon:
-        amazon_links += 1
-    elif has_ext_org:
+    amazon_count = len(re.findall(r'<a[^>]*href="[^"]*amazon\.com[^"]*"', body))
+    if amazon_count >= 3:
+        amazon_min3 += 1
+    amazon_links += (1 if amazon_count > 0 else 0)
+    if any(d in body for d in ext_domains):
         external_links += 1
-    else:
-        internal_only += 1
+    if re.search(r'href="/(the-|tools|about)', body):
+        internal_links += 1
 
-fix5_pass = kalesh_links > 0 and amazon_links > 0 and external_links > 0 and internal_only > 0
-print(f"  kalesh.love: {kalesh_links} ({kalesh_links/total*100:.0f}%) (target: 14%)")
-print(f"  Amazon (sponsored): {amazon_links} ({amazon_links/total*100:.0f}%) (target: 33%)")
-print(f"  External org (nofollow): {external_links} ({external_links/total*100:.0f}%) (target: 23%)")
-print(f"  Internal only: {internal_only} ({internal_only/total*100:.0f}%) (target: 30%)")
-print(f"  {'✓' if fix5_pass else '✗'} Backlink distribution verified across {total} articles")
+fix5_pass = amazon_min3 == total  # Every article must have 3+ Amazon links
+print(f"  Articles with 3+ Amazon links: {amazon_min3}/{total} (target: {total}/{total})")
+print(f"  Articles with kalesh.love link: {kalesh_links}")
+print(f"  Articles with external org link: {external_links}")
+print(f"  Articles with internal link: {internal_links}")
+print(f"  {'✓' if fix5_pass else '✗'} All {total} articles have 3+ Amazon affiliate links")
 
 # ─── FIX 6: CONCLUSION VARIETY ───
 print("\n[FIX 6] CONCLUSION VARIETY (30% challenge / 70% tender)")
@@ -266,7 +266,7 @@ print(f"Fix 1 — Opener variety:      {'✓ PASS' if fix1_pass else '✗ FAIL'}
 print(f"Fix 2 — 'This is where':     {'✓ PASS' if fix2_pass else '✗ FAIL'} | {this_is_where_count} violations (target: 0)")
 print(f"Fix 3 — Named references:    {'✓ PASS' if fix3_pass else '✗ FAIL'} | {has_any_ref}/{total} articles")
 print(f"Fix 4 — FAQ distribution:    {'✓ PASS' if fix4_pass else '✗ FAIL'} | 0:{faq_counts.get(0,0)} 2:{faq_counts.get(2,0)} 3:{faq_counts.get(3,0)} 4:{faq_counts.get(4,0)} 5:{faq_counts.get(5,0)}")
-print(f"Fix 5 — Backlinks:           {'✓ PASS' if fix5_pass else '✗ FAIL'} | kalesh:{kalesh_links} amazon:{amazon_links} ext:{external_links} int:{internal_only}")
+print(f"Fix 5 — Amazon links:        {'✓ PASS' if fix5_pass else '✗ FAIL'} | {amazon_min3}/{total} articles with 3+ Amazon links (kalesh:{kalesh_links} ext:{external_links} int:{internal_links})")
 print(f"Fix 6 — Conclusions:         {'✓ PASS' if fix6_pass else '✗ FAIL'} | challenge:{challenge_endings} tender:{tender_endings} banned:{banned_count}")
 print(f"Fix 7 — Unique final H2:     {'✓ PASS' if fix7_pass else '✗ FAIL'} | {unique_h2s} unique / {generic_h2_count} generic")
 print(f"Fix 8 — Lived experience:    {'✓ PASS' if fix8_pass else '✗ FAIL'} | {has_lived}/{total} articles (target: 285+)")
