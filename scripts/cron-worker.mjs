@@ -57,6 +57,24 @@ function runGenerator() {
   });
 }
 
+/** Run the Amazon ASIN health checker (Sundays) */
+function runAsinHealthCheck() {
+  console.log('[cron] Running ASIN health check at', new Date().toISOString());
+  const child = spawn('node', [path.join(__dirname, 'check-amazon-links.mjs'), '--fix', '--push'], {
+    stdio: 'inherit',
+    env: { ...process.env },
+    timeout: 900000, // 15 min — checks ~30 ASINs at 2s each + buffer
+  });
+
+  child.on('close', (code) => {
+    console.log('[cron] ASIN health check exited with code ' + code);
+  });
+
+  child.on('error', (err) => {
+    console.error('[cron] ASIN health check error:', err);
+  });
+}
+
 /** Run the product spotlight generator on Saturdays */
 function runSpotlightGenerator() {
   console.log('[cron] Running product spotlight generator at', new Date().toISOString());
@@ -98,10 +116,18 @@ if (runNow) {
     runSpotlightGenerator();
   }, { timezone: 'UTC' });
 
+  // ── Phase 4: Amazon ASIN health check every Sunday ──
+  // Sundays at 06:00 UTC — validates all Amazon links, auto-fixes dead ones
+  // Lightweight: HTTP GET only, no API keys, ~2s per ASIN
+  cron.schedule('0 6 * * 0', () => {
+    runAsinHealthCheck();
+  }, { timezone: 'UTC' });
+
   console.log('[cron] Scheduled:');
   console.log('  Phase 1: Hourly publish check (5/day for 54 days)');
   console.log('  Phase 2: Mon-Fri 12:00 UTC auto-gen (5/week, when enabled)');
   console.log('  Phase 3: Saturday 14:00 UTC product spotlight');
+  console.log('  Phase 4: Sunday 06:00 UTC ASIN health check (auto-fix + push)');
 
   // Run publish check immediately on startup
   publishScheduledArticles();

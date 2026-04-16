@@ -1,0 +1,257 @@
+{
+  "timestamp": "2026-04-16T16:07:11.875Z",
+  "mode": "dry-run",
+  "totalAsins": 27,
+  "totalLinks": 911,
+  "healthy": 27,
+  "broken": 0,
+  "captcha": 0,
+  "fixesApplied": 0,
+  "articlesModified": 0,
+  "results": [
+    {
+      "asin": "B0CRKX1VV7",
+      "name": "The Psychedelic Integration Journal",
+      "uses": 144,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "The Psychedelic Integration Journal",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "1646119266",
+      "name": "a guided meditation journal",
+      "uses": 100,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Inner Peace: A Guided Meditation Journal for Beginners",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "0062429655",
+      "name": "Stealing Fire by Steven Kotler",
+      "uses": 82,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Stealing Fire: How Silicon Valley, the Navy SEALs, and Maverick Scientists Are Revolutionizing the Way We Live and Work",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "0735224153",
+      "name": "How to Change Your Mind by Michael Pollan",
+      "uses": 80,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "How to Change Your Mind: What the New Science of Psychedelics Teaches Us About Consciousness, Dying, Addiction, Depression, and Transcendence",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0DK86ZBNJ",
+      "name": "a soft therapy blanket",
+      "uses": 61,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Feelings Wheel Emotions Chart Blanket Mental Health Blanket 60&#34;x80&#34; Cozy Fluffy Flannel Throw Blankets for Therapy Counseling Office Classroom Home Couch Bed Sofa Decor,Therapist Counselor Gift",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0D2K8N8NR",
+      "name": "a meditation zafu cushion",
+      "uses": 58,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Meditation Cushion Set Zafu &amp; Zabuton – Buckwheat Hull &amp; Memory Foam, Adjustable Floor Pillow for Yoga, Meditation &amp; Sitting, Removable Velvet Cover (Purple)",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "0451494091",
+      "name": "A Really Good Day by Ayelet Waldman",
+      "uses": 57,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "A Really Good Day: How Microdosing Made a Mega Difference in My Mood, My Marriage, and My Life",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0885S1766",
+      "name": "a precision milligram scale",
+      "uses": 57,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "THINKSCALE Milligram Scale, 50g/0.001g Digital Jewelry Scale, Micro Gram Scale for Powder, Medicine, Gold, Gem, Reloading, Mg Scale 6 Units, Tare, Cal Weight Included",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B01MR4Y0CZ",
+      "name": "an aromatherapy essential oil diffuser",
+      "uses": 31,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "ASAKUKI Essential Oil Diffuser for Home, 500ML Aromatherapy Diffuser Humidifier with Remote Control, 7 Color LED Lights, Quiet Cool Mist Diffuser for Bedroom, Living Room, Office (Yellow)",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "1594774021",
+      "name": "The Psychedelic Explorer's Guide by James Fadiman",
+      "uses": 27,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "The Psychedelic Explorer&#39;s Guide: Safe, Therapeutic, and Sacred Journeys",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "0143127748",
+      "name": "The Body Keeps the Score by Bessel van der Kolk",
+      "uses": 26,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "The Body Keeps the Score: Brain, Mind, and Body in the Healing of Trauma",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B08FR8MPCW",
+      "name": "an acupressure mat and pillow set",
+      "uses": 24,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "XiaoMaGe Acupressure Mat and Pillow Set with Bag - Large Size 28.7 X 16.5 inch Acupuncture Mat for Neck &amp; Back Pain, Muscle Relaxation Stress Relief, Sciatica Pain Relief Pillow (Black)",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0CHVYY8P4",
+      "name": "a therapy journal with guided prompts",
+      "uses": 20,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Therapy Journal: A Guided Notebook with Prompts to use Through Mental Health Counseling Sessions",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0D5HNFKVC",
+      "name": "a natural beeswax candle set",
+      "uses": 20,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "12 Pack Beeswax Taper Candles,8in Dripless Pure Beeswax Candles Non Toxic,8 Hours Long Burning 100% Natural Candle Sticks,Smokeless and Unscented Bees Wax Candle for Home,Prayer,Tall Tapered",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B09VK9S4JB",
+      "name": "a mushroom growing kit",
+      "uses": 19,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "BloomBox Blue Oyster Mushroom Grow Kit – Ready to Fruit Indoor Gardening Gift – Organic Spawn Log for Fresh Fungi in 10 Days – Unique DIY STEM Science Project for Kids &amp; Adults – Vegan Meat Substitute",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0FWQQGTST",
+      "name": "a meditation bell for mindfulness practice",
+      "uses": 19,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Master Flame Solid Wood Meditation Bell with Brass Bowl, Traditional C-Shaped Stand, Magnetic Striker, Healing Tones for Home, Office, Mindfulness, 15cm Height (Variation 1)",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B09XS7JWHH",
+      "name": "Sony WH-1000XM5 noise-canceling headphones",
+      "uses": 17,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Sony WH-1000XM5 Premium Noise Canceling Headphones, Auto NC Optimizer, 30-Hour Battery, Alexa Voice Control, Black",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B073429DV2",
+      "name": "a weighted blanket for grounding",
+      "uses": 17,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "YnM 15lbs Weighted Blanket for Adults, Heavy Bed Throw Blanket with Cooling Glass Beads for All Season Use, Ideal for ~90lbs (48x72 Inches, Twin/Full, Dark Grey)",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B08346DZN9",
+      "name": "an intermittent fasting tracker",
+      "uses": 15,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Intermittent Fasting Tracker: Fasting Timer, Lose Weight Without Diet No Gym, Fasting Plans, Pro Version - App on Amazon Appstore",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0GRTH9B7J",
+      "name": "blue light blocking glasses",
+      "uses": 14,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Sleep ZM Blue Light Blocking &amp; Light Sensitivity Glasses - 8 Lens Types for Comfort, Relaxation, Sleep &amp; Relief - 50+ Styles",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B078SZX3ML",
+      "name": "Lion's Mane mushroom capsules",
+      "uses": 9,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Real Mushrooms Lions Mane Mushroom Cognition (120 Capsules) Lions Mane Mushroom Powder Extract Capsules | Brain Supplement, Brain Vitamins, Focus Supplement",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B074TBYWGS",
+      "name": "a silk sleep eye mask",
+      "uses": 6,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "LULUSILK Mulberry Silk Sleep Eye Mask &amp; Blindfold with Elastic Strap/Headband, Soft Eye Cover Eyeshade for Night Sleeping, Travel, Nap(Pink)",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "0525510311",
+      "name": "Entangled Life by Merlin Sheldrake",
+      "uses": 3,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Entangled Life: How Fungi Make Our Worlds, Change Our Minds &amp; Shape Our Futures",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0CGV7GLFL",
+      "name": "a smart water bottle with hydration tracker",
+      "uses": 2,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "BOOST Smart Water Bottle with Reminder &amp; Tracker, Double Wall Vacuum Insulated Bottles Stainless Steel, 32oz BPA-Free Wide Mouth for School, Gym, Office, Ideal for Mother&#39;s Day",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "0060801719",
+      "name": "The Doors of Perception by Aldous Huxley",
+      "uses": 1,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "The Doors of Perception",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "1451636024",
+      "name": "Waking Up by Sam Harris",
+      "uses": 1,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "Waking Up: A Guide to Spirituality Without Religion",
+      "titleMatch": "scraped"
+    },
+    {
+      "asin": "B0FPML7DJC",
+      "name": "a WHOOP HRV monitor",
+      "uses": 1,
+      "status": "ok",
+      "httpCode": 200,
+      "scrapedTitle": "WHOOP One Bundle - WHOOP 5.0 Health &amp; Fitness Wearable with 12-Month Membership + CoreKnit Wristband + Corded Battery Pack - 24/7 Activity Tracker with Sleep, Recovery &amp; VO2 Max Insights - Ash Grey",
+      "titleMatch": "scraped"
+    }
+  ],
+  "fixes": []
+}

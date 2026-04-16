@@ -20,7 +20,7 @@ const AMAZON_TAG = 'spankyspinola-20';
 // The primary product being reviewed + 2-4 related/complementary products
 // ALL ASINs VERIFIED via HTTP 200 from amazon.com/dp/{ASIN} on 2026-04-16
 const AMAZON_PRODUCTS = [
-  { asin: 'B0C1H1J3K5', name: 'precision milligram scale', category: 'tools' },
+  { asin: 'B0885S1766', name: 'precision milligram scale', category: 'tools' },
   { asin: 'B0CRKX1VV7', name: 'The Psychedelic Integration Journal', category: 'journals' },
   { asin: '1646119266', name: 'a guided meditation journal', category: 'journals' },
   { asin: 'B0D2K8N8NR', name: 'a meditation zafu cushion', category: 'meditation' },
@@ -28,10 +28,10 @@ const AMAZON_PRODUCTS = [
   { asin: 'B078SZX3ML', name: "Lion's Mane mushroom capsules", category: 'supplements' },
   { asin: 'B08346DZN9', name: 'an intermittent fasting tracker', category: 'wellness' },
   { asin: 'B09VK9S4JB', name: 'a mushroom growing kit', category: 'cultivation' },
-  { asin: '0593473396', name: "How to Change Your Mind by Michael Pollan", category: 'books' },
-  { asin: '0399178570', name: "The Psychedelic Explorer's Guide", category: 'books' },
-  { asin: '1623174023', name: 'The Body Keeps the Score', category: 'books' },
-  { asin: '0062515675', name: 'Stealing Fire', category: 'books' },
+  { asin: '0735224153', name: "How to Change Your Mind by Michael Pollan", category: 'books' },
+  { asin: '1594774021', name: "The Psychedelic Explorer's Guide", category: 'books' },
+  { asin: '0143127748', name: 'The Body Keeps the Score', category: 'books' },
+  { asin: '0062429655', name: 'Stealing Fire', category: 'books' },
   { asin: '0451494091', name: 'A Really Good Day by Ayelet Waldman', category: 'books' },
   { asin: '0525510311', name: 'Entangled Life by Merlin Sheldrake', category: 'books' },
   { asin: 'B0GRTH9B7J', name: 'blue light blocking glasses', category: 'wellness' },
@@ -42,7 +42,7 @@ const AMAZON_PRODUCTS = [
   { asin: 'B0FPML7DJC', name: 'a WHOOP HRV monitor', category: 'tracking' },
   { asin: 'B0CHVYY8P4', name: 'a therapy journal with guided prompts', category: 'journals' },
   { asin: 'B0DK86ZBNJ', name: 'a soft therapy blanket', category: 'wellness' },
-  { asin: 'B0BH4JH1YK', name: 'a gentle meditation timer', category: 'meditation' },
+  { asin: 'B0FWQQGTST', name: 'a gentle meditation timer', category: 'meditation' },
   { asin: 'B074TBYWGS', name: 'a silk sleep eye mask', category: 'wellness' },
   { asin: '0060801719', name: 'The Doors of Perception by Aldous Huxley', category: 'books' },
   { asin: '1451636024', name: 'Waking Up by Sam Harris', category: 'books' },

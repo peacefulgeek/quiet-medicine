@@ -45,7 +45,7 @@ const EXTERNAL_AUTHORITY_SITES = [
 // Products should be contextually relevant to the article topic
 // ALL ASINs VERIFIED via HTTP 200 from amazon.com/dp/{ASIN} on 2026-04-16
 const AMAZON_PRODUCTS = [
-  { asin: 'B0C1H1J3K5', name: 'precision milligram scale', keywords: ['microdos', 'dose', 'dosage', 'scale', 'measure', 'protocol', 'psilocybin'] },
+  { asin: 'B0885S1766', name: 'precision milligram scale', keywords: ['microdos', 'dose', 'dosage', 'scale', 'measure', 'protocol', 'psilocybin'] },
   { asin: 'B0CRKX1VV7', name: 'The Psychedelic Integration Journal', keywords: ['integrat', 'journal', 'writing', 'reflect', 'process', 'aftercare', 'insight'] },
   { asin: '1646119266', name: 'a guided meditation journal', keywords: ['meditat', 'mindful', 'contemplat', 'silence', 'awareness', 'breath'] },
   { asin: 'B0D2K8N8NR', name: 'a meditation zafu cushion', keywords: ['meditat', 'sit', 'breath', 'mindful', 'practice', 'ceremony', 'ritual'] },
@@ -53,10 +53,10 @@ const AMAZON_PRODUCTS = [
   { asin: 'B078SZX3ML', name: "Lion's Mane mushroom capsules", keywords: ['mushroom', 'adapto', 'supplement', 'stack', 'stamets', 'nootropic'] },
   { asin: 'B08346DZN9', name: 'an intermittent fasting tracker', keywords: ['fast', 'diet', 'nutrition', 'body', 'preparation', 'cleanse'] },
   { asin: 'B09VK9S4JB', name: 'a mushroom growing kit', keywords: ['grow', 'mushroom', 'cultivat', 'mycel', 'fungi'] },
-  { asin: '0593473396', name: "How to Change Your Mind by Michael Pollan", keywords: ['pollan', 'book', 'research', 'history', 'science', 'literature'] },
-  { asin: '0399178570', name: "The Psychedelic Explorer's Guide", keywords: ['guide', 'preparation', 'set', 'setting', 'sitter', 'facilitat'] },
-  { asin: '1623174023', name: 'The Body Keeps the Score', keywords: ['trauma', 'body', 'somatic', 'ptsd', 'nervous', 'stress', 'healing'] },
-  { asin: '0062515675', name: 'Stealing Fire', keywords: ['flow', 'consciousness', 'peak', 'altered', 'brain', 'neuroscience'] },
+  { asin: '0735224153', name: "How to Change Your Mind by Michael Pollan", keywords: ['pollan', 'book', 'research', 'history', 'science', 'literature'] },
+  { asin: '1594774021', name: "The Psychedelic Explorer's Guide", keywords: ['guide', 'preparation', 'set', 'setting', 'sitter', 'facilitat'] },
+  { asin: '0143127748', name: 'The Body Keeps the Score', keywords: ['trauma', 'body', 'somatic', 'ptsd', 'nervous', 'stress', 'healing'] },
+  { asin: '0062429655', name: 'Stealing Fire', keywords: ['flow', 'consciousness', 'peak', 'altered', 'brain', 'neuroscience'] },
   { asin: '0451494091', name: 'A Really Good Day by Ayelet Waldman', keywords: ['microdos', 'lsd', 'mood', 'depression', 'anxiety', 'daily'] },
   { asin: '0525510311', name: 'Entangled Life by Merlin Sheldrake', keywords: ['fungi', 'mushroom', 'mycel', 'network', 'nature', 'biology'] },
   { asin: 'B0GRTH9B7J', name: 'blue light blocking glasses', keywords: ['sleep', 'light', 'circadian', 'rest', 'recovery', 'night'] },
@@ -67,7 +67,7 @@ const AMAZON_PRODUCTS = [
   { asin: 'B0FPML7DJC', name: 'a WHOOP HRV monitor', keywords: ['heart', 'hrv', 'nervous', 'vagal', 'biometric', 'stress'] },
   { asin: 'B0CHVYY8P4', name: 'a therapy journal with guided prompts', keywords: ['therap', 'clinical', 'session', 'treatment', 'mental health'] },
   { asin: 'B0DK86ZBNJ', name: 'a soft therapy blanket', keywords: ['session', 'comfort', 'clinical', 'therap', 'support'] },
-  { asin: 'B0BH4JH1YK', name: 'a gentle meditation timer', keywords: ['timer', 'meditation', 'practice', 'mindful', 'routine'] },
+  { asin: 'B0FWQQGTST', name: 'a gentle meditation timer', keywords: ['timer', 'meditation', 'practice', 'mindful', 'routine'] },
   { asin: 'B074TBYWGS', name: 'a silk sleep eye mask', keywords: ['sleep', 'eye', 'mask', 'rest', 'dark', 'session'] },
   { asin: '0060801719', name: 'The Doors of Perception by Aldous Huxley', keywords: ['huxley', 'classic', 'mescaline', 'perception', 'history'] },
   { asin: '1451636024', name: 'Waking Up by Sam Harris', keywords: ['harris', 'meditation', 'spiritual', 'consciousness', 'mindful'] },
