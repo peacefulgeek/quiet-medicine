@@ -108,6 +108,12 @@ function css() {
       --radius-sm: 8px;
       --shadow: 0 4px 24px rgba(0,0,0,0.4);
       --shadow-glow: 0 0 40px rgba(124,77,255,0.15);
+      /* Design tokens (addendum 9A) */
+      --body-font-size-desktop: 18px;
+      --body-font-size-mobile: 16px;
+      --line-height-body: 1.75;
+      --max-content-width: 720px;
+      --tap-target-min: 44px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -116,8 +122,8 @@ function css() {
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 17px;
-      line-height: 1.7;
+      font-size: var(--body-font-size-desktop);
+      line-height: var(--line-height-body);
       color: var(--text);
       background: var(--bg);
       -webkit-font-smoothing: antialiased;
@@ -128,6 +134,10 @@ function css() {
     a { color: var(--accent-2); text-decoration: none; transition: color 0.2s, opacity 0.2s; }
     a:hover { color: var(--accent-gold); }
     ::selection { background: rgba(124,77,255,0.4); color: white; }
+    @media (max-width: 768px) { body { font-size: var(--body-font-size-mobile); } }
+    article p, article li { max-width: 72ch; }
+    button, a.button, .cta { min-height: var(--tap-target-min); min-width: var(--tap-target-min); }
+    img { max-width: 100%; height: auto; display: block; }
 
     /* ═══ NAVIGATION ═══ */
     .nav-wrap {
@@ -712,6 +722,11 @@ function featuredCard(a) {
 
 // ─── API ROUTES ───
 app.use(express.json());
+
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 app.post('/api/subscribe', async (req, res) => {
   const { email, source } = req.body;

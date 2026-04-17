@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename);
 const contentDir = path.join(__dirname, '..', 'content', 'articles');
 
 const runNow = process.argv.includes('--run-now');
+const AUTO_GEN = process.env.AUTO_GEN_ENABLED === 'true';
 
 /** Publish any scheduled articles whose publishDate has passed */
 function publishScheduledArticles() {
@@ -75,6 +76,30 @@ function runAsinHealthCheck() {
   });
 }
 
+/** Monthly content refresh — re-audit quality of oldest articles */
+function runMonthlyRefresh() {
+  console.log('[cron] Running monthly content refresh at', new Date().toISOString());
+  const child = spawn('node', [path.join(__dirname, 'refresh-monthly.mjs')], {
+    stdio: 'inherit',
+    env: { ...process.env },
+    timeout: 1200000, // 20 min
+  });
+  child.on('close', (code) => { console.log('[cron] Monthly refresh exited with code ' + code); });
+  child.on('error', (err) => { console.error('[cron] Monthly refresh error:', err); });
+}
+
+/** Quarterly content refresh — deeper regeneration of underperforming articles */
+function runQuarterlyRefresh() {
+  console.log('[cron] Running quarterly content refresh at', new Date().toISOString());
+  const child = spawn('node', [path.join(__dirname, 'refresh-quarterly.mjs')], {
+    stdio: 'inherit',
+    env: { ...process.env },
+    timeout: 1800000, // 30 min
+  });
+  child.on('close', (code) => { console.log('[cron] Quarterly refresh exited with code ' + code); });
+  child.on('error', (err) => { console.error('[cron] Quarterly refresh error:', err); });
+}
+
 /** Run the product spotlight generator on Saturdays */
 function runSpotlightGenerator() {
   console.log('[cron] Running product spotlight generator at', new Date().toISOString());
@@ -103,31 +128,46 @@ if (runNow) {
     publishScheduledArticles();
   }, { timezone: 'UTC' });
 
-  // ── Phase 2: Auto-generate new articles ──
-  // Mon-Fri at 12:00 UTC — generates 1 article/day = 5/week
-  // Only runs when AUTO_GEN_ENABLED=true in generate-articles.mjs
-  cron.schedule('0 12 * * 1-5', () => {
-    runGenerator();
-  }, { timezone: 'UTC' });
+  if (!AUTO_GEN) {
+    console.log('[cron] AUTO_GEN_ENABLED != "true" — generation crons disabled');
+  } else {
+    // ── Cron 1: Article generation — Mon-Fri 06:00 UTC (5/week) ──
+    cron.schedule('0 6 * * 1-5', () => {
+      runGenerator();
+    }, { timezone: 'UTC' });
 
-  // ── Phase 3: Product spotlight every Saturday ──
-  // Saturdays at 14:00 UTC — generates 1 product spotlight article
-  cron.schedule('0 14 * * 6', () => {
-    runSpotlightGenerator();
-  }, { timezone: 'UTC' });
+    // ── Cron 2: Product spotlight — Saturday 08:00 UTC (1/week) ──
+    cron.schedule('0 8 * * 6', () => {
+      runSpotlightGenerator();
+    }, { timezone: 'UTC' });
 
-  // ── Phase 4: Amazon ASIN health check every Sunday ──
-  // Sundays at 06:00 UTC — validates all Amazon links, auto-fixes dead ones
-  // Lightweight: HTTP GET only, no API keys, ~2s per ASIN
-  cron.schedule('0 6 * * 0', () => {
+    // ── Cron 3: Monthly content refresh — 1st of month 03:00 UTC ──
+    cron.schedule('0 3 1 * *', () => {
+      runMonthlyRefresh();
+    }, { timezone: 'UTC' });
+
+    // ── Cron 4: Quarterly content refresh — Jan/Apr/Jul/Oct 1st 04:00 UTC ──
+    cron.schedule('0 4 1 1,4,7,10 *', () => {
+      runQuarterlyRefresh();
+    }, { timezone: 'UTC' });
+
+    console.log('[cron] Generation crons registered (AUTO_GEN_ENABLED=true)');
+  }
+
+  // ── Cron 5: ASIN health check — Sunday 05:00 UTC (always runs) ──
+  cron.schedule('0 5 * * 0', () => {
     runAsinHealthCheck();
   }, { timezone: 'UTC' });
 
   console.log('[cron] Scheduled:');
-  console.log('  Phase 1: Hourly publish check (5/day for 54 days)');
-  console.log('  Phase 2: Mon-Fri 12:00 UTC auto-gen (5/week, when enabled)');
-  console.log('  Phase 3: Saturday 14:00 UTC product spotlight');
-  console.log('  Phase 4: Sunday 06:00 UTC ASIN health check (auto-fix + push)');
+  console.log('  Phase 1: Hourly publish check');
+  if (AUTO_GEN) {
+    console.log('  Cron 1: Mon-Fri 06:00 UTC article gen (5/week)');
+    console.log('  Cron 2: Saturday 08:00 UTC product spotlight');
+    console.log('  Cron 3: 1st of month 03:00 UTC monthly refresh');
+    console.log('  Cron 4: Jan/Apr/Jul/Oct 1st 04:00 UTC quarterly refresh');
+  }
+  console.log('  Cron 5: Sunday 05:00 UTC ASIN health check');
 
   // Run publish check immediately on startup
   publishScheduledArticles();

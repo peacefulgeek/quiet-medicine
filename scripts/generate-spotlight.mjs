@@ -63,6 +63,22 @@ const AMAZON_PRODUCTS = [
 // ─── AMAZON LINK FORMAT ───
 // <a href="https://www.amazon.com/dp/{ASIN}?tag=spankyspinola-20" rel="nofollow sponsored" target="_blank">{product name} (paid link)</a>
 
+// ─── HARD RULES (appended to every Anthropic generation prompt) ───
+const HARD_RULES = `
+HARD RULES for this article:
+- 1,600 to 2,000 words (strict)
+- Zero em-dashes. Use commas, periods, colons, or parentheses instead.
+- Never use these words: delve, tapestry, paradigm, synergy, leverage, unlock, empower, utilize, pivotal, embark, underscore, paramount, seamlessly, robust, beacon, foster, elevate, curate, curated, bespoke, resonate, harness, intricate, plethora, myriad, comprehensive, transformative, groundbreaking, innovative, cutting-edge, revolutionary, state-of-the-art, ever-evolving, profound, holistic, nuanced, multifaceted, stakeholders, ecosystem, furthermore, moreover, additionally, consequently, subsequently, thereby, streamline, optimize, facilitate, amplify, catalyze, landscape, realm, sphere, domain, arguably, notably, crucially, importantly, essentially, fundamentally, inherently, intrinsically, substantively, propel, spearhead, orchestrate, navigate, traverse, thusly, wherein, whereby, remarkable, extraordinary, exceptional, unprecedented, unparalleled, game-changing, next-level, world-class.
+- Never use these phrases: "it's important to note," "in conclusion," "in summary," "in the realm of," "dive deep into," "dive into," "delve into," "at the end of the day," "in today's fast-paced world," "plays a crucial role," "a testament to," "when it comes to," "cannot be overstated," "it goes without saying," "needless to say," "last but not least," "first and foremost," "the power of," "the beauty of," "the art of," "the journey of," "serves as a," "stands as a," "acts as a," "has emerged as," "continues to evolve," "speaks volumes."
+- Contractions throughout. You're. Don't. It's. That's. I've. We'll.
+- Vary sentence length aggressively. Some fragments. Some long ones that stretch across a full breath. Some just three words.
+- Direct address ("you") throughout OR first-person ("I / my") throughout. Pick one.
+- Include at least 2 conversational openers somewhere in the piece: "Here's the thing," "Honestly," "Look," "Truth is," "But here's what's interesting," "Think about it," "That said."
+- Concrete specifics over abstractions. A name. A number. A moment.
+- 3 to 5 Amazon product links embedded naturally in prose, each followed by "(paid link)" in plain text. Use only ASINs from the provided catalog.
+- No em-dashes. No em-dashes. No em-dashes.
+`;
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';

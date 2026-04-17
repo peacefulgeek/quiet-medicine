@@ -2,14 +2,31 @@ services:
   - type: web
     name: quiet-medicine
     runtime: node
+    plan: starter
     region: oregon
-    plan: free
-    buildCommand: pnpm install && pnpm build
-    startCommand: node scripts/start-with-cron.mjs
+    branch: main
+    autoDeploy: true
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: "3000"
-    healthCheckPath: /
-    autoDeploy: true
+        value: "10000"
+      - key: AMAZON_TAG
+        value: spankyspinola-20
+      - key: AUTO_GEN_ENABLED
+        value: "true"
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: FAL_KEY
+        sync: false
+      - key: BUNNY_STORAGE_ZONE
+        sync: false
+      - key: BUNNY_API_KEY
+        sync: false
+      - key: BUNNY_PULL_ZONE_URL
+        sync: false
+      - key: GH_PAT
+        sync: false
