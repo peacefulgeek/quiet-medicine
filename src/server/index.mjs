@@ -587,7 +587,8 @@ function navHTML() {
   <a href="/" class="logo">The Quiet Medicine</a>
   <div class="nav-links">
     <a href="/articles">Articles</a>
-    <a href="/start-here">Start Here</a>
+    <a href="/quizzes">Quizzes</a>
+    <a href="/assessments">Assessments</a>
     <a href="/about">About</a>
     <a href="/start-here" class="nav-cta">Begin</a>
   </div>
@@ -609,7 +610,8 @@ function footerHTML() {
       <h4>Resources</h4>
       <a href="/start-here">Start Here</a>
       <a href="/legal-check">Legal Check</a>
-      <a href="/quiz/microdosing-readiness">Quizzes</a>
+      <a href="/quizzes">Quizzes</a>
+      <a href="/assessments">Assessments</a>
       <a href="/feed.xml">RSS Feed</a>
     </div>
     <div class="footer-col">
@@ -1035,7 +1037,7 @@ app.get('/', (req, res) => {
   res.send(`${htmlHead('The Quiet Medicine — Microdosing, Psychedelics & Conscious Healing', 'Explore the intersection of psychedelic wellness, microdosing, and conscious healing through evidence-based research and contemplative wisdom.', 'https://thequietmedicine.com/', `${BUNNY_CDN_BASE}/og/homepage.webp`)}
 <body>
 ${navHTML()}
-<div class="hero">
+<div class="hero" style="background:linear-gradient(180deg, rgba(13,11,26,0.3) 0%, rgba(13,11,26,0.7) 50%, rgba(13,11,26,0.95) 100%), url('https://quiet-medicine.b-cdn.net/images/homepage-hero-mushroom.webp') center/cover no-repeat;min-height:520px;display:flex;align-items:center;">
   <div class="hero-content">
     <h1>The Quiet Medicine</h1>
     <p class="tagline">${SITE.tagline}</p>
@@ -1046,6 +1048,7 @@ ${navHTML()}
 <div class="wide" style="padding-top:60px;">
   ${featured ? `<div class="section-head"><h2>Featured</h2></div>${featuredCard(featured)}` : ''}
 
+  <div style="margin:40px auto;max-width:900px;"><img src="https://quiet-medicine.b-cdn.net/images/mushroom-psychedelic-pattern.webp" alt="Psychedelic mushroom art" style="width:100%;height:200px;object-fit:cover;border-radius:16px;opacity:0.7;" loading="lazy"></div>
   <div class="section-head"><h2>Latest</h2><a href="/articles">View All &rarr;</a></div>
   <div class="card-grid">
     ${latest.map(a => articleCard(a)).join('')}
@@ -1254,6 +1257,93 @@ ${navHTML()}
   <p style="margin:32px 0;line-height:1.85;font-size:18px;color:var(--text);">Our editorial approach honors both the rigor of clinical research and the depth of contemplative traditions. Every article is grounded in peer-reviewed science while acknowledging that some of the most important dimensions of psychedelic experience resist quantification. We write for people who want to understand what the research actually says — and what it doesn't.</p>
   <p style="margin:32px 0;line-height:1.85;font-size:18px;color:var(--text);">With ` + articles.length + ` published articles across five categories, we cover the full spectrum of psychedelic wellness: the neuroscience, the protocols, the ceremonial traditions, the clinical frameworks, and the essential work of integration that makes any of it meaningful.</p>
 
+  <img src="https://quiet-medicine.b-cdn.net/images/about-team-mushroom.webp" alt="Medicinal mushrooms and botanical research" style="width:100%;height:280px;object-fit:cover;border-radius:16px;margin:40px 0 32px;" loading="lazy">
+  <h2 style="font-size:clamp(24px,3.5vw,32px);margin:24px 0 12px;font-family:'Newsreader',serif;">Our Editorial Team</h2>
+  <p style="margin:0 0 32px;line-height:1.85;font-size:17px;color:var(--text-dim);">Every piece we publish passes through the hands of researchers, clinicians, and practitioners who live this work. Our team brings decades of combined experience across mycology, neuroscience, clinical psychology, indigenous plant medicine traditions, and harm reduction advocacy.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-bottom:48px;">
+
+    <div class="advisor-card" style="margin:0;">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+        <div class="author-avatar" style="width:56px;height:56px;font-size:20px;background:linear-gradient(135deg,#7C4DFF,#B388FF);">DR</div>
+        <div>
+          <h3 style="margin:0;font-size:18px;">Dr. Reina Matsuda</h3>
+          <div style="font-size:12px;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Chief Science Editor</div>
+        </div>
+      </div>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-dim);margin:0;">Neuropharmacologist with 14 years of psilocybin research at Johns Hopkins and Imperial College London. Reina translates dense clinical data into writing that respects both the science and the reader. She holds a PhD in molecular neuroscience from Columbia and has co-authored 23 peer-reviewed papers on serotonergic psychedelics.</p>
+    </div>
+
+    <div class="advisor-card" style="margin:0;">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+        <div class="author-avatar" style="width:56px;height:56px;font-size:20px;background:linear-gradient(135deg,#00BFA5,#64FFDA);">MO</div>
+        <div>
+          <h3 style="margin:0;font-size:18px;">Marcus Okafor-Reeves</h3>
+          <div style="font-size:12px;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Mycology & Cultivation Editor</div>
+        </div>
+      </div>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-dim);margin:0;">Certified mycologist and permaculture designer who has spent 11 years studying fungal networks across three continents. Marcus brings deep field knowledge of both gourmet and functional mushroom species, cultivation techniques, and the emerging science of mycelial intelligence. He trained under Paul Stamets and runs a small-batch mushroom farm in the Pacific Northwest.</p>
+    </div>
+
+    <div class="advisor-card" style="margin:0;">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+        <div class="author-avatar" style="width:56px;height:56px;font-size:20px;background:linear-gradient(135deg,#FF6D00,#FFAB40);">LS</div>
+        <div>
+          <h3 style="margin:0;font-size:18px;">Dr. Luna Solano</h3>
+          <div style="font-size:12px;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Clinical Psychology Editor</div>
+        </div>
+      </div>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-dim);margin:0;">Licensed clinical psychologist specializing in psychedelic-assisted therapy with over 200 guided sessions. Luna brings a trauma-informed lens to every assessment and quiz we create, making sure our tools are both clinically grounded and genuinely helpful. She completed her PsyD at the California Institute of Integral Studies and serves on the MAPS therapist training faculty.</p>
+    </div>
+
+    <div class="advisor-card" style="margin:0;">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+        <div class="author-avatar" style="width:56px;height:56px;font-size:20px;background:linear-gradient(135deg,#E040FB,#EA80FC);">JT</div>
+        <div>
+          <h3 style="margin:0;font-size:18px;">Jade Thornton</h3>
+          <div style="font-size:12px;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Harm Reduction & Safety Editor</div>
+        </div>
+      </div>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-dim);margin:0;">Former DanceSafe chapter director and Zendo Project volunteer with 9 years in psychedelic harm reduction. Jade reviews every piece of content for safety accuracy and ensures our disclaimers, contraindication warnings, and dosing guidance meet the highest standards. She holds a Masters in Public Health from Boston University with a focus on substance use policy.</p>
+    </div>
+
+    <div class="advisor-card" style="margin:0;">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+        <div class="author-avatar" style="width:56px;height:56px;font-size:20px;background:linear-gradient(135deg,#00E5FF,#84FFFF);">AW</div>
+        <div>
+          <h3 style="margin:0;font-size:18px;">Dr. Alistair Whitfield</h3>
+          <div style="font-size:12px;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Ethnobotany & Traditions Editor</div>
+        </div>
+      </div>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-dim);margin:0;">Ethnobotanist and anthropologist who has documented indigenous mushroom traditions across Oaxaca, the Amazon Basin, and Southeast Asia for 18 years. Alistair ensures our coverage of traditional practices is respectful, accurate, and free from cultural appropriation. He holds a PhD in ethnobotany from the University of Kent and has published two books on sacred fungi in Mesoamerican cultures.</p>
+    </div>
+
+    <div class="advisor-card" style="margin:0;">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+        <div class="author-avatar" style="width:56px;height:56px;font-size:20px;background:linear-gradient(135deg,#76FF03,#B2FF59);">SP</div>
+        <div>
+          <h3 style="margin:0;font-size:18px;">Suki Park</h3>
+          <div style="font-size:12px;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Nutrition & Functional Mushrooms Editor</div>
+        </div>
+      </div>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-dim);margin:0;">Registered dietitian and functional medicine practitioner who specializes in adaptogenic and medicinal mushrooms. Suki reviews all content related to lion's mane, reishi, chaga, cordyceps, turkey tail, and mushroom supplement stacking. She holds an MS in Clinical Nutrition from NYU and consults for three major functional mushroom brands on formulation and bioavailability.</p>
+    </div>
+
+    <div class="advisor-card" style="margin:0;">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+        <div class="author-avatar" style="width:56px;height:56px;font-size:20px;background:linear-gradient(135deg,#FFD600,#FFFF00);">RK</div>
+        <div>
+          <h3 style="margin:0;font-size:18px;">Rohan Kapoor</h3>
+          <div style="font-size:12px;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Integration & Mindfulness Editor</div>
+        </div>
+      </div>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-dim);margin:0;">Meditation teacher and psychedelic integration specialist with 12 years of practice in Vipassana and Zen traditions. Rohan bridges the contemplative and the clinical, ensuring our integration content honors both the inner journey and the evidence base. He trained at Spirit Rock Meditation Center and holds a certification in psychedelic-assisted therapy from CIIS.</p>
+    </div>
+
+  </div>
+
+  <h2 style="font-size:clamp(24px,3.5vw,32px);margin:16px 0 24px;font-family:'Newsreader',serif;">Our Advisor</h2>
+
   <div class="advisor-card">
     <div style="display:flex;gap:20px;align-items:center;margin-bottom:20px;">
       <div class="author-avatar" style="width:64px;height:64px;font-size:24px;">K</div>
@@ -1287,6 +1377,7 @@ app.get('/start-here', (req, res) => {
 ${navHTML()}
 <div class="container" style="padding-top:60px;">
   <h1>Start Here</h1>
+  <img src="https://quiet-medicine.b-cdn.net/images/start-here-mushroom.webp" alt="A single mushroom growing from rich soil" style="width:100%;max-width:700px;height:300px;object-fit:cover;border-radius:16px;margin:24px auto;display:block;" loading="lazy">
   <p style="margin:24px 0;line-height:1.85;font-size:18px;color:var(--text);">Welcome to The Quiet Medicine. Whether you're exploring microdosing for the first time, researching legal psychedelic therapy, or integrating a transformative experience, these foundational articles will orient you.</p>
   <p style="margin:24px 0;line-height:1.85;font-size:18px;color:var(--text);">The medicine is ancient. The science is catching up. And the most important work — the integration, the embodiment, the willingness to let what you've seen actually change how you live — that's what we write about here.</p>
   ` + pillarHtml + `
@@ -1401,117 +1492,990 @@ app.get('/tools', (req, res) => {
 
 // ─── QUIZZES INDEX ───
 var quizzes = [
-  { slug: 'microdosing-readiness', title: 'Microdosing Readiness Quiz', desc: 'Assess whether your current life circumstances, mental health, and intentions align with a microdosing practice.', questions: [
-    { q: 'How would you describe your current mental health baseline?', opts: ['Struggling significantly', 'Some challenges but managing', 'Generally stable', 'Strong and resilient'] },
-    { q: 'What is your primary intention for exploring microdosing?', opts: ['Escape from pain', 'Curiosity without direction', 'Specific personal growth goal', 'Deepening an existing practice'] },
-    { q: 'How comfortable are you with uncertainty and non-linear experiences?', opts: ['Very uncomfortable', 'Somewhat anxious about it', 'Open but cautious', 'Comfortable with ambiguity'] },
-    { q: 'Do you have a meditation or contemplative practice?', opts: ['No practice at all', 'Occasional and inconsistent', 'Regular but relatively new', 'Established daily practice'] },
-    { q: 'How would you rate your current support system?', opts: ['Minimal support', 'A few trusted people', 'Strong community', 'Professional support in place'] },
-    { q: 'Are you currently taking psychiatric medications?', opts: ['Yes, multiple', 'Yes, one medication', 'Recently discontinued', 'No psychiatric medications'] },
-  ], results: [
-    { title: 'Not Yet Ready', text: 'Your current circumstances suggest that now may not be the right time to begin a microdosing practice. Focus first on stabilizing your mental health foundation, building a support network, and developing a contemplative practice. The medicine will still be there when the timing is right.' },
-    { title: 'Approaching Readiness', text: 'You are moving toward readiness but would benefit from more preparation. Consider deepening your meditation practice, clarifying your intentions, and consulting with a healthcare provider about your specific situation before proceeding.' },
-    { title: 'Well Prepared', text: 'Your preparation, intentions, and support system suggest you are in a good position to explore microdosing thoughtfully. Remember that preparation is ongoing, not a checkbox. Continue building your practice alongside any protocol.' },
-    { title: 'Deeply Ready', text: 'You bring significant preparation, clarity of intention, and support to this exploration. Your challenge is not whether to begin but how to approach it with the reverence and rigor it deserves. Trust your preparation and stay curious.' },
-  ]},
-  { slug: 'substance-match', title: 'Which Substance Might Suit You?', desc: 'Based on your goals, temperament, and circumstances, discover which psychedelic modality aligns with your needs.', questions: [
-    { q: 'What draws you most to psychedelic exploration?', opts: ['Relief from depression or anxiety', 'Creative enhancement and flow', 'Spiritual depth and meaning', 'Processing trauma or grief'] },
-    { q: 'How do you prefer to explore consciousness?', opts: ['Gentle and gradual', 'Structured clinical setting', 'Deep ceremonial immersion', 'Self-directed with precision'] },
-    { q: 'What is your relationship with nature?', opts: ['Mostly indoors', 'Appreciate it occasionally', 'Regular time outdoors', 'Deep ecological connection'] },
-    { q: 'How long of a commitment feels right?', opts: ['A few hours maximum', 'A full day experience', 'Multiple days of ceremony', 'Ongoing daily practice'] },
-    { q: 'What matters most in your approach?', opts: ['Clinical safety and oversight', 'Ancient tradition and lineage', 'Scientific evidence base', 'Personal autonomy and control'] },
-  ], results: [
-    { title: 'Ketamine-Assisted Therapy', text: 'Your preferences point toward ketamine-assisted therapy. It offers clinical safety, shorter duration, and legal accessibility. The dissociative experience can provide profound perspective shifts while remaining in a controlled medical environment.' },
-    { title: 'Psilocybin Microdosing', text: 'A psilocybin microdosing protocol aligns well with your goals. The sub-perceptual approach allows integration into daily life while supporting creativity, emotional processing, and neuroplasticity over time.' },
-    { title: 'Ceremonial Ayahuasca', text: 'Your orientation toward depth, tradition, and transformative experience suggests ceremonial ayahuasca. This path requires significant preparation and the right ceremonial container, but offers unparalleled depth of insight.' },
-    { title: 'MDMA-Assisted Therapy', text: 'Your focus on emotional processing and trauma work aligns with MDMA-assisted therapy. The empathogenic qualities of MDMA create a unique window for processing difficult experiences with self-compassion and clarity.' },
-  ]},
-  { slug: 'integration-style', title: 'Your Integration Style', desc: 'Discover how you naturally process and integrate transformative experiences into daily life.', questions: [
-    { q: 'After a powerful experience, what do you do first?', opts: ['Talk to someone immediately', 'Write or journal about it', 'Sit in silence and feel', 'Move your body'] },
-    { q: 'How do you make sense of things that defy logic?', opts: ['Research and read about it', 'Create art or music', 'Meditate and sit with it', 'Discuss with others'] },
-    { q: 'What helps you feel grounded?', opts: ['Physical exercise', 'Time in nature', 'Structured routine', 'Creative expression'] },
-    { q: 'When insights arise, how do you capture them?', opts: ['Voice memos and notes', 'Drawing or visual art', 'Body-based practices', 'Conversation with a guide'] },
-    { q: 'What does integration mean to you?', opts: ['Understanding what happened', 'Changing daily habits', 'Deepening spiritual practice', 'Healing relationships'] },
-  ], results: [
-    { title: 'The Verbal Processor', text: 'You integrate through language and dialogue. Working with an integration therapist, joining a psychedelic integration circle, or maintaining a detailed journal will serve you well. Your insights crystallize through articulation.' },
-    { title: 'The Somatic Integrator', text: 'Your body is your primary integration tool. Yoga, breathwork, dance, and somatic experiencing will help you process what the mind cannot yet articulate. Trust the wisdom of your nervous system.' },
-    { title: 'The Contemplative', text: 'Silence and stillness are your integration allies. A deepened meditation practice, time in nature, and periods of deliberate solitude will allow your experiences to unfold at their own pace.' },
-    { title: 'The Creative Channel', text: 'You integrate through creation. Art, music, writing, and movement allow you to express what cannot be spoken. Your integration practice is inherently creative and non-linear.' },
-  ]},
-  { slug: 'set-and-setting', title: 'Set & Setting Assessment', desc: 'Evaluate whether your current mindset and environment are conducive to a meaningful psychedelic experience.', questions: [
-    { q: 'How would you describe your emotional state this week?', opts: ['Turbulent and unstable', 'Somewhat anxious', 'Calm and centered', 'Deeply peaceful'] },
-    { q: 'Is your physical space clean, safe, and comfortable?', opts: ['Chaotic environment', 'Somewhat cluttered', 'Clean and organized', 'Intentionally prepared'] },
-    { q: 'Do you have a trusted person available if needed?', opts: ['No one available', 'Someone I could call', 'A friend who understands', 'An experienced sitter confirmed'] },
-    { q: 'Have you set a clear intention?', opts: ['No intention set', 'Vague sense of purpose', 'Written intention', 'Intention refined through meditation'] },
-    { q: 'How is your physical health right now?', opts: ['Unwell or depleted', 'Minor issues', 'Generally healthy', 'Well-rested and nourished'] },
-    { q: 'Are there unresolved conflicts in your life right now?', opts: ['Major ongoing conflicts', 'Some tension present', 'Minor issues only', 'Relationships feel clear'] },
-  ], results: [
-    { title: 'Wait and Prepare', text: 'Your current set and setting suggest waiting. There is no rush. Use this time to resolve what can be resolved, prepare your space, secure support, and cultivate the inner stability that will serve as your foundation.' },
-    { title: 'Almost There', text: 'You are close but a few elements need attention. Focus on the specific areas that scored lower — whether that is your physical space, emotional state, or support system. Small adjustments can make a significant difference.' },
-    { title: 'Good Foundation', text: 'Your set and setting are solid. You have done the preparation work and your circumstances support a meaningful experience. Stay present with your intention and trust the container you have created.' },
-    { title: 'Optimal Conditions', text: 'Your preparation is thorough and your circumstances are aligned. The care you have taken with set and setting reflects the respect this work deserves. Proceed with confidence and surrender.' },
-  ]},
-  { slug: 'psychedelic-knowledge', title: 'Psychedelic Literacy Quiz', desc: 'Test your understanding of psychedelic science, history, and harm reduction principles.', questions: [
-    { q: 'What does "set and setting" refer to?', opts: ['Drug dosage and timing', 'Mindset and environment', 'Legal status and location', 'Music and lighting'] },
-    { q: 'Which researcher pioneered modern psilocybin research at Johns Hopkins?', opts: ['Timothy Leary', 'Roland Griffiths', 'Alexander Shulgin', 'Stanislav Grof'] },
-    { q: 'What is the default mode network?', opts: ['A social media platform', 'A brain network active during self-referential thought', 'A type of neural pathway', 'A meditation technique'] },
-    { q: 'What does "integration" mean in psychedelic therapy?', opts: ['Mixing substances together', 'Processing and applying insights from experiences', 'Combining therapy modalities', 'Returning to normal consciousness'] },
-    { q: 'Which substance is currently FDA-approved for treatment-resistant depression?', opts: ['Psilocybin', 'MDMA', 'Esketamine (Spravato)', 'LSD'] },
-    { q: 'What is a common microdose of psilocybin?', opts: ['5 grams', '0.1 to 0.3 grams', '1 to 2 grams', '3.5 grams'] },
-  ], results: [
-    { title: 'Beginner Explorer', text: 'You are at the beginning of your psychedelic education, and that is a perfectly valid place to be. Start with foundational reading — Michael Pollan\'s "How to Change Your Mind" is an excellent entry point. Knowledge is the first form of harm reduction.' },
-    { title: 'Developing Understanding', text: 'You have some foundational knowledge but there are gaps worth filling. Dive deeper into the neuroscience and harm reduction literature. Understanding the mechanisms helps you approach these experiences with appropriate respect.' },
-    { title: 'Well Informed', text: 'Your knowledge base is solid. You understand the key concepts, researchers, and principles that inform responsible psychedelic use. Continue staying current with emerging research and clinical developments.' },
-    { title: 'Deep Literacy', text: 'You demonstrate sophisticated understanding of psychedelic science and practice. Your knowledge positions you to be a resource for others in your community. Consider how you might share what you know responsibly.' },
-  ]},
-  { slug: 'harm-reduction', title: 'Harm Reduction Awareness', desc: 'Evaluate your understanding of safety practices and risk mitigation in psychedelic use.', questions: [
-    { q: 'What should you do if someone is having a difficult psychedelic experience?', opts: ['Give them more substances', 'Leave them alone', 'Stay calm, reassure them, change the setting', 'Call 911 immediately'] },
-    { q: 'Which combination is considered most dangerous?', opts: ['Psilocybin and meditation', 'MDMA and SSRIs', 'Cannabis and breathwork', 'Microdosing and journaling'] },
-    { q: 'How long should you wait between macro-dose experiences?', opts: ['No waiting needed', 'At least 24 hours', 'At least 2-4 weeks minimum', 'Exactly 7 days'] },
-    { q: 'What is the purpose of testing substances?', opts: ['To increase potency', 'To verify identity and detect adulterants', 'To measure exact dosage', 'Testing is unnecessary'] },
-    { q: 'When should you NOT use psychedelics?', opts: ['During a full moon', 'If you have a family history of psychosis', 'If you are over 40', 'If you have not fasted'] },
-  ], results: [
-    { title: 'Safety First', text: 'Your harm reduction knowledge needs strengthening before proceeding with any psychedelic use. This is not a judgment — it is an invitation to learn the practices that keep people safe. Start with resources from DanceSafe and the Zendo Project.' },
-    { title: 'Building Awareness', text: 'You have some safety awareness but important gaps remain. Focus on drug interactions, contraindications, and crisis support techniques. These are not abstract concepts — they are practical skills that matter.' },
-    { title: 'Safety Conscious', text: 'You demonstrate good harm reduction awareness. You understand the key risks and how to mitigate them. Continue refining your knowledge, especially around drug interactions and medical contraindications.' },
-    { title: 'Harm Reduction Advocate', text: 'Your understanding of harm reduction is thorough and practical. You are well-positioned to not only keep yourself safe but to support others. Consider training as a peer support volunteer or trip sitter.' },
-  ]},
-  { slug: 'meditation-depth', title: 'Meditation Practice Depth', desc: 'Assess the depth and consistency of your contemplative practice as it relates to psychedelic exploration.', questions: [
-    { q: 'How often do you meditate?', opts: ['Never or rarely', 'A few times per month', 'Several times per week', 'Daily practice'] },
-    { q: 'What is your typical session length?', opts: ['Under 5 minutes', '5-15 minutes', '15-30 minutes', '30+ minutes'] },
-    { q: 'Can you maintain focused attention for extended periods?', opts: ['Very difficult', 'Challenging but improving', 'Reasonably stable', 'Strong concentration ability'] },
-    { q: 'Have you experienced states of deep stillness or absorption?', opts: ['Never', 'Brief glimpses', 'Occasionally', 'Regularly'] },
-    { q: 'How do you relate to difficult emotions during meditation?', opts: ['Avoid or suppress them', 'Get caught up in them', 'Observe with some distance', 'Welcome them with equanimity'] },
-  ], results: [
-    { title: 'The Seed', text: 'Your meditation practice is just beginning, and that is beautiful. Even five minutes of daily sitting will transform your relationship with your own mind over time. Start small, be consistent, and let the practice teach you.' },
-    { title: 'The Sprout', text: 'Your practice is developing roots. The consistency you are building matters more than the depth of any single session. Consider working with a teacher or structured program to deepen your foundation.' },
-    { title: 'The Flowering', text: 'You have a meaningful practice that provides real stability and insight. This foundation will serve you well in psychedelic exploration, where the skills of observation and equanimity become profoundly relevant.' },
-    { title: 'The Fruit', text: 'Your contemplative practice is mature and deep. The qualities you have cultivated — concentration, equanimity, and open awareness — are precisely what allow psychedelic experiences to be most transformative.' },
-  ]},
-  { slug: 'psychedelic-personality', title: 'Your Psychedelic Personality', desc: 'Discover your natural orientation toward psychedelic experience based on your temperament and values.', questions: [
-    { q: 'What aspect of consciousness interests you most?', opts: ['How the brain creates experience', 'The nature of self and identity', 'Connection to something larger', 'Healing emotional wounds'] },
-    { q: 'How do you approach the unknown?', opts: ['With careful analysis', 'With creative curiosity', 'With spiritual reverence', 'With therapeutic intention'] },
-    { q: 'What would a breakthrough experience look like for you?', opts: ['Understanding a scientific mechanism', 'Dissolving creative blocks', 'Experiencing unity consciousness', 'Releasing stored trauma'] },
-    { q: 'Who would you most want to guide your experience?', opts: ['A neuroscientist', 'An artist or musician', 'A spiritual teacher', 'A trained therapist'] },
-    { q: 'What do you want to bring back from the experience?', opts: ['Knowledge and understanding', 'Inspiration and vision', 'Peace and connection', 'Healing and wholeness'] },
-  ], results: [
-    { title: 'The Scientist', text: 'You approach psychedelics through the lens of understanding. You want to know how and why these compounds work. Your path is through research, measurement, and careful observation. The mystery does not diminish with understanding — it deepens.' },
-    { title: 'The Artist', text: 'You approach psychedelics as a creative catalyst. You are drawn to the aesthetic dimensions of altered states — the visual, the musical, the poetic. Your integration is inherently creative, and your experiences want to be expressed.' },
-    { title: 'The Mystic', text: 'You approach psychedelics as a doorway to the sacred. You are drawn to the transpersonal dimensions of experience — unity, interconnection, and the dissolution of the separate self. Your path is devotional and contemplative.' },
-    { title: 'The Healer', text: 'You approach psychedelics as medicine for the soul. You are drawn to their therapeutic potential — the ability to process trauma, release patterns, and restore wholeness. Your path is through the body and the heart.' },
-  ]},
+  {
+    "slug": "which-mushroom-is-right-for-you",
+    "title": "Which Mushroom Is Right for You?",
+    "desc": "Based on your health goals, lifestyle, and experience level, discover which functional or psychedelic mushroom species aligns with your needs.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-hero-quizzes.webp",
+    "questions": [
+      {
+        "q": "What is your primary wellness goal right now?",
+        "opts": [
+          "Sharper focus and mental clarity",
+          "Better sleep and stress relief",
+          "Immune system support",
+          "Deep emotional or spiritual work"
+        ]
+      },
+      {
+        "q": "How would you describe your experience with mushrooms?",
+        "opts": [
+          "Complete beginner, never tried any",
+          "I take basic supplements sometimes",
+          "I cook with gourmet mushrooms regularly",
+          "I have experience with psychedelic mushrooms"
+        ]
+      },
+      {
+        "q": "What format do you prefer for supplements?",
+        "opts": [
+          "Capsules I can take quickly",
+          "Powder I can add to coffee or smoothies",
+          "Tinctures and liquid extracts",
+          "Whole mushrooms I can cook with"
+        ]
+      },
+      {
+        "q": "How do you feel about earthy, mushroom-y flavors?",
+        "opts": [
+          "Not a fan at all",
+          "I can tolerate them",
+          "I actually enjoy them",
+          "I love strong umami flavors"
+        ]
+      },
+      {
+        "q": "What time of day do you want to take your mushroom supplement?",
+        "opts": [
+          "Morning for energy and focus",
+          "Afternoon for sustained performance",
+          "Evening for wind-down and recovery",
+          "I want something I can take any time"
+        ]
+      },
+      {
+        "q": "How important is scientific research backing to you?",
+        "opts": [
+          "Very important, I want clinical evidence",
+          "Somewhat important",
+          "I trust traditional use as much as studies",
+          "I go by personal experience above all"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Lion's Mane: The Brain Mushroom",
+        "text": "Your focus on mental clarity and cognitive performance points straight to Lion's Mane (Hericium erinaceus). This remarkable fungus contains compounds called hericenones and erinacines that stimulate nerve growth factor (NGF) production in the brain. Research from Tohoku University showed significant cognitive improvement in adults who took Lion's Mane daily for 16 weeks. Start with 500mg twice daily and give it at least 4 weeks to notice effects.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Lion's Mane Capsules"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          }
+        ]
+      },
+      {
+        "title": "Reishi: The Calming Adaptogen",
+        "text": "Your need for stress relief and better sleep makes Reishi (Ganoderma lucidum) your ideal match. Known as the \"mushroom of immortality\" in traditional Chinese medicine, Reishi contains triterpenes and beta-glucans that modulate the immune system and calm the nervous system. A 2012 study in the Journal of Ethnopharmacology found that Reishi extract significantly improved sleep quality and reduced fatigue. Take it in the evening, about an hour before bed, starting with 1-2 grams daily.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "B074TBYWGS",
+            "name": "Silk Sleep Eye Mask"
+          },
+          {
+            "asin": "1646119266",
+            "name": "Guided Meditation Journal"
+          }
+        ]
+      },
+      {
+        "title": "Turkey Tail: The Immune Warrior",
+        "text": "Your focus on immune support leads to Turkey Tail (Trametes versicolor), one of the most researched medicinal mushrooms on the planet. Turkey Tail contains polysaccharide-K (PSK) and polysaccharopeptide (PSP), both of which have been studied extensively for immune modulation. Japan has used PSK as an adjunct cancer therapy since the 1980s. Take 2-3 grams daily with food.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          },
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          }
+        ]
+      },
+      {
+        "title": "Psilocybin Mushrooms: The Deep Explorer",
+        "text": "Your orientation toward emotional depth and spiritual work aligns with psilocybin-containing mushrooms. These are not supplements you take casually. Psilocybin is a powerful serotonergic compound that can produce profound shifts in consciousness, emotional processing, and sense of meaning. Johns Hopkins research has shown lasting positive effects from even a single guided session. If you are considering this path, preparation is everything: set, setting, intention, and ideally professional support.",
+        "products": [
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale 50g/0.001g"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "0735224153",
+            "name": "How to Change Your Mind by Michael Pollan"
+          },
+          {
+            "asin": "1594774021",
+            "name": "The Psychedelic Explorer's Guide"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "mushroom-safety-iq",
+    "title": "Mushroom Safety IQ Quiz",
+    "desc": "Test your knowledge of mushroom safety, identification basics, contraindications, and harm reduction. How much do you really know?",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-science-lab.webp",
+    "questions": [
+      {
+        "q": "What is the single most important rule of wild mushroom foraging?",
+        "opts": [
+          "Always cook mushrooms before eating",
+          "Never eat a mushroom you cannot identify with 100% certainty",
+          "Only forage in forests, never in fields",
+          "Taste a small piece first to check"
+        ]
+      },
+      {
+        "q": "Which of these is a dangerous lookalike for edible mushrooms?",
+        "opts": [
+          "Shiitake",
+          "Death Cap (Amanita phalloides)",
+          "Oyster mushroom",
+          "Maitake"
+        ]
+      },
+      {
+        "q": "What medication category has the most dangerous interaction with psilocybin?",
+        "opts": [
+          "Blood pressure medications",
+          "Lithium and MAOIs",
+          "Antihistamines",
+          "Antibiotics"
+        ]
+      },
+      {
+        "q": "How should you store dried mushrooms for maximum potency and safety?",
+        "opts": [
+          "In a plastic bag at room temperature",
+          "In the refrigerator in an open container",
+          "In an airtight container with desiccant, away from light",
+          "Frozen in water"
+        ]
+      },
+      {
+        "q": "What does \"set and setting\" mean in psychedelic safety?",
+        "opts": [
+          "The dose and the mushroom species",
+          "Your mindset and your physical environment",
+          "The time of day and season",
+          "Your diet and exercise routine"
+        ]
+      },
+      {
+        "q": "Which population should absolutely avoid psilocybin mushrooms?",
+        "opts": [
+          "People over 60",
+          "People with a personal or family history of psychosis",
+          "People who exercise regularly",
+          "People who drink coffee"
+        ]
+      },
+      {
+        "q": "What is the purpose of a reagent test kit for mushrooms?",
+        "opts": [
+          "To measure exact dosage",
+          "To identify the species by color reaction",
+          "To check for contamination and verify presence of psilocybin",
+          "To improve potency"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Safety Novice: Time to Study Up",
+        "text": "Your safety knowledge has some significant gaps that need addressing before you go further. This is not a criticism. It is genuinely important information that could prevent serious harm. Start with the basics: identification, contraindications, and proper storage.",
+        "products": [
+          {
+            "asin": "1594774021",
+            "name": "The Psychedelic Explorer's Guide"
+          },
+          {
+            "asin": "0735224153",
+            "name": "How to Change Your Mind"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          }
+        ]
+      },
+      {
+        "title": "Developing Awareness: Getting There",
+        "text": "You have a foundation of safety knowledge but there are gaps worth filling. You understand some key principles but may be fuzzy on drug interactions, storage best practices, or identification red flags.",
+        "products": [
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale"
+          },
+          {
+            "asin": "1594774021",
+            "name": "The Psychedelic Explorer's Guide"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          }
+        ]
+      },
+      {
+        "title": "Safety Conscious: Solid Foundation",
+        "text": "You demonstrate strong safety awareness across identification, contraindications, and harm reduction principles. You understand the key risks and how to mitigate them.",
+        "products": [
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale"
+          },
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          }
+        ]
+      },
+      {
+        "title": "Safety Expert: You Know Your Stuff",
+        "text": "Your mushroom safety knowledge is thorough and practical. You are well-positioned to not only keep yourself safe but to be a resource for others in your community.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          },
+          {
+            "asin": "0060801719",
+            "name": "The Doors of Perception by Aldous Huxley"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "functional-mushroom-stack-finder",
+    "title": "Find Your Functional Mushroom Stack",
+    "desc": "Discover the ideal combination of functional mushrooms for your specific health goals. Lion's Mane, Reishi, Cordyceps, Chaga, Turkey Tail, and more.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-hero-assessments.webp",
+    "questions": [
+      {
+        "q": "What do you need most right now?",
+        "opts": [
+          "Mental performance and focus",
+          "Physical energy and endurance",
+          "Immune resilience",
+          "Calm and emotional balance"
+        ]
+      },
+      {
+        "q": "How is your energy throughout the day?",
+        "opts": [
+          "Crashes hard in the afternoon",
+          "Steady but could be better",
+          "Generally good with occasional dips",
+          "High energy most of the time"
+        ]
+      },
+      {
+        "q": "Do you exercise regularly?",
+        "opts": [
+          "Rarely",
+          "A few times a month",
+          "Three to four times a week",
+          "Daily intense training"
+        ]
+      },
+      {
+        "q": "How is your gut health?",
+        "opts": [
+          "Frequent digestive issues",
+          "Occasional bloating or discomfort",
+          "Generally fine",
+          "Excellent, I prioritize gut health"
+        ]
+      },
+      {
+        "q": "Are you dealing with any inflammation or chronic pain?",
+        "opts": [
+          "Yes, significant chronic pain",
+          "Some inflammation or joint stiffness",
+          "Minor occasional issues",
+          "No inflammation concerns"
+        ]
+      },
+      {
+        "q": "How much are you willing to spend monthly on mushroom supplements?",
+        "opts": [
+          "Under $30",
+          "$30 to $60",
+          "$60 to $100",
+          "Whatever it takes"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "The Focus Stack: Lion's Mane + Cordyceps",
+        "text": "Your profile calls for a cognitive-performance stack. Lion's Mane for nerve growth factor and neuroplasticity, paired with Cordyceps for sustained energy without the jitters. Take Lion's Mane (1000mg) in the morning with breakfast and Cordyceps (500mg) before your afternoon slump.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Lion's Mane Capsules"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          }
+        ]
+      },
+      {
+        "title": "The Athlete Stack: Cordyceps + Chaga + Reishi",
+        "text": "Your active lifestyle needs mushrooms that support performance and recovery. Cordyceps boosts oxygen utilization and ATP production. Chaga fights exercise-induced oxidative stress. Reishi in the evening supports deep recovery sleep.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "B0FPML7DJC",
+            "name": "WHOOP 5.0 HRV Monitor"
+          },
+          {
+            "asin": "B08FR8MPCW",
+            "name": "Acupressure Mat for Recovery"
+          }
+        ]
+      },
+      {
+        "title": "The Immunity Stack: Turkey Tail + Chaga + Maitake",
+        "text": "Your immune system needs reinforcement. Turkey Tail is the most researched immune mushroom. Chaga provides massive antioxidant protection. Maitake contains D-fraction, studied for immune activation.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          }
+        ]
+      },
+      {
+        "title": "The Calm Stack: Reishi + Lion's Mane + Tremella",
+        "text": "Your need for emotional balance calls for the adaptogenic trio. Reishi is the master calming mushroom. Lion's Mane supports emotional resilience through neuroplasticity. Tremella is deeply hydrating and nourishing.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "B01MR4Y0CZ",
+            "name": "Aromatherapy Essential Oil Diffuser"
+          },
+          {
+            "asin": "1646119266",
+            "name": "Guided Meditation Journal"
+          },
+          {
+            "asin": "B074TBYWGS",
+            "name": "Silk Sleep Eye Mask"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "microdosing-mushroom-quiz",
+    "title": "Microdosing Mushrooms: Are You Ready?",
+    "desc": "An honest assessment of your readiness, knowledge, and preparation for a psilocybin microdosing practice. No judgment, just clarity.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-science-lab.webp",
+    "questions": [
+      {
+        "q": "Why are you interested in microdosing?",
+        "opts": [
+          "I heard it helps with depression or anxiety",
+          "I want to boost creativity and flow states",
+          "I am curious after reading about it",
+          "I have macro-dose experience and want a subtler practice"
+        ]
+      },
+      {
+        "q": "Do you understand what a microdose actually is?",
+        "opts": [
+          "Not really, I just know it is a small amount",
+          "I think it is about 0.1 to 0.3 grams of dried psilocybin mushrooms",
+          "I know the dose range and that it should be sub-perceptual",
+          "I understand dose ranges, protocols, and individual variation"
+        ]
+      },
+      {
+        "q": "Are you currently taking any psychiatric medications?",
+        "opts": [
+          "Yes, SSRIs or SNRIs",
+          "Yes, other psychiatric medications",
+          "I recently stopped medications",
+          "No psychiatric medications"
+        ]
+      },
+      {
+        "q": "Do you have access to a precision scale that measures to 0.01g or better?",
+        "opts": [
+          "No, I would just eyeball it",
+          "I have a kitchen scale",
+          "I have a scale that measures to 0.01g",
+          "I have a milligram scale (0.001g)"
+        ]
+      },
+      {
+        "q": "How would you track your microdosing experience?",
+        "opts": [
+          "I probably would not track it",
+          "Mental notes",
+          "A simple journal or app",
+          "Detailed daily journal with mood, sleep, creativity, and physical metrics"
+        ]
+      },
+      {
+        "q": "Do you understand the legal status of psilocybin where you live?",
+        "opts": [
+          "No idea",
+          "I think it might be illegal",
+          "I know the general legal status",
+          "I have researched the specific laws in my jurisdiction thoroughly"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Not Ready Yet: Build Your Foundation First",
+        "text": "Honest answer: you are not ready to start microdosing, and that is completely fine. There are some important knowledge gaps and preparation steps to address first. If you are on SSRIs, consult a doctor. If you are eyeballing doses, you need a precision scale. Start with education and preparation.",
+        "products": [
+          {
+            "asin": "0735224153",
+            "name": "How to Change Your Mind by Michael Pollan"
+          },
+          {
+            "asin": "1594774021",
+            "name": "The Psychedelic Explorer's Guide"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          }
+        ]
+      },
+      {
+        "title": "Getting Closer: A Few More Steps",
+        "text": "You have some foundation but there are practical gaps to address. A milligram scale is not optional. It is essential safety equipment. And a structured journal turns a vague experiment into actionable data about what works for your specific brain chemistry.",
+        "products": [
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "0735224153",
+            "name": "How to Change Your Mind"
+          }
+        ]
+      },
+      {
+        "title": "Well Prepared: Ready to Begin Carefully",
+        "text": "Your knowledge, tools, and approach suggest you are in a good position to explore microdosing thoughtfully. Start with the Fadiman Protocol (one day on, two days off) at the lowest dose you think might work, then adjust.",
+        "products": [
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Lion's Mane Capsules (Stamets Stack)"
+          }
+        ]
+      },
+      {
+        "title": "Deeply Prepared: Experienced and Equipped",
+        "text": "You bring significant knowledge, proper equipment, and a structured approach to microdosing. Consider the Stamets Stack (psilocybin + Lion's Mane + niacin) for enhanced neurogenesis.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Lion's Mane Capsules (Stamets Stack)"
+          },
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "edible-mushroom-personality",
+    "title": "What's Your Edible Mushroom Personality?",
+    "desc": "A fun quiz to discover which gourmet and culinary mushroom matches your cooking style, flavor preferences, and kitchen confidence.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-hero-assessments.webp",
+    "questions": [
+      {
+        "q": "How adventurous are you in the kitchen?",
+        "opts": [
+          "I stick to recipes I know",
+          "I try new things occasionally",
+          "I experiment regularly",
+          "I treat cooking as creative expression"
+        ]
+      },
+      {
+        "q": "What flavor profile do you gravitate toward?",
+        "opts": [
+          "Mild and familiar",
+          "Rich and savory (umami)",
+          "Bold and earthy",
+          "Complex and layered"
+        ]
+      },
+      {
+        "q": "How do you feel about foraging your own food?",
+        "opts": [
+          "That sounds terrifying",
+          "Interesting but I would need a guide",
+          "I have done it or would love to try",
+          "I forage regularly"
+        ]
+      },
+      {
+        "q": "What is your go-to cooking method?",
+        "opts": [
+          "Quick stir-fry or saute",
+          "Slow-cooked soups and stews",
+          "Grilling or roasting",
+          "Raw or lightly prepared"
+        ]
+      },
+      {
+        "q": "How important is the health benefit of what you eat?",
+        "opts": [
+          "I eat for taste, not health",
+          "I think about it sometimes",
+          "I actively choose nutrient-dense foods",
+          "Food is medicine to me"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Button & Cremini: The Reliable Classic",
+        "text": "You are the white button and cremini mushroom. Approachable, versatile, and more interesting than people give you credit for. Cremini mushrooms have a deeper flavor than white buttons and work in everything from pasta to pizza.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Lion's Mane Supplement"
+          }
+        ]
+      },
+      {
+        "title": "Shiitake: The Umami Master",
+        "text": "You are the shiitake mushroom. Rich, deeply savory, and packed with lentinan. Shiitakes bring that deep umami backbone to stir-fries, ramen, risotto, and dashi broth.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Supplement"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          }
+        ]
+      },
+      {
+        "title": "Maitake: The Wild Forager",
+        "text": "You are the maitake, also called Hen of the Woods. Found growing at the base of oak trees in autumn, maitake is prized by foragers and chefs alike.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Supplement"
+          }
+        ]
+      },
+      {
+        "title": "Lion's Mane: The Culinary Innovator",
+        "text": "You are Lion's Mane. When sliced thick and seared in butter, this mushroom develops a texture and flavor remarkably similar to crab or lobster. It is the mushroom that makes non-mushroom-lovers reconsider everything.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Lion's Mane Capsules"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "mushroom-blend-builder",
+    "title": "Build Your Custom Mushroom Blend",
+    "desc": "Answer questions about your daily routine, health priorities, and preferences to get a personalized mushroom supplement blend recommendation.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-forest-magical.webp",
+    "questions": [
+      {
+        "q": "What time do you wake up?",
+        "opts": [
+          "Before 6 AM",
+          "6 to 8 AM",
+          "8 to 10 AM",
+          "After 10 AM"
+        ]
+      },
+      {
+        "q": "How would you describe your stress level?",
+        "opts": [
+          "Constantly overwhelmed",
+          "High but manageable",
+          "Moderate, comes and goes",
+          "Low, I manage stress well"
+        ]
+      },
+      {
+        "q": "Do you drink coffee or tea?",
+        "opts": [
+          "Multiple cups of coffee daily",
+          "One cup of coffee in the morning",
+          "I prefer tea",
+          "Neither, I avoid caffeine"
+        ]
+      },
+      {
+        "q": "How is your skin health?",
+        "opts": [
+          "Problematic, frequent breakouts or dryness",
+          "Okay but could be better",
+          "Generally fine",
+          "Great, I invest in skin health"
+        ]
+      },
+      {
+        "q": "What is your biggest health concern right now?",
+        "opts": [
+          "Brain fog and poor concentration",
+          "Low energy and fatigue",
+          "Frequent illness or slow recovery",
+          "Anxiety and poor sleep"
+        ]
+      },
+      {
+        "q": "How do you feel about taking multiple supplements?",
+        "opts": [
+          "I want one simple product",
+          "Two to three is fine",
+          "I do not mind a full protocol",
+          "I already take many supplements"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "The Morning Clarity Blend: Lion's Mane + Cordyceps",
+        "text": "Your early mornings and brain fog point to a clean cognitive-energy stack. Add Lion's Mane powder to your morning coffee for focus without anxiety, and Cordyceps for sustained physical energy.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Lion's Mane Capsules"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "Wellness Tracking Journal"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          }
+        ]
+      },
+      {
+        "title": "The Resilience Blend: Chaga + Turkey Tail + Cordyceps",
+        "text": "Your immune concerns and energy needs call for the resilience trio. Chaga brings the highest antioxidant load. Turkey Tail provides proven beta-glucan immune support. Cordyceps fills the energy gap.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          }
+        ]
+      },
+      {
+        "title": "The Beauty + Brain Blend: Tremella + Lion's Mane + Reishi",
+        "text": "Your skin concerns and stress levels point to the beauty-brain-calm trio. Tremella holds 500 times its weight in water, deeply hydrating skin from within.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "B01MR4Y0CZ",
+            "name": "Aromatherapy Diffuser"
+          },
+          {
+            "asin": "1646119266",
+            "name": "Guided Meditation Journal"
+          }
+        ]
+      },
+      {
+        "title": "The Full Spectrum Protocol: 5-Mushroom Daily Stack",
+        "text": "You are ready for the comprehensive approach. Lion's Mane (1000mg morning), Cordyceps (500mg morning), Chaga (500mg midday), Turkey Tail (1000mg with meals), and Reishi (1500mg evening). Cycle 5 days on, 2 days off.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "Wellness Tracking Journal"
+          },
+          {
+            "asin": "B0FPML7DJC",
+            "name": "WHOOP 5.0 HRV Monitor"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "mushroom-myths-vs-facts",
+    "title": "Mushroom Myths vs. Facts",
+    "desc": "Can you separate mushroom science from mushroom folklore? Test your knowledge of common misconceptions about both culinary and psychedelic mushrooms.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-psychedelic-pattern.webp",
+    "questions": [
+      {
+        "q": "True or false: All brightly colored mushrooms are poisonous.",
+        "opts": [
+          "True, bright colors always mean danger",
+          "False, color alone does not determine toxicity",
+          "True, but only red and orange ones",
+          "It depends on the season"
+        ]
+      },
+      {
+        "q": "Can you build a tolerance to psilocybin mushrooms?",
+        "opts": [
+          "No, each experience is the same",
+          "Yes, tolerance builds rapidly within days",
+          "Only if you take very high doses",
+          "Tolerance takes months to develop"
+        ]
+      },
+      {
+        "q": "Are mushroom supplements all created equal?",
+        "opts": [
+          "Yes, a mushroom is a mushroom",
+          "No, many supplements use mycelium on grain, not actual fruiting bodies",
+          "Only organic ones matter",
+          "Price determines quality"
+        ]
+      },
+      {
+        "q": "Can you overdose fatally on psilocybin mushrooms alone?",
+        "opts": [
+          "Yes, easily",
+          "Yes, at high doses",
+          "The lethal dose is estimated at 1.7 kg of dried mushrooms, making fatal overdose practically impossible",
+          "There is no lethal dose"
+        ]
+      },
+      {
+        "q": "Do cooking mushrooms destroy their nutritional value?",
+        "opts": [
+          "Yes, always eat them raw",
+          "Cooking actually makes many mushroom nutrients more bioavailable",
+          "It does not matter either way",
+          "Only microwaving destroys nutrients"
+        ]
+      },
+      {
+        "q": "Is the \"Stamets Stack\" for microdosing scientifically proven?",
+        "opts": [
+          "Yes, multiple clinical trials confirm it",
+          "It has theoretical backing and anecdotal support but lacks large-scale clinical trials",
+          "It has been debunked",
+          "It only works with specific mushroom strains"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Myth Believer: Time for a Reality Check",
+        "text": "You have absorbed some common mushroom myths that could lead you astray. The biggest misconception: color does not indicate toxicity, and not all supplements are the same.",
+        "products": [
+          {
+            "asin": "0735224153",
+            "name": "How to Change Your Mind"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms (Fruiting Body Extract)"
+          }
+        ]
+      },
+      {
+        "title": "Mixed Knowledge: Some Myths Still Lingering",
+        "text": "You got some right and some wrong. The supplement quality question trips up most people. Many products labeled \"mushroom\" are actually mycelium grown on grain.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms (Fruiting Body)"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          }
+        ]
+      },
+      {
+        "title": "Fact-Based Thinker: Well Informed",
+        "text": "You have a strong grasp of mushroom science versus folklore. Your critical thinking serves you well in a space full of marketing hype and misinformation.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Supplement"
+          }
+        ]
+      },
+      {
+        "title": "Mycology Scholar: You Know Your Fungi",
+        "text": "You can separate science from folklore with precision. Your knowledge base is solid enough to help others cut through the noise in the mushroom wellness space.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0060801719",
+            "name": "The Doors of Perception"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale"
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 app.get('/quizzes', (req, res) => {
   res.send(htmlHead('Quizzes — ' + SITE.title, 'Interactive quizzes to explore your readiness, preferences, and path in psychedelic wellness.', SITE.domain + '/quizzes') + '\n' +
     '<body>\n' + navHTML() + '\n' +
-    '<div class="hero" style="padding:60px 24px 40px;">\n' +
+    '<div class="hero" style="padding:60px 24px 40px;background:linear-gradient(180deg, rgba(13,11,26,0.4) 0%, rgba(13,11,26,0.85) 100%), url(\'https://quiet-medicine.b-cdn.net/images/mushroom-hero-quizzes.webp\') center/cover no-repeat;min-height:300px;display:flex;align-items:center;">\n' +
     '  <div class="hero-content"><h1>Quizzes</h1><p class="tagline">Explore your readiness, discover your path, and deepen your understanding.</p></div>\n' +
     '</div>\n' +
     '<main class="wide" style="padding-top:40px;">\n' +
     '<div class="quiz-index-grid">\n' +
     quizzes.map(function(q) {
-      return '<div class="quiz-index-card"><h3><a href="/quiz/' + q.slug + '">' + q.title + '</a></h3><p>' + q.desc + '</p></div>';
+      return '<div class="quiz-index-card">' + (q.heroImage ? '<img src="' + q.heroImage + '" alt="' + q.title + '" style="width:100%;height:180px;object-fit:cover;border-radius:12px 12px 0 0;margin:-20px -20px 16px;width:calc(100% + 40px);">' : '') + '<h3><a href="/quiz/' + q.slug + '">' + q.title + '</a></h3><p>' + q.desc + '</p></div>';
     }).join('\n') + '\n' +
     '</div>\n' +
     '</main>\n' + footerHTML() + '\n' + cookieBannerHTML() + '\n' +
@@ -1570,6 +2534,14 @@ quizzes.forEach(function(quiz) {
       '  var r = results[idx];\n' +
       '  document.getElementById("resultTitle").textContent = r.title;\n' +
       '  document.getElementById("resultText").textContent = r.text;\n' +
+      '  if (r.products && r.products.length > 0) {\n' +
+      '    var prodHtml = \'<div style="margin-top:32px;text-align:left;"><h3 style="font-size:18px;color:var(--accent);margin-bottom:16px;">Recommended Products</h3>\';\n' +
+      '    r.products.forEach(function(p) {\n' +
+      '      prodHtml += \'<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;margin-bottom:8px;background:rgba(124,77,255,0.06);border-radius:8px;border:1px solid rgba(124,77,255,0.15);"><span style="font-size:20px;">\\ud83c\\udf44</span><div><a href="https://www.amazon.com/dp/\' + p.asin + \'?tag=spankyspinola-20" target="_blank" rel="nofollow sponsored" style="color:var(--accent);text-decoration:none;font-weight:600;">\' + p.name + \'</a><span style="font-size:11px;color:var(--text-dim);margin-left:8px;">(paid link)</span></div></div>\';\n' +
+      '    });\n' +
+      '    prodHtml += \'</div>\';\n' +
+      '    document.getElementById("resultText").insertAdjacentHTML("afterend", prodHtml);\n' +
+      '  }\n' +
       '  var url = encodeURIComponent(window.location.href);\n' +
       '  document.getElementById("shareTwitter").href = "https://twitter.com/intent/tweet?url="+url+"&text="+encodeURIComponent("I got \\\""+r.title+"\\\" on "+document.title);\n' +
       '  document.getElementById("shareFB").href = "https://www.facebook.com/sharer/sharer.php?u="+url;\n' +
@@ -1596,125 +2568,836 @@ quizzes.forEach(function(quiz) {
 
 // ─── ASSESSMENTS ───
 var assessments = [
-  { slug: 'psychedelic-readiness', title: 'Psychedelic Readiness Assessment', desc: 'A comprehensive evaluation of your physical, psychological, and social readiness for a psychedelic experience.', questions: [
-    { q: 'How stable has your mood been over the past 3 months?', opts: ['Very unstable — frequent swings', 'Somewhat unstable', 'Mostly stable with occasional dips', 'Consistently stable'] },
-    { q: 'Do you have a personal or family history of psychotic disorders?', opts: ['Yes, personal history', 'Yes, close family history', 'Distant family history only', 'No known history'] },
-    { q: 'How would you rate your physical health?', opts: ['Significant health concerns', 'Some chronic issues', 'Generally healthy', 'Excellent health'] },
-    { q: 'Are you currently using any substances regularly?', opts: ['Heavy use of multiple substances', 'Regular use of one substance', 'Occasional recreational use', 'No substance use'] },
-    { q: 'How developed is your emotional regulation capacity?', opts: ['Frequently overwhelmed', 'Sometimes struggle with emotions', 'Usually able to self-regulate', 'Strong emotional regulation skills'] },
-    { q: 'Do you have access to professional mental health support?', opts: ['No access', 'Could find someone if needed', 'Have a therapist but not psychedelic-informed', 'Have a psychedelic-informed therapist'] },
-    { q: 'How clear are your intentions for this experience?', opts: ['No clear intention', 'Vague sense of wanting change', 'Specific but untested intention', 'Well-refined intention through reflection'] },
-    { q: 'How comfortable are you with surrendering control?', opts: ['Very uncomfortable', 'Anxious but willing', 'Reasonably comfortable', 'Practiced at letting go'] },
-  ], results: [
-    { title: 'Significant Preparation Needed', text: 'This assessment indicates several areas that need attention before proceeding with a psychedelic experience. This is not a failure — it is valuable information. Focus on building your foundation: stabilize your mental health, develop a contemplative practice, and establish professional support. The most courageous thing you can do right now is wait and prepare.' },
-    { title: 'Moderate Preparation Recommended', text: 'You have some foundation in place but important areas need strengthening. Consider working with a therapist to address the specific areas that scored lower. Building emotional regulation skills and clarifying your intentions will significantly improve both the safety and depth of any future experience.' },
-    { title: 'Good Readiness Level', text: 'Your assessment suggests a solid foundation for psychedelic exploration. You have addressed many of the key preparation areas and your circumstances support a meaningful experience. Continue refining your intentions and ensure your support system is in place before proceeding.' },
-    { title: 'High Readiness', text: 'Your preparation is thorough across physical, psychological, and social dimensions. You demonstrate the kind of thoughtful, informed approach that leads to the most meaningful experiences. Trust your preparation while remaining humble before the unknown.' },
-  ]},
-  { slug: 'integration-needs', title: 'Integration Needs Assessment', desc: 'Identify what kind of integration support would serve you best after a psychedelic experience.', questions: [
-    { q: 'How do you typically process intense emotional experiences?', opts: ['Suppress or avoid them', 'Ruminate and overthink', 'Talk them through with others', 'Sit with them in contemplation'] },
-    { q: 'What is your relationship with your body?', opts: ['Disconnected from body sensations', 'Aware but uncomfortable', 'Growing body awareness', 'Strong somatic awareness'] },
-    { q: 'How do you handle experiences that challenge your worldview?', opts: ['Reject and return to familiar', 'Feel destabilized for extended periods', 'Process gradually over time', 'Welcome paradigm shifts'] },
-    { q: 'What creative outlets do you have?', opts: ['None currently', 'Occasional creative activity', 'Regular creative practice', 'Multiple creative outlets'] },
-    { q: 'How is your relationship with sleep and rest?', opts: ['Chronic sleep issues', 'Irregular sleep patterns', 'Generally good sleep', 'Excellent sleep hygiene'] },
-    { q: 'Do you have a community that understands this work?', opts: ['No one who understands', 'One or two people', 'A small supportive circle', 'Active integration community'] },
-  ], results: [
-    { title: 'Intensive Support Recommended', text: 'Your integration needs are significant and would benefit from professional support. Consider working with a psychedelic integration therapist who can provide the structured container you need. Somatic therapy may be particularly valuable given your relationship with body awareness. Building community connections will also be essential.' },
-    { title: 'Structured Support Beneficial', text: 'You would benefit from a structured integration approach that combines professional guidance with personal practice. A regular therapy schedule, journaling practice, and gradual community building will create the support network your integration needs.' },
-    { title: 'Self-Directed with Check-ins', text: 'You have good internal resources for integration but would benefit from periodic check-ins with a therapist or integration circle. Your existing practices and awareness provide a solid foundation. Focus on deepening what is already working.' },
-    { title: 'Strong Self-Integration Capacity', text: 'You have well-developed integration resources — body awareness, creative outlets, community, and contemplative practice. Your integration path can be largely self-directed with the support of your existing network. Trust your process while remaining open to professional support when needed.' },
-  ]},
-  { slug: 'trauma-sensitivity', title: 'Trauma Sensitivity Screen', desc: 'A gentle assessment to help you understand how trauma may interact with psychedelic experiences.', questions: [
-    { q: 'Do you experience flashbacks or intrusive memories?', opts: ['Frequently and intensely', 'Sometimes', 'Rarely', 'Not at all'] },
-    { q: 'How do you respond to unexpected loud noises or surprises?', opts: ['Extreme startle response', 'Noticeable but manageable', 'Mild reaction', 'Calm response'] },
-    { q: 'Do you experience physical tension or pain without clear cause?', opts: ['Constant tension', 'Frequent unexplained tension', 'Occasional', 'Rarely'] },
-    { q: 'How safe do you generally feel in your body?', opts: ['Rarely feel safe', 'Safety comes and goes', 'Usually feel safe', 'Strong sense of embodied safety'] },
-    { q: 'Are you currently working with a trauma-informed therapist?', opts: ['No, and have significant trauma', 'No, but considering it', 'Yes, early in the process', 'Yes, with significant progress'] },
-    { q: 'How do you respond to loss of control?', opts: ['Panic or dissociation', 'Significant anxiety', 'Discomfort but manageable', 'Can surrender with practice'] },
-  ], results: [
-    { title: 'High Sensitivity — Professional Support Essential', text: 'This assessment suggests significant trauma sensitivity that requires professional support before considering psychedelic experiences. Psychedelics can amplify trauma responses, and without proper preparation and support, this could be retraumatizing rather than healing. Work with a trauma-informed therapist to build your window of tolerance before proceeding.' },
-    { title: 'Moderate Sensitivity — Careful Preparation Needed', text: 'You show moderate trauma sensitivity that warrants careful preparation. Working with a trauma-informed therapist to develop grounding techniques and expand your window of tolerance will be important. If you proceed with psychedelic work, ensure you have experienced, trauma-aware support present.' },
-    { title: 'Manageable Sensitivity — Proceed with Awareness', text: 'Your trauma sensitivity is present but manageable. You have developed some capacity to work with difficult material. Ensure your set and setting account for the possibility of trauma material arising, and have grounding techniques readily available.' },
-    { title: 'Low Sensitivity — Standard Preparation Sufficient', text: 'Your trauma sensitivity screen suggests a relatively stable baseline. Standard preparation practices — intention setting, set and setting optimization, and having support available — should be sufficient. Remain aware that psychedelics can surface material you did not know was there.' },
-  ]},
-  { slug: 'microdosing-protocol', title: 'Microdosing Protocol Assessment', desc: 'Determine which microdosing protocol and approach best fits your lifestyle and goals.', questions: [
-    { q: 'What is your primary goal for microdosing?', opts: ['Treating depression or anxiety', 'Enhancing creativity and flow', 'Improving focus and productivity', 'Spiritual development'] },
-    { q: 'How structured is your daily routine?', opts: ['Very unstructured', 'Somewhat flexible', 'Moderately structured', 'Highly structured'] },
-    { q: 'How sensitive are you to substances in general?', opts: ['Very sensitive', 'Somewhat sensitive', 'Average sensitivity', 'Low sensitivity'] },
-    { q: 'How much time can you dedicate to tracking your experience?', opts: ['Minimal time', 'A few minutes daily', '10-15 minutes daily', 'Detailed daily journaling'] },
-    { q: 'What is your experience with psychedelics?', opts: ['No experience', 'One or two experiences', 'Several experiences', 'Extensive experience'] },
-    { q: 'How important is scientific evidence in your decision-making?', opts: ['Not very important', 'Somewhat important', 'Important', 'Essential'] },
-  ], results: [
-    { title: 'Fadiman Protocol Recommended', text: 'Based on your goals and circumstances, the Fadiman Protocol (one day on, two days off) is your best starting point. It is the most researched protocol, provides clear structure, and allows adequate time to observe effects. Start with the lowest effective dose and adjust gradually. Your sensitivity profile suggests beginning conservatively.' },
-    { title: 'Stamets Stack Recommended', text: 'Your goals and experience level align well with the Stamets Stack (psilocybin + lion\'s mane + niacin). This protocol emphasizes neurogenesis and is taken five days on, two days off. The combination may support your cognitive and creative goals while the niacin helps with distribution.' },
-    { title: 'Intuitive Protocol Recommended', text: 'Your experience and self-awareness suggest you may benefit from an intuitive approach — dosing when you feel called to rather than on a fixed schedule. This requires honest self-assessment and strong tracking habits, both of which you appear to have. Listen to your body and adjust accordingly.' },
-    { title: 'Custom Protocol Recommended', text: 'Your specific goals and circumstances suggest a customized approach. Consider working with a knowledgeable guide to design a protocol tailored to your needs. Your extensive experience and structured approach position you well for a more nuanced protocol.' },
-  ]},
-  { slug: 'emotional-baseline', title: 'Emotional Baseline Assessment', desc: 'Establish a clear picture of your current emotional landscape before beginning any psychedelic practice.', questions: [
-    { q: 'How often do you feel genuinely content?', opts: ['Rarely or never', 'Occasionally', 'Often', 'Most of the time'] },
-    { q: 'How do you handle disappointment?', opts: ['Devastated for extended periods', 'Significantly affected', 'Process and move through it', 'Accept and adapt quickly'] },
-    { q: 'How connected do you feel to others?', opts: ['Deeply isolated', 'Somewhat disconnected', 'Reasonably connected', 'Deeply connected'] },
-    { q: 'How present are you in daily activities?', opts: ['Constantly distracted or dissociated', 'Frequently lost in thought', 'Usually present', 'Deeply present and engaged'] },
-    { q: 'How do you relate to anxiety?', opts: ['Overwhelming and constant', 'Frequent and disruptive', 'Occasional and manageable', 'Rare and informative'] },
-    { q: 'How meaningful does your life feel?', opts: ['Deeply meaningless', 'Searching for meaning', 'Sense of emerging purpose', 'Clear sense of meaning'] },
-    { q: 'How well do you sleep?', opts: ['Severe insomnia', 'Frequent sleep disruption', 'Generally adequate', 'Consistently restorative'] },
-  ], results: [
-    { title: 'Baseline: Struggling', text: 'Your emotional baseline suggests you are currently in a difficult period. This is important information — not a judgment. Before exploring psychedelics, focus on stabilizing your foundation: sleep, nutrition, movement, and professional support. These basics matter more than any substance.' },
-    { title: 'Baseline: Rebuilding', text: 'You are in a period of rebuilding and growth. Your emotional landscape shows both challenges and emerging strengths. This is a good time to deepen your self-awareness practices and build the support systems that will serve you in any future exploration.' },
-    { title: 'Baseline: Stable', text: 'Your emotional baseline is stable and provides a good foundation for psychedelic exploration. You have the emotional resources to navigate challenging experiences and the self-awareness to recognize when you need support.' },
-    { title: 'Baseline: Flourishing', text: 'Your emotional baseline reflects genuine well-being and resilience. From this foundation, psychedelic experiences are more likely to deepen what is already working rather than attempting to fix what is broken. This is the ideal starting point.' },
-  ]},
-  { slug: 'relationship-impact', title: 'Relationship Impact Assessment', desc: 'Understand how psychedelic experiences might affect your relationships and how to navigate that.', questions: [
-    { q: 'Does your partner or close family know about your interest in psychedelics?', opts: ['No, and they would disapprove', 'No, unsure how they would react', 'Yes, they are cautiously supportive', 'Yes, they are fully supportive'] },
-    { q: 'How do your relationships handle periods of personal change?', opts: ['Poorly — change creates conflict', 'With difficulty', 'Reasonably well', 'Growth is welcomed and supported'] },
-    { q: 'Do you have relationships that feel authentic and honest?', opts: ['Very few or none', 'One or two', 'Several', 'Most of my relationships'] },
-    { q: 'How do you handle disagreements about values?', opts: ['Avoid or suppress', 'Argue and defend', 'Discuss with some difficulty', 'Navigate with mutual respect'] },
-    { q: 'Are there relationships you are avoiding dealing with?', opts: ['Several significant ones', 'One or two important ones', 'Minor avoidances only', 'Relationships feel current'] },
-  ], results: [
-    { title: 'High Relationship Risk', text: 'Your relationship landscape suggests that psychedelic experiences could create significant interpersonal challenges. Consider addressing relationship dynamics before proceeding. Couples therapy or honest conversations about your interests may be necessary first steps.' },
-    { title: 'Moderate Relationship Considerations', text: 'There are relationship dynamics that deserve attention before or alongside any psychedelic exploration. Having honest conversations with key people in your life about your interests and intentions will reduce the risk of misunderstanding and conflict.' },
-    { title: 'Supportive Relationship Context', text: 'Your relationships provide a generally supportive context for psychedelic exploration. Continue nurturing open communication with your close circle and be prepared for the ways that personal transformation can shift relationship dynamics.' },
-    { title: 'Strong Relational Foundation', text: 'Your relationships are characterized by honesty, support, and mutual growth. This relational foundation is one of the most important factors in having positive psychedelic experiences and successful integration.' },
-  ]},
-  { slug: 'spiritual-orientation', title: 'Spiritual Orientation Assessment', desc: 'Explore your relationship with spirituality and how it might inform your psychedelic journey.', questions: [
-    { q: 'How would you describe your relationship with spirituality?', opts: ['Skeptical or dismissive', 'Curious but uncommitted', 'Active personal practice', 'Deep devotional life'] },
-    { q: 'Have you had experiences that felt transcendent or mystical?', opts: ['Never', 'Once or twice', 'Several times', 'Regularly'] },
-    { q: 'How do you relate to the concept of ego dissolution?', opts: ['Frightening', 'Intellectually interesting', 'Curious and open', 'Familiar territory'] },
-    { q: 'What role does gratitude play in your daily life?', opts: ['Rarely think about it', 'Occasional appreciation', 'Regular gratitude practice', 'Pervasive sense of gratitude'] },
-    { q: 'How do you relate to suffering?', opts: ['Avoid it at all costs', 'Endure it reluctantly', 'Accept it as part of life', 'See it as a teacher'] },
-    { q: 'Do you have a relationship with silence?', opts: ['Uncomfortable with silence', 'Tolerate it briefly', 'Enjoy periods of silence', 'Silence is home'] },
-  ], results: [
-    { title: 'The Rational Explorer', text: 'You approach these territories through reason and evidence, and that is a perfectly valid orientation. You do not need to adopt spiritual language to benefit from psychedelic experiences. The neuroscience alone is profound. Your skepticism can serve as a grounding force.' },
-    { title: 'The Curious Seeker', text: 'You are in a beautiful place of openness without attachment to any particular framework. This flexibility allows you to receive whatever arises without forcing it into a predetermined narrative. Stay curious and let your experience inform your understanding.' },
-    { title: 'The Practicing Devotee', text: 'Your existing spiritual practice provides a rich container for psychedelic exploration. The skills you have developed — presence, surrender, devotion — are precisely what allow these experiences to reach their deepest potential.' },
-    { title: 'The Mystic', text: 'You have a mature and deep spiritual orientation that will profoundly inform your psychedelic experiences. The territory of ego dissolution and unity consciousness is not foreign to you. Your challenge is integration — bringing the transcendent into the ordinary.' },
-  ]},
-  { slug: 'lifestyle-readiness', title: 'Lifestyle Readiness Assessment', desc: 'Evaluate whether your current lifestyle supports safe and meaningful psychedelic exploration.', questions: [
-    { q: 'How would you rate your current diet?', opts: ['Poor — mostly processed food', 'Inconsistent', 'Generally healthy', 'Intentional and nourishing'] },
-    { q: 'How much physical exercise do you get?', opts: ['Sedentary', 'Occasional movement', 'Regular exercise', 'Daily movement practice'] },
-    { q: 'How much screen time do you have daily?', opts: ['Excessive — 8+ hours non-work', 'High — 4-8 hours non-work', 'Moderate — 2-4 hours', 'Minimal — under 2 hours'] },
-    { q: 'How often do you spend time in nature?', opts: ['Rarely or never', 'Monthly', 'Weekly', 'Daily'] },
-    { q: 'How would you describe your work-life balance?', opts: ['Severely imbalanced', 'Struggling', 'Mostly balanced', 'Well balanced'] },
-    { q: 'Do you have a regular sleep schedule?', opts: ['Very irregular', 'Somewhat irregular', 'Mostly consistent', 'Consistent and prioritized'] },
-    { q: 'How much unstructured time do you have?', opts: ['None — constantly busy', 'Very little', 'Some free time', 'Adequate spaciousness'] },
-  ], results: [
-    { title: 'Lifestyle Overhaul Recommended', text: 'Your current lifestyle may not support the kind of experience you are seeking. Psychedelics amplify what is already present, and a depleted foundation leads to depleted experiences. Focus on the basics first: sleep, nutrition, movement, and reducing overstimulation. These changes alone can be transformative.' },
-    { title: 'Lifestyle Adjustments Needed', text: 'Your lifestyle has some supportive elements but key areas need attention. Focus on the lowest-scoring areas — they represent the weakest links in your preparation. Even small improvements in sleep, diet, or nature time can significantly impact the quality of psychedelic experiences.' },
-    { title: 'Supportive Lifestyle', text: 'Your lifestyle provides a good foundation for psychedelic exploration. You have established many of the habits that support both preparation and integration. Continue strengthening these practices and consider them part of your ongoing integration work.' },
-    { title: 'Optimal Lifestyle Foundation', text: 'Your lifestyle reflects the kind of intentional living that creates the best conditions for psychedelic work. The care you take with your body, mind, and daily rhythms is itself a form of practice. This foundation will serve you well.' },
-  ]},
+  {
+    "slug": "mushroom-supplement-readiness",
+    "title": "Mushroom Supplement Readiness Assessment",
+    "desc": "A thorough evaluation of your health background, current medications, and goals to determine which functional mushroom supplements are safe and appropriate for you.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-hero-assessments.webp",
+    "questions": [
+      {
+        "q": "Are you currently taking any blood-thinning medications (warfarin, aspirin, heparin)?",
+        "opts": [
+          "Yes",
+          "No",
+          "I am not sure"
+        ]
+      },
+      {
+        "q": "Do you have any autoimmune conditions (lupus, rheumatoid arthritis, MS, etc.)?",
+        "opts": [
+          "Yes, diagnosed",
+          "Suspected but not diagnosed",
+          "No"
+        ]
+      },
+      {
+        "q": "Are you pregnant, breastfeeding, or planning to become pregnant?",
+        "opts": [
+          "Yes",
+          "Possibly",
+          "No"
+        ]
+      },
+      {
+        "q": "Do you have any known allergies to molds or fungi?",
+        "opts": [
+          "Yes, confirmed allergy",
+          "I have had reactions but not tested",
+          "No known allergies"
+        ]
+      },
+      {
+        "q": "Are you currently taking immunosuppressant medications?",
+        "opts": [
+          "Yes",
+          "I was recently but stopped",
+          "No"
+        ]
+      },
+      {
+        "q": "Have you had any organ transplants?",
+        "opts": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "q": "Do you have low blood pressure or take blood pressure medication?",
+        "opts": [
+          "Yes, both",
+          "Low blood pressure only",
+          "Blood pressure medication only",
+          "Neither"
+        ]
+      },
+      {
+        "q": "Are you scheduled for surgery in the next two weeks?",
+        "opts": [
+          "Yes",
+          "No"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Proceed with Caution: Medical Consultation Required",
+        "text": "Based on your responses, there are potential contraindications that require professional medical guidance before starting mushroom supplements. Several functional mushrooms can interact with blood thinners, affect blood sugar, and modulate immune function. Please bring this assessment to your doctor.",
+        "products": [
+          {
+            "asin": "0143127748",
+            "name": "The Body Keeps the Score"
+          },
+          {
+            "asin": "1646119266",
+            "name": "Guided Meditation Journal"
+          },
+          {
+            "asin": "B0CHVYY8P4",
+            "name": "Therapy Journal with Guided Prompts"
+          }
+        ]
+      },
+      {
+        "title": "Low Risk: Start Slowly with Basic Species",
+        "text": "Your health profile suggests a low-risk starting point for functional mushroom supplements. Begin with well-researched species like Lion's Mane or Turkey Tail. Start at half the recommended dose for the first week.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Lion's Mane Capsules"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "Wellness Tracking Journal"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          }
+        ]
+      },
+      {
+        "title": "Good to Go: Full Spectrum Available",
+        "text": "Your health profile shows no major contraindications. You have a wide range of species available to you. Quality matters enormously: look for fruiting body supplements with verified beta-glucan content.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Organic Capsules"
+          },
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "Wellness Tracking Journal"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "psychedelic-readiness-assessment",
+    "title": "Psychedelic Mushroom Readiness Assessment",
+    "desc": "A comprehensive evaluation of your mental health history, support system, and preparation level for a psychedelic mushroom experience. Honest, clinical, no hype.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-psychedelic-pattern.webp",
+    "questions": [
+      {
+        "q": "Do you have a personal or family history of schizophrenia, schizoaffective disorder, or psychotic episodes?",
+        "opts": [
+          "Yes, personal history",
+          "Yes, family history",
+          "Not that I know of",
+          "No"
+        ]
+      },
+      {
+        "q": "Are you currently taking lithium, tramadol, or MAO inhibitors?",
+        "opts": [
+          "Yes, one or more of these",
+          "I recently stopped one of these",
+          "No"
+        ]
+      },
+      {
+        "q": "Do you have a trusted person who could serve as a sitter or guide?",
+        "opts": [
+          "No, I would do it alone",
+          "I have friends but none with experience",
+          "I have someone willing but inexperienced",
+          "I have an experienced sitter or professional guide"
+        ]
+      },
+      {
+        "q": "How would you describe your current mental health?",
+        "opts": [
+          "In active crisis or severe distress",
+          "Struggling but stable",
+          "Generally okay with some challenges",
+          "Stable and grounded"
+        ]
+      },
+      {
+        "q": "What is your experience with meditation or mindfulness practices?",
+        "opts": [
+          "None",
+          "I have tried it a few times",
+          "Regular but inconsistent practice",
+          "Established daily practice"
+        ]
+      },
+      {
+        "q": "Have you researched what a psychedelic experience actually involves?",
+        "opts": [
+          "Not really",
+          "I have read some articles",
+          "I have read multiple books and trip reports",
+          "I have extensive research and/or personal experience"
+        ]
+      },
+      {
+        "q": "Do you have a clear intention for why you want this experience?",
+        "opts": [
+          "Not really, just curious",
+          "Vague sense of wanting growth",
+          "Specific intention I can articulate",
+          "Deep, well-considered intention with preparation work done"
+        ]
+      },
+      {
+        "q": "Are you in a stable life situation (housing, relationships, work)?",
+        "opts": [
+          "Multiple areas of instability",
+          "Some instability",
+          "Mostly stable",
+          "Very stable"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Not Recommended at This Time",
+        "text": "Based on your responses, a psychedelic mushroom experience is not recommended right now. If you have a history of psychosis or are taking lithium/MAOIs, psilocybin carries serious risks. Please prioritize conventional mental health support first.",
+        "products": [
+          {
+            "asin": "0143127748",
+            "name": "The Body Keeps the Score"
+          },
+          {
+            "asin": "B0CHVYY8P4",
+            "name": "Therapy Journal"
+          },
+          {
+            "asin": "1646119266",
+            "name": "Guided Meditation Journal"
+          }
+        ]
+      },
+      {
+        "title": "More Preparation Needed",
+        "text": "You have some readiness factors in place but important gaps remain. Focus on: having an experienced sitter, building a meditation practice, and clarifying your intention. Spend 2-3 months on preparation.",
+        "products": [
+          {
+            "asin": "0735224153",
+            "name": "How to Change Your Mind"
+          },
+          {
+            "asin": "1594774021",
+            "name": "The Psychedelic Explorer's Guide"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "B0D2K8N8NR",
+            "name": "Meditation Cushion"
+          }
+        ]
+      },
+      {
+        "title": "Approaching Readiness",
+        "text": "Your profile shows meaningful preparation and a solid foundation. Consider a low-dose experience (1-1.5g dried) as your first step rather than a full dose.",
+        "products": [
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "B09XS7JWHH",
+            "name": "Sony WH-1000XM5 Headphones"
+          },
+          {
+            "asin": "B0DK86ZBNJ",
+            "name": "Cozy Therapy Blanket"
+          }
+        ]
+      },
+      {
+        "title": "Well Prepared: Strong Foundation",
+        "text": "Your assessment indicates thorough preparation across all key dimensions. The remaining steps are practical: confirm your sitter, prepare your space, prepare a playlist, and set aside 8 hours with no obligations the following day.",
+        "products": [
+          {
+            "asin": "B09XS7JWHH",
+            "name": "Sony WH-1000XM5 Headphones"
+          },
+          {
+            "asin": "B0DK86ZBNJ",
+            "name": "Cozy Therapy Blanket"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "B074TBYWGS",
+            "name": "Silk Sleep Eye Mask"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "mushroom-growing-readiness",
+    "title": "Home Mushroom Cultivation Readiness",
+    "desc": "Assess whether you have the space, patience, and knowledge to successfully grow mushrooms at home. From oyster mushrooms to lion's mane.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-forest-magical.webp",
+    "questions": [
+      {
+        "q": "Do you have a clean, temperature-controlled indoor space you can dedicate to growing?",
+        "opts": [
+          "No dedicated space",
+          "A closet or small area I could use",
+          "A spare room or basement",
+          "I have a dedicated growing area already set up"
+        ]
+      },
+      {
+        "q": "How patient are you with slow processes?",
+        "opts": [
+          "I want results fast",
+          "I can wait a few weeks",
+          "I enjoy slow, methodical processes",
+          "I find waiting meditative"
+        ]
+      },
+      {
+        "q": "How comfortable are you with sterile technique?",
+        "opts": [
+          "Not very",
+          "I can follow instructions",
+          "I am naturally careful and detail-oriented",
+          "I have lab or medical experience with sterile technique"
+        ]
+      },
+      {
+        "q": "What is your budget for getting started?",
+        "opts": [
+          "Under $25",
+          "$25 to $75",
+          "$75 to $200",
+          "Over $200"
+        ]
+      },
+      {
+        "q": "Which mushrooms are you most interested in growing?",
+        "opts": [
+          "Oyster mushrooms (easiest)",
+          "Shiitake",
+          "Lion's Mane",
+          "Multiple species including more challenging ones"
+        ]
+      },
+      {
+        "q": "How do you handle setbacks and failed experiments?",
+        "opts": [
+          "I get frustrated and quit",
+          "Disappointed but I try again",
+          "I analyze what went wrong and adjust",
+          "Failure is part of the process, I expect it"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Start with a Ready-Made Kit",
+        "text": "Your current setup points to starting with a pre-made mushroom growing kit. These come with fully colonized substrate. Just open, mist daily, and harvest in 7-14 days. Oyster mushroom kits have the highest success rate for beginners.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "Growing Journal"
+          }
+        ]
+      },
+      {
+        "title": "Ready for Intermediate Growing",
+        "text": "You have the patience, space, and mindset for intermediate mushroom cultivation. Start with oyster mushrooms on straw (very forgiving) and progress to shiitake on supplemented sawdust.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "Cultivation Journal"
+          }
+        ]
+      },
+      {
+        "title": "Advanced Cultivator Potential",
+        "text": "Your combination of dedicated space, patience, sterile technique comfort, and resilience positions you for serious mushroom cultivation. Consider building a still-air box or investing in a laminar flow hood.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Scale"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Lion's Mane Supplement"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "integration-readiness-assessment",
+    "title": "Psychedelic Integration Readiness",
+    "desc": "After a psychedelic mushroom experience, integration is where the real work happens. Assess your readiness to process and apply what you experienced.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-psychedelic-pattern.webp",
+    "questions": [
+      {
+        "q": "How soon after your experience are you taking this assessment?",
+        "opts": [
+          "During or immediately after",
+          "Within the first week",
+          "One to four weeks after",
+          "More than a month after"
+        ]
+      },
+      {
+        "q": "Can you articulate what happened during your experience?",
+        "opts": [
+          "It is completely overwhelming and confusing",
+          "I have fragments but cannot make sense of them",
+          "I can describe the main themes and feelings",
+          "I have a clear narrative with specific insights"
+        ]
+      },
+      {
+        "q": "Do you have someone you can talk to about your experience?",
+        "opts": [
+          "No one who would understand",
+          "Friends but they have no psychedelic experience",
+          "A friend or partner with psychedelic experience",
+          "A therapist or integration specialist"
+        ]
+      },
+      {
+        "q": "How are you sleeping since your experience?",
+        "opts": [
+          "Barely sleeping, racing thoughts",
+          "Disrupted but functional",
+          "About the same as before",
+          "Better than before"
+        ]
+      },
+      {
+        "q": "Are you experiencing persistent anxiety, depersonalization, or intrusive thoughts?",
+        "opts": [
+          "Yes, significantly",
+          "Mildly",
+          "Briefly but they passed",
+          "No"
+        ]
+      },
+      {
+        "q": "Do you have a journaling or reflective practice?",
+        "opts": [
+          "No",
+          "I have tried but do not stick with it",
+          "Occasional journaling",
+          "Regular journaling or contemplative practice"
+        ]
+      },
+      {
+        "q": "Have you made any impulsive major life decisions since your experience?",
+        "opts": [
+          "Yes, several",
+          "I am considering major changes",
+          "I have ideas but I am sitting with them",
+          "No, I am letting things settle"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Seek Professional Support",
+        "text": "Your responses suggest you may be experiencing challenging after-effects that would benefit from professional support. The Fireside Project (62-FIRESIDE) offers free peer support. MAPS maintains a directory of integration therapists.",
+        "products": [
+          {
+            "asin": "0143127748",
+            "name": "The Body Keeps the Score"
+          },
+          {
+            "asin": "B0CHVYY8P4",
+            "name": "Therapy Journal with Guided Prompts"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          }
+        ]
+      },
+      {
+        "title": "Active Integration Phase",
+        "text": "You are in the active integration window. Write everything down before it fades, avoid major life decisions for at least two weeks, and find someone to talk to who can hold space without judgment.",
+        "products": [
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "B0D2K8N8NR",
+            "name": "Meditation Cushion"
+          },
+          {
+            "asin": "1646119266",
+            "name": "Guided Meditation Journal"
+          }
+        ]
+      },
+      {
+        "title": "Grounded Integration",
+        "text": "You are processing your experience from a stable, grounded place. The work now is translating insight into action. What specific changes did the experience point toward?",
+        "products": [
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "B0D2K8N8NR",
+            "name": "Meditation Cushion"
+          },
+          {
+            "asin": "0062429655",
+            "name": "Stealing Fire by Steven Kotler"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "mushroom-knowledge-level",
+    "title": "Your Mushroom Knowledge Level",
+    "desc": "A comprehensive assessment of your mycological knowledge across identification, cultivation, pharmacology, history, and ecology.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-hero-quizzes.webp",
+    "questions": [
+      {
+        "q": "Can you name the five parts of a typical mushroom fruiting body?",
+        "opts": [
+          "I could not name any",
+          "I know cap and stem",
+          "I know cap, stem, gills, and maybe one more",
+          "Cap, stem, gills, ring (annulus), and volva"
+        ]
+      },
+      {
+        "q": "What is mycelium?",
+        "opts": [
+          "The mushroom cap",
+          "The underground root-like network of fungal threads",
+          "A type of mushroom spore",
+          "The soil mushrooms grow in"
+        ]
+      },
+      {
+        "q": "What role do fungi play in forest ecosystems?",
+        "opts": [
+          "They are parasites that harm trees",
+          "They decompose dead matter only",
+          "They form mycorrhizal networks that connect and nourish trees, decompose organic matter, and cycle nutrients",
+          "They compete with plants for sunlight"
+        ]
+      },
+      {
+        "q": "What is the difference between a spore print and a spore syringe?",
+        "opts": [
+          "No idea",
+          "I know what a spore print is but not a syringe",
+          "I understand both conceptually",
+          "I can explain both and have made or used them"
+        ]
+      },
+      {
+        "q": "Who is Paul Stamets and why is he significant?",
+        "opts": [
+          "Never heard of him",
+          "I think he is a mushroom scientist",
+          "He is a prominent mycologist and advocate for fungal solutions",
+          "I know his work in detail including patents, books, and the Stamets Stack"
+        ]
+      },
+      {
+        "q": "What is the Wood Wide Web?",
+        "opts": [
+          "A website about trees",
+          "The mycorrhizal network connecting trees through fungal threads underground",
+          "A type of spider web found in forests",
+          "I am not sure"
+        ]
+      },
+      {
+        "q": "Can you explain saprotrophic, mycorrhizal, and parasitic fungi?",
+        "opts": [
+          "No",
+          "I know one of these terms",
+          "I understand two of the three",
+          "I can explain all three and give examples of each"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "Mushroom Curious: Welcome to the Kingdom",
+        "text": "You are at the beginning of what could become a lifelong fascination. Fungi are the hidden kingdom that makes life on Earth possible. Start with Merlin Sheldrake's Entangled Life for a mind-expanding introduction.",
+        "products": [
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life by Merlin Sheldrake"
+          },
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0735224153",
+            "name": "How to Change Your Mind"
+          }
+        ]
+      },
+      {
+        "title": "Developing Mycophile: Building Knowledge",
+        "text": "You have a foundation that puts you ahead of most people. The next level involves hands-on experience: growing mushrooms, learning spore printing, and understanding ecological relationships.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Supplement"
+          }
+        ]
+      },
+      {
+        "title": "Knowledgeable Mycophile: Solid Understanding",
+        "text": "Your mycological knowledge is substantial. Your next growth edge might be in specialized areas: medicinal mushroom pharmacology, advanced cultivation techniques, or fungal taxonomy.",
+        "products": [
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Mushroom Growing Kit"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "0060801719",
+            "name": "The Doors of Perception"
+          },
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Scale"
+          }
+        ]
+      },
+      {
+        "title": "Advanced Mycologist: Deep Expertise",
+        "text": "Your knowledge spans fungal biology, ecology, pharmacology, cultivation, and cultural history. You are the kind of person who could teach others or contribute to citizen science projects.",
+        "products": [
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          },
+          {
+            "asin": "0060801719",
+            "name": "The Doors of Perception"
+          },
+          {
+            "asin": "B09VK9S4JB",
+            "name": "Advanced Growing Kit"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "mushroom-interaction-risk",
+    "title": "Mushroom-Drug Interaction Risk Assessment",
+    "desc": "Evaluate potential interactions between mushroom supplements or psilocybin and your current medications. Safety first, always.",
+    "heroImage": "https://quiet-medicine.b-cdn.net/images/mushroom-science-lab.webp",
+    "questions": [
+      {
+        "q": "Which category best describes your current medications?",
+        "opts": [
+          "SSRIs or SNRIs (antidepressants)",
+          "Lithium, MAOIs, or tricyclic antidepressants",
+          "Blood thinners (warfarin, Eliquis, Xarelto)",
+          "Blood pressure or heart medications",
+          "Immunosuppressants",
+          "Diabetes medications",
+          "I take no prescription medications"
+        ]
+      },
+      {
+        "q": "What type of mushroom product are you considering?",
+        "opts": [
+          "Functional supplements only (Lion's Mane, Reishi, etc.)",
+          "Psilocybin microdosing",
+          "Psilocybin macro-dose experience",
+          "Both functional supplements and psilocybin"
+        ]
+      },
+      {
+        "q": "How many different medications do you take daily?",
+        "opts": [
+          "None",
+          "One to two",
+          "Three to five",
+          "More than five"
+        ]
+      },
+      {
+        "q": "Do you consume alcohol regularly?",
+        "opts": [
+          "Daily",
+          "Several times a week",
+          "Occasionally",
+          "Rarely or never"
+        ]
+      },
+      {
+        "q": "Have you ever had an adverse reaction to a supplement or herbal product?",
+        "opts": [
+          "Yes, serious reaction",
+          "Yes, mild reaction",
+          "Not that I recall",
+          "No"
+        ]
+      },
+      {
+        "q": "Are you taking any serotonin-affecting supplements (St. John's Wort, 5-HTP, SAMe)?",
+        "opts": [
+          "Yes, one or more",
+          "I am not sure",
+          "No"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "title": "HIGH RISK: Do Not Proceed Without Medical Supervision",
+        "text": "Your medication profile indicates HIGH RISK for dangerous interactions. Lithium + psilocybin can trigger seizures. MAOIs + psilocybin can cause serotonin syndrome. DO NOT combine any mushroom product with your current medications without explicit physician approval.",
+        "products": [
+          {
+            "asin": "0143127748",
+            "name": "The Body Keeps the Score"
+          },
+          {
+            "asin": "B0CHVYY8P4",
+            "name": "Therapy Journal"
+          },
+          {
+            "asin": "1646119266",
+            "name": "Guided Meditation Journal"
+          }
+        ]
+      },
+      {
+        "title": "MODERATE RISK: Medical Consultation Required",
+        "text": "Your profile shows moderate interaction risk. SSRIs significantly reduce psilocybin effects and there are theoretical serotonin risks. Reishi and Maitake can affect blood pressure and blood sugar. Schedule a conversation with your doctor.",
+        "products": [
+          {
+            "asin": "0735224153",
+            "name": "How to Change Your Mind"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "The Psychedelic Integration Journal"
+          },
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Supplement"
+          }
+        ]
+      },
+      {
+        "title": "LOW RISK: Proceed Mindfully",
+        "text": "Your medication profile suggests low interaction risk. Start with low doses, introduce one new product at a time, and monitor your response for at least a week before adjusting.",
+        "products": [
+          {
+            "asin": "B078SZX3ML",
+            "name": "Real Mushrooms Lion's Mane"
+          },
+          {
+            "asin": "B0885S1866",
+            "name": "Precision Milligram Scale"
+          },
+          {
+            "asin": "B0CRKX1VV7",
+            "name": "Wellness Tracking Journal"
+          },
+          {
+            "asin": "0525510311",
+            "name": "Entangled Life"
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 app.get('/assessments', (req, res) => {
   res.send(htmlHead('Assessments — ' + SITE.title, 'In-depth self-assessments with downloadable PDF results for your psychedelic wellness journey.', SITE.domain + '/assessments') + '\n' +
     '<body>\n' + navHTML() + '\n' +
-    '<div class="hero" style="padding:60px 24px 40px;">\n' +
+    '<div class="hero" style="padding:60px 24px 40px;background:linear-gradient(180deg, rgba(13,11,26,0.4) 0%, rgba(13,11,26,0.85) 100%), url(\'https://quiet-medicine.b-cdn.net/images/mushroom-hero-assessments.webp\') center/cover no-repeat;min-height:300px;display:flex;align-items:center;">\n' +
     '  <div class="hero-content"><h1>Assessments</h1><p class="tagline">In-depth evaluations with detailed results you can download and keep.</p></div>\n' +
     '</div>\n' +
     '<main class="wide" style="padding-top:40px;">\n' +
     '<div class="quiz-index-grid">\n' +
     assessments.map(function(a) {
-      return '<div class="quiz-index-card"><h3><a href="/assessment/' + a.slug + '">' + a.title + '</a></h3><p>' + a.desc + '</p></div>';
+      return '<div class="quiz-index-card">' + (a.heroImage ? '<img src="' + a.heroImage + '" alt="' + a.title + '" style="width:100%;height:180px;object-fit:cover;border-radius:12px 12px 0 0;margin:-20px -20px 16px;width:calc(100% + 40px);">' : '') + '<h3><a href="/assessment/' + a.slug + '">' + a.title + '</a></h3><p>' + a.desc + '</p></div>';
     }).join('\n') + '\n' +
     '</div>\n' +
     '</main>\n' + footerHTML() + '\n' + cookieBannerHTML() + '\n' +
@@ -1772,6 +3455,16 @@ assessments.forEach(function(assess) {
       '  var r = results[idx];\n' +
       '  document.getElementById("resultTitle").textContent = r.title;\n' +
       '  document.getElementById("resultText").textContent = r.text;\n' +
+      '  if (r.products && r.products.length > 0) {\n' +
+      '    var prodHtml = \'<div style="margin-top:32px;text-align:left;"><h3 style="font-size:18px;color:var(--accent);margin-bottom:16px;">Recommended Products</h3>\';\n' +
+      '    r.products.forEach(function(p) {\n' +
+      '      prodHtml += \'<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;margin-bottom:8px;background:rgba(124,77,255,0.06);border-radius:8px;border:1px solid rgba(124,77,255,0.15);"><span style="font-size:20px;">\\ud83c\\udf44</span><div><a href="https://www.amazon.com/dp/\' + p.asin + \'?tag=spankyspinola-20" target="_blank" rel="nofollow sponsored" style="color:var(--accent);text-decoration:none;font-weight:600;">\' + p.name + \'</a><span style="font-size:11px;color:var(--text-dim);margin-left:8px;">(paid link)</span></div></div>\';\n' +
+      '    });\n' +
+      '    prodHtml += \'</div>\';\n' +
+      '    document.getElementById("resultText").insertAdjacentHTML("afterend", prodHtml);\n' +
+      '  }\n' +
+      '  var disclaimer = \'<div style="margin-top:24px;padding:16px 20px;background:rgba(255,107,107,0.08);border-left:3px solid #ff6b6b;border-radius:8px;font-size:13px;line-height:1.7;color:var(--text-dim);"><strong style="color:#ff6b6b;">Important Disclaimer:</strong> This assessment is for educational and informational purposes only. It is not medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider before starting any supplement or considering psychedelic use. You assume all responsibility for your own health decisions.</div>\';\n' +
+      '  document.getElementById("scoreBreakdown").insertAdjacentHTML("afterend", disclaimer);\n' +
       '  var breakdown = "<h3 style=\\"font-size:18px;margin-bottom:16px;color:#00E5FF;\\">Your Responses</h3>";\n' +
       '  answers.forEach(function(a, i) {\n' +
       '    var pct = (a.score / 3) * 100;\n' +
