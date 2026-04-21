@@ -54,7 +54,7 @@ echo -n "6e. Voice check: "
 grep -q "voiceSignals\|contractions" src/lib/article-quality-gate.mjs 2>/dev/null && echo OK || echo FAIL
 
 echo -n "6f. Word count check: "
-grep -q "words-too-low:\|words-too-high:" src/lib/article-quality-gate.mjs 2>/dev/null && echo OK || echo FAIL
+grep -q "word-count-too-low:\|word-count-too-high:" src/lib/article-quality-gate.mjs 2>/dev/null && echo OK || echo FAIL
 
 # Generation prompt includes hard rules
 echo -n "7. HARD RULES in gen prompt: "

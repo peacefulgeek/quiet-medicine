@@ -82,6 +82,7 @@ HARD RULES for this article:
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { runQualityGate } from '../src/lib/article-quality-gate.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -103,19 +104,39 @@ async function main() {
   }
 
   console.log('[spotlight] Starting product spotlight generation...');
-  console.log('[spotlight] Requirements: 3-5 Amazon links per spotlight, spankyspinola-20 tag, (paid link) labels');
-  
-  // Product spotlight generation logic:
-  // 1. Pick a product category not recently covered
-  // 2. Select primary product + 2-4 complementary products from AMAZON_PRODUCTS
-  // 3. Generate article with Anthropic API:
-  //    - Review/recommend the primary product
-  //    - Naturally weave in 3-5 Amazon links using formatAmazonLink()
-  //    - Follow all quality standards (word count, voice, no banned phrases, etc.)
-  // 4. Generate hero + OG images with FAL.ai
-  // 5. Upload images to Bunny CDN
-  // 6. Save article JSON to content/articles/
-  // 7. Commit and push to GitHub
+  console.log('[spotlight] Quality gate: 1200-2500 words, 0 em-dashes, 0 AI words, 3-5 Amazon links, voice signals');
+
+  // ─── GENERATION WITH QUALITY GATE (3-attempt loop) ───
+  async function generateSpotlightWithQualityGate(product, relatedProducts) {
+    const MAX_ATTEMPTS = 3;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      console.log(`[spotlight] Attempt ${attempt}/${MAX_ATTEMPTS} for: ${product.name}`);
+
+      // TODO: Call Anthropic API with HARD_RULES appended to prompt
+      // const body = await callAnthropic(product, relatedProducts, HARD_RULES);
+      const body = ''; // placeholder until Anthropic call is wired
+
+      const gate = runQualityGate(body);
+      if (gate.passed) {
+        console.log(`[spotlight] Quality gate PASSED on attempt ${attempt}`);
+        console.log(`[spotlight]   Words: ${gate.wordCount}, Amazon: ${gate.amazonLinks}, Voice: contractions=${gate.voice.contractions}, stdDev=${gate.voice.sentenceStdDev}`);
+        return body;
+      }
+
+      console.warn(`[spotlight] Quality gate FAILED attempt ${attempt}:`, gate.failures);
+    }
+
+    console.error(`[spotlight] ABANDONED after ${MAX_ATTEMPTS} failed attempts: ${product.name}`);
+    return null; // never store a broken article
+  }
+
+  // TODO: Wire generateSpotlightWithQualityGate into the full pipeline
+  // 1. Pick product category not recently covered
+  // 2. Select primary + 2-4 complementary products
+  // 3. const body = await generateSpotlightWithQualityGate(primary, related);
+  // 4. if (!body) return; // abandoned
+  // 5. Generate images with FAL.ai -> process through image-pipeline.mjs
+  // 6. Save JSON, commit, push
 }
 
 main().catch(err => {

@@ -108,6 +108,7 @@ HARD RULES for this article:
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { runQualityGate } from '../src/lib/article-quality-gate.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -144,24 +145,47 @@ async function main() {
   }
 
   console.log('[generate] Starting article generation...');
-  console.log('[generate] Quality standards: 1200-1800 words, no emdashes, no AI words, 3+ Amazon links, Kalesh voice');
-  
-  // Article generation logic:
-  // 1. Use Anthropic API to generate article content
-  //    - Append HARD_RULES to every prompt
-  //    - Embed 3+ Amazon links using formatAmazonLink() + pickRelevantProducts()
-  //    - Voice: Kalesh (consciousness teacher, direct, warm, no spiritual bypassing)
-  // 2. Run quality gate (src/lib/article-quality-gate.mjs):
-  //    - Word count 1200-2500 (target 1600-2000)
-  //    - Zero em-dashes, zero AI-flagged words/phrases
-  //    - 3-4 Amazon links with verified ASINs
-  //    - Voice signals: contractions, sentence variance, conversational markers
-  //    - If gate fails, regenerate (up to 3 attempts, then abandon)
-  // 3. Generate hero + OG images with FAL.ai
-  //    - Process through image-pipeline.mjs (WebP, <200KB, Bunny CDN)
-  // 4. Upload images to Bunny CDN at /images/{slug}.webp and /og/{slug}.webp
-  // 5. Save article JSON to content/articles/{slug}.json
-  // 6. Commit and push to GitHub via GH_PAT
+  console.log('[generate] Quality gate: 1200-2500 words, 0 em-dashes, 0 AI words, 3-4 Amazon links, voice signals');
+
+  // ─── GENERATION WITH QUALITY GATE (3-attempt loop) ───
+  // Step 1: Build prompt with HARD_RULES appended
+  // Step 2: Call Anthropic API to generate article body
+  // Step 3: Run quality gate on generated body
+  // Step 4: If gate fails, log failures and regenerate (up to 3 attempts)
+  // Step 5: If all 3 attempts fail, abandon article (never store broken content)
+  // Step 6: On pass, generate hero + OG images with FAL.ai
+  // Step 7: Process images through image-pipeline.mjs (WebP, <200KB, Bunny CDN)
+  // Step 8: Save article JSON and commit+push to GitHub
+
+  async function generateWithQualityGate(topic, category) {
+    const MAX_ATTEMPTS = 3;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      console.log(`[generate] Attempt ${attempt}/${MAX_ATTEMPTS} for: ${topic}`);
+
+      // TODO: Call Anthropic API with HARD_RULES appended to prompt
+      // const body = await callAnthropic(topic, category, HARD_RULES);
+      const body = ''; // placeholder until Anthropic call is wired
+
+      const gate = runQualityGate(body);
+      if (gate.passed) {
+        console.log(`[generate] Quality gate PASSED on attempt ${attempt}`);
+        console.log(`[generate]   Words: ${gate.wordCount}, Amazon: ${gate.amazonLinks}, Voice: contractions=${gate.voice.contractions}, stdDev=${gate.voice.sentenceStdDev}`);
+        return body;
+      }
+
+      console.warn(`[generate] Quality gate FAILED attempt ${attempt}:`, gate.failures);
+    }
+
+    console.error(`[generate] ABANDONED after ${MAX_ATTEMPTS} failed attempts: ${topic}`);
+    return null; // never store a broken article
+  }
+
+  // TODO: Wire generateWithQualityGate into the full pipeline
+  // 1. Pick topic from editorial calendar
+  // 2. const body = await generateWithQualityGate(topic, category);
+  // 3. if (!body) return; // abandoned
+  // 4. Generate images with FAL.ai -> process through image-pipeline.mjs
+  // 5. Save JSON, commit, push
 }
 
 main().catch(err => {

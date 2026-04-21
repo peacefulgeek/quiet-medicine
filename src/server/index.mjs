@@ -569,6 +569,16 @@ function htmlHead(title, description, canonical, ogImage) {
   <link rel="alternate" type="application/rss+xml" title="The Quiet Medicine RSS" href="/feed.xml">
   <link rel="preconnect" href="${BUNNY_CDN_BASE}">
   <style>${css()}</style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXL1WC9X7D"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YXL1WC9X7D');
+  </script>
+  <!-- Grow.me -->
+  <script data-grow-initializer="">!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTpkYmZiYzM0ZS04Zjk1LTRmNmItYjIxMi01YTIwM2Y0NGM0ZGQ=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();</script>
 </head>`;
 }
 
