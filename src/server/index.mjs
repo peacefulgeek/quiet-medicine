@@ -49,6 +49,15 @@ const CAT_DESCRIPTIONS = {
 };
 
 // ─── MIDDLEWARE ───
+// 301 redirect www → non-www (canonical domain for SEO)
+app.use((req, res, next) => {
+  const host = req.hostname || req.headers.host;
+  if (host && host.startsWith('www.')) {
+    const bare = host.replace(/^www\./, '');
+    return res.redirect(301, `${req.protocol}://${bare}${req.originalUrl}`);
+  }
+  next();
+});
 app.use(compression());
 app.use((req, res, next) => {
   res.setHeader('X-AI-Content-Author', 'Kalesh');
