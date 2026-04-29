@@ -1,25 +1,42 @@
 // ─── PRODUCT SPOTLIGHT GENERATOR ───
-// Runs every Saturday via cron — generates 1 product spotlight article
-// Uses same env vars as generate-articles.mjs
+// Runs Saturday 08:00 UTC — generates 1 product spotlight, publishes directly
+// Uses DeepSeek V4-Pro via OpenAI SDK
 
-const AUTO_GEN_ENABLED = true; // Flipped to true - autogen active
+import OpenAI from 'openai';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-const FAL_KEY = process.env.FAL_API_KEY;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const contentDir = path.join(__dirname, '..', 'content', 'articles');
+
+// ─── FEATURE FLAG ───
+const AUTO_GEN_ENABLED = process.env.AUTO_GEN_ENABLED === 'true';
+
+// ─── DEEPSEEK V4-PRO CLIENT ───
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: process.env.OPENAI_BASE_URL || 'https://api.deepseek.com'
+});
+const MODEL = process.env.OPENAI_MODEL || 'deepseek-v4-pro';
+
+// ─── GIT ───
 const GH_PAT = process.env.GH_PAT;
-
-const BUNNY_STORAGE_ZONE = 'quiet-medicine';
-const BUNNY_STORAGE_HOST = 'ny.storage.bunnycdn.com';
-const BUNNY_STORAGE_PASSWORD = '4675df05-785b-4fca-a9e84e666981-5a5c-430d';
-const BUNNY_CDN_BASE = 'https://quiet-medicine.b-cdn.net';
 const GITHUB_REPO = 'peacefulgeek/quiet-medicine';
-const AMAZON_TAG = 'spankyspinola-20';
 
-// ─── AMAZON PRODUCT CATALOG FOR SPOTLIGHTS ───
-// Spotlight articles are product-focused, so they MUST include at least 3-5 Amazon links
-// The primary product being reviewed + 2-4 related/complementary products
-// ALL ASINs VERIFIED via HTTP 200 from amazon.com/dp/{ASIN} on 2026-04-16
-const AMAZON_PRODUCTS = [
+// ─── BUNNY CDN (HARDCODED) ───
+const BUNNY_STORAGE_ZONE = 'quiet-medicine';
+const BUNNY_API_KEY = '4675df05-785b-4fca-a9e84e666981-5a5c-430d';
+const BUNNY_PULL_ZONE = 'https://quiet-medicine.b-cdn.net';
+const BUNNY_HOSTNAME = 'ny.storage.bunnycdn.com';
+
+// ─── CONFIG ───
+const AMAZON_TAG = 'spankyspinola-20';
+const AUTHOR_LINK = 'https://kalesh.love';
+
+// ─── VERIFIED ASIN POOL ───
+const ASIN_POOL = [
   { asin: 'B0885S1766', name: 'precision milligram scale', category: 'tools' },
   { asin: 'B0CRKX1VV7', name: 'The Psychedelic Integration Journal', category: 'journals' },
   { asin: '1646119266', name: 'a guided meditation journal', category: 'journals' },
@@ -48,48 +65,99 @@ const AMAZON_PRODUCTS = [
   { asin: '1451636024', name: 'Waking Up by Sam Harris', category: 'books' },
 ];
 
-// ─── QUALITY STANDARDS (same as generate-articles.mjs) ───
-// 1. 1200-1800 words
-// 2. No emdashes
-// 3. No AI-flagged words
-// 4. No banned phrases
-// 5. 2 conversational interjections
-// 6. At least 1 lived experience marker
-// 7. At least 3 Amazon affiliate links (spotlights should have 3-5)
-// 8. Kalesh voice
-// 9. Health disclaimer
-// 10. Article-specific images on Bunny CDN
+// ─── PAUL VOICE GATE ───
+const BANNED_WORDS = /\b(utilize|delve|tapestry|landscape|paradigm|synergy|leverage|unlock|empower|pivotal|embark|underscore|paramount|seamlessly|robust|beacon|foster|elevate|curate|curated|bespoke|resonate|harness|intricate|plethora|myriad|groundbreaking|innovative|cutting-edge|state-of-the-art|game-changer|ever-evolving|rapidly-evolving|stakeholders|navigate|ecosystem|framework|comprehensive|transformative|holistic|nuanced|multifaceted|profound|furthermore)\b/gi;
 
-// ─── AMAZON LINK FORMAT ───
-// <a href="https://www.amazon.com/dp/{ASIN}?tag=spankyspinola-20" rel="nofollow sponsored" target="_blank">{product name} (paid link)</a>
+const BANNED_PHRASES = [
+  "it's important to note that",
+  "it's worth noting that",
+  "in conclusion",
+  "in summary",
+  "a holistic approach",
+  "in the realm of",
+  "dive deep into",
+  "at the end of the day",
+  "in today's fast-paced world",
+  "plays a crucial role",
+];
 
-// ─── HARD RULES (appended to every Anthropic generation prompt) ───
-const HARD_RULES = `
-HARD RULES for this article:
-- 1,600 to 2,000 words (strict)
-- Zero em-dashes. Use commas, periods, colons, or parentheses instead.
-- Never use these words: delve, tapestry, paradigm, synergy, leverage, unlock, empower, utilize, pivotal, embark, underscore, paramount, seamlessly, robust, beacon, foster, elevate, curate, curated, bespoke, resonate, harness, intricate, plethora, myriad, comprehensive, transformative, groundbreaking, innovative, cutting-edge, revolutionary, state-of-the-art, ever-evolving, profound, holistic, nuanced, multifaceted, stakeholders, ecosystem, furthermore, moreover, additionally, consequently, subsequently, thereby, streamline, optimize, facilitate, amplify, catalyze, landscape, realm, sphere, domain, arguably, notably, crucially, importantly, essentially, fundamentally, inherently, intrinsically, substantively, propel, spearhead, orchestrate, navigate, traverse, thusly, wherein, whereby, remarkable, extraordinary, exceptional, unprecedented, unparalleled, game-changing, next-level, world-class.
-- Never use these phrases: "it's important to note," "in conclusion," "in summary," "in the realm of," "dive deep into," "dive into," "delve into," "at the end of the day," "in today's fast-paced world," "plays a crucial role," "a testament to," "when it comes to," "cannot be overstated," "it goes without saying," "needless to say," "last but not least," "first and foremost," "the power of," "the beauty of," "the art of," "the journey of," "serves as a," "stands as a," "acts as a," "has emerged as," "continues to evolve," "speaks volumes."
-- Contractions throughout. You're. Don't. It's. That's. I've. We'll.
-- Vary sentence length aggressively. Some fragments. Some long ones that stretch across a full breath. Some just three words.
-- Direct address ("you") throughout OR first-person ("I / my") throughout. Pick one.
-- Include at least 2 conversational openers somewhere in the piece: "Here's the thing," "Honestly," "Look," "Truth is," "But here's what's interesting," "Think about it," "That said."
-- Concrete specifics over abstractions. A name. A number. A moment.
-- 3 to 5 Amazon product links embedded naturally in prose, each followed by "(paid link)" in plain text. Use only ASINs from the provided catalog.
-- No em-dashes. No em-dashes. No em-dashes.
-`;
+function runPaulVoiceGate(text) {
+  const failures = [];
+  const wordMatches = text.match(BANNED_WORDS);
+  if (wordMatches) failures.push(`banned-words: ${[...new Set(wordMatches.map(w => w.toLowerCase()))].join(', ')}`);
+  const lowerText = text.toLowerCase();
+  for (const phrase of BANNED_PHRASES) {
+    if (lowerText.includes(phrase.toLowerCase())) failures.push(`banned-phrase: "${phrase}"`);
+  }
+  let cleaned = text.replace(/\u2014/g, ' - ').replace(/\u2013/g, ' - ');
+  if (cleaned !== text) text = cleaned;
+  const words = text.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(w => w.length > 0).length;
+  if (words < 1200) failures.push(`word-count-too-low: ${words}`);
+  if (words > 2500) failures.push(`word-count-too-high: ${words}`);
+  const amazonLinks = (text.match(/amazon\.com\/dp\/[A-Z0-9]{10}/g) || []).length;
+  if (amazonLinks < 3 || amazonLinks > 4) failures.push(`amazon-links: ${amazonLinks} (need 3-4)`);
+  return { passed: failures.length === 0, failures, wordCount: words, amazonLinks, text };
+}
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { runQualityGate } from '../src/lib/article-quality-gate.mjs';
+// ─── BUNNY CDN IMAGE LIBRARY ───
+async function assignHeroImage(slug) {
+  const sourceFile = `lib-${String(Math.floor(Math.random() * 40) + 1).padStart(2, '0')}.webp`;
+  const destFile = `${slug}.webp`;
+  try {
+    const sourceUrl = `${BUNNY_PULL_ZONE}/library/${sourceFile}`;
+    const downloadRes = await fetch(sourceUrl);
+    if (!downloadRes.ok) throw new Error('Download failed');
+    const imageBuffer = await downloadRes.arrayBuffer();
+    const uploadUrl = `https://${BUNNY_HOSTNAME}/${BUNNY_STORAGE_ZONE}/images/${destFile}`;
+    const uploadRes = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: { 'AccessKey': BUNNY_API_KEY, 'Content-Type': 'image/webp' },
+      body: imageBuffer,
+    });
+    if (!uploadRes.ok) throw new Error('Upload failed');
+    return `${BUNNY_PULL_ZONE}/images/${destFile}`;
+  } catch (err) {
+    return `${BUNNY_PULL_ZONE}/library/${sourceFile}`;
+  }
+}
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+function slugify(title) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
+}
 
-/** Format an Amazon affiliate link */
-function formatAmazonLink(product) {
-  return `<a href="https://www.amazon.com/dp/${product.asin}?tag=${AMAZON_TAG}" rel="nofollow sponsored" target="_blank">${product.name} (paid link)</a>`;
+function buildSpotlightPrompt(primary, related) {
+  const allProducts = [primary, ...related];
+  const asinList = allProducts.map(p =>
+    `  ASIN: ${p.asin} — "${p.name}" → <a href="https://www.amazon.com/dp/${p.asin}?tag=${AMAZON_TAG}" target="_blank" rel="nofollow sponsored">${p.name} (paid link)</a>`
+  ).join('\n');
+
+  return `You are Kalesh, a consciousness teacher and writer at The Quiet Medicine.
+
+Write a product spotlight/review article about: "${primary.name}"
+This is a genuine, experience-based review that helps readers decide if this product supports their psychedelic wellness practice.
+
+VOICE:
+- Direct address ("you") throughout
+- Contractions everywhere (don't, can't, it's, you're)
+- 2-3 conversational markers: "Right?!", "Know what I mean?", "Here's the thing,", "Honestly,"
+- Concrete specifics. Real scenarios. Real use cases.
+- Vary sentence length aggressively.
+
+FORMAT:
+- Full HTML article body only (no wrapper tags)
+- Use <h2>, <h3>, <p>, <ul>, <li> tags
+- 1,400 to 2,000 words
+- Include 3 or 4 Amazon affiliate links (primary + related products):
+${asinList}
+- Include 1 link to ${AUTHOR_LINK}
+- End with disclaimer card
+
+HARD RULES:
+- Zero em-dashes (— or –). Use commas, periods, colons instead.
+- NEVER use: utilize, delve, tapestry, landscape, paradigm, synergy, leverage, unlock, empower, pivotal, embark, underscore, paramount, seamlessly, robust, beacon, foster, elevate, curate, curated, bespoke, resonate, harness, intricate, plethora, myriad, groundbreaking, innovative, cutting-edge, state-of-the-art, game-changer, ever-evolving, stakeholders, navigate, ecosystem, framework, comprehensive, transformative, holistic, nuanced, multifaceted, profound, furthermore
+- NEVER use: "it's important to note that", "in conclusion", "in summary", "a holistic approach", "in the realm of", "dive deep into", "at the end of the day", "in today's fast-paced world", "plays a crucial role"
+
+Output ONLY the HTML. No preamble. No code fences.`;
 }
 
 async function main() {
@@ -97,49 +165,88 @@ async function main() {
     console.log('[spotlight] AUTO_GEN_ENABLED is false. Exiting.');
     process.exit(0);
   }
-
-  if (!ANTHROPIC_API_KEY || !FAL_KEY || !GH_PAT) {
-    console.error('[spotlight] Missing required environment variables.');
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('[spotlight] Missing OPENAI_API_KEY. Exiting.');
     process.exit(1);
   }
 
-  console.log('[spotlight] Starting product spotlight generation...');
-  console.log('[spotlight] Quality gate: 1200-2500 words, 0 em-dashes, 0 AI words, 3-5 Amazon links, voice signals');
+  // Pick a product not recently spotlighted
+  const existingSlugs = new Set(fs.readdirSync(contentDir).map(f => f.replace('.json', '')));
+  const shuffled = [...ASIN_POOL].sort(() => Math.random() - 0.5);
+  const primary = shuffled[0];
+  const related = shuffled.slice(1, 4);
 
-  // ─── GENERATION WITH QUALITY GATE (3-attempt loop) ───
-  async function generateSpotlightWithQualityGate(product, relatedProducts) {
-    const MAX_ATTEMPTS = 3;
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-      console.log(`[spotlight] Attempt ${attempt}/${MAX_ATTEMPTS} for: ${product.name}`);
+  console.log(`[spotlight] Generating spotlight for: ${primary.name}`);
 
-      // TODO: Call Anthropic API with HARD_RULES appended to prompt
-      // const body = await callAnthropic(product, relatedProducts, HARD_RULES);
-      const body = ''; // placeholder until Anthropic call is wired
+  const MAX_ATTEMPTS = 4;
+  let body = null;
 
-      const gate = runQualityGate(body);
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    console.log(`[spotlight] Attempt ${attempt}/${MAX_ATTEMPTS}`);
+    try {
+      const response = await client.chat.completions.create({
+        model: MODEL,
+        messages: [{ role: 'user', content: buildSpotlightPrompt(primary, related) }],
+        temperature: 0.72,
+      });
+      let text = response.choices[0].message.content || '';
+      text = text.replace(/^```html?\n?/i, '').replace(/\n?```$/i, '').trim();
+      const gate = runPaulVoiceGate(text);
       if (gate.passed) {
-        console.log(`[spotlight] Quality gate PASSED on attempt ${attempt}`);
-        console.log(`[spotlight]   Words: ${gate.wordCount}, Amazon: ${gate.amazonLinks}, Voice: contractions=${gate.voice.contractions}, stdDev=${gate.voice.sentenceStdDev}`);
-        return body;
+        console.log(`[spotlight] PASSED (words: ${gate.wordCount}, amazon: ${gate.amazonLinks})`);
+        body = gate.text;
+        break;
       }
-
-      console.warn(`[spotlight] Quality gate FAILED attempt ${attempt}:`, gate.failures);
+      console.warn(`[spotlight] FAILED:`, gate.failures);
+    } catch (err) {
+      console.error(`[spotlight] API error:`, err.message);
     }
-
-    console.error(`[spotlight] ABANDONED after ${MAX_ATTEMPTS} failed attempts: ${product.name}`);
-    return null; // never store a broken article
   }
 
-  // TODO: Wire generateSpotlightWithQualityGate into the full pipeline
-  // 1. Pick product category not recently covered
-  // 2. Select primary + 2-4 complementary products
-  // 3. const body = await generateSpotlightWithQualityGate(primary, related);
-  // 4. if (!body) return; // abandoned
-  // 5. Generate images with FAL.ai -> process through image-pipeline.mjs
-  // 6. Save JSON, commit, push
+  if (!body) {
+    console.error('[spotlight] ABANDONED. Exiting.');
+    process.exit(1);
+  }
+
+  const slug = slugify(`spotlight-${primary.name}`);
+  const heroUrl = await assignHeroImage(slug);
+
+  const article = {
+    slug,
+    title: `Product Spotlight: ${primary.name}`,
+    categorySlug: 'the-microdose',
+    categoryName: 'The Microdose',
+    dateISO: new Date().toISOString(),
+    body,
+    excerpt: body.replace(/<[^>]+>/g, ' ').slice(0, 200).trim() + '...',
+    heroImage: heroUrl,
+    ogImage: heroUrl,
+    heroAlt: `${primary.name} product review`,
+    readingTime: Math.ceil(body.replace(/<[^>]+>/g, ' ').split(/\s+/).length / 250),
+    status: 'published',
+    published_at: new Date().toISOString(),
+    publishDate: new Date().toISOString().split('T')[0],
+    wordCount: body.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(w => w.length > 0).length,
+  };
+
+  fs.writeFileSync(path.join(contentDir, `${slug}.json`), JSON.stringify(article, null, 2));
+  console.log(`[spotlight] Published: ${slug}`);
+
+  // Git push
+  if (GH_PAT) {
+    const { execSync } = await import('child_process');
+    try {
+      execSync('git add -A', { cwd: path.join(__dirname, '..'), stdio: 'pipe' });
+      execSync(`git commit -m "Spotlight: ${primary.name}"`, { cwd: path.join(__dirname, '..'), stdio: 'pipe' });
+      execSync(`git push https://${GH_PAT}@github.com/${GITHUB_REPO}.git main`, { cwd: path.join(__dirname, '..'), stdio: 'pipe' });
+      console.log('[spotlight] Pushed to GitHub.');
+    } catch (err) {
+      console.warn('[spotlight] Git push failed:', err.message);
+    }
+  }
 }
 
 main().catch(err => {
-  console.error('[spotlight] Fatal error:', err);
+  console.error('[spotlight] Fatal:', err);
   process.exit(1);
 });

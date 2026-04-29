@@ -12,7 +12,7 @@ const BUNNY_API_KEY = process.env.BUNNY_API_KEY || '';
 const BUNNY_PULL_ZONE_URL = process.env.BUNNY_PULL_ZONE_URL || 'https://quiet-medicine.b-cdn.net';
 
 /**
- * Take a source image URL (from FAL or any source), fetch it, convert to WebP,
+ * Take a source image URL, fetch it, convert to WebP,
  * compress to under 200KB, upload to Bunny, return the CDN URL.
  */
 export async function processAndUploadImage(sourceUrl, filename) {

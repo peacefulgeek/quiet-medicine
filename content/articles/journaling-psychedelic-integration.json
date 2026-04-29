@@ -34,5 +34,7 @@
   "status": "published",
   "publishDate": "2026-05-01T16:00:00.000Z",
   "linkType": "internal",
-  "wordCount": 1462
+  "wordCount": 1462,
+  "queued_at": "2026-05-01T16:00:00.000Z",
+  "published_at": "2026-05-01T16:00:00.000Z"
 }

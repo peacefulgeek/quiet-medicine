@@ -17,5 +17,7 @@
   "status": "published",
   "publishDate": "2026-05-12T18:00:00.000Z",
   "linkType": "amazon",
-  "wordCount": 1527
+  "wordCount": 1527,
+  "queued_at": "2026-05-12T18:00:00.000Z",
+  "published_at": "2026-05-12T18:00:00.000Z"
 }

@@ -26,5 +26,7 @@
   "status": "published",
   "publishDate": "2026-02-06T10:00:00.000Z",
   "linkType": "kalesh",
-  "wordCount": 1460
+  "wordCount": 1460,
+  "queued_at": "2026-02-06T10:00:00.000Z",
+  "published_at": "2026-02-06T10:00:00.000Z"
 }

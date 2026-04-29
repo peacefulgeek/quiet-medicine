@@ -38,5 +38,7 @@
   "status": "published",
   "publishDate": "2026-05-16T12:00:00.000Z",
   "linkType": "kalesh",
-  "wordCount": 1509
+  "wordCount": 1509,
+  "queued_at": "2026-05-16T12:00:00.000Z",
+  "published_at": "2026-05-16T12:00:00.000Z"
 }

@@ -1,23 +1,40 @@
-// ─── FEATURE FLAG (stays in code — not a secret) ───
-const AUTO_GEN_ENABLED = true; // Flipped to true - autogen active
+// ─── ARTICLE PUBLISHER / GENERATOR ───
+// Queue-based: publishes from queue first, generates new if queue empty
+// Uses DeepSeek V4-Pro via OpenAI SDK
 
-// ─── FROM RENDER ENV VARS (auto-revoked if found in code) ───
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-const FAL_KEY = process.env.FAL_API_KEY;
+import OpenAI from 'openai';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const contentDir = path.join(__dirname, '..', 'content', 'articles');
+
+// ─── FEATURE FLAG ───
+const AUTO_GEN_ENABLED = process.env.AUTO_GEN_ENABLED === 'true';
+
+// ─── DEEPSEEK V4-PRO CLIENT ───
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: process.env.OPENAI_BASE_URL || 'https://api.deepseek.com'
+});
+const MODEL = process.env.OPENAI_MODEL || 'deepseek-v4-pro';
+
+// ─── GIT ───
 const GH_PAT = process.env.GH_PAT;
-
-// ─── HARDCODED (Bunny is safe in code) ───
-const BUNNY_STORAGE_ZONE = 'quiet-medicine';
-const BUNNY_STORAGE_HOST = 'ny.storage.bunnycdn.com';
-const BUNNY_STORAGE_PASSWORD = '4675df05-785b-4fca-a9e84e666981-5a5c-430d';
-const BUNNY_CDN_BASE = 'https://quiet-medicine.b-cdn.net';
 const GITHUB_REPO = 'peacefulgeek/quiet-medicine';
+
+// ─── BUNNY CDN (HARDCODED — safe in code) ───
+const BUNNY_STORAGE_ZONE = 'quiet-medicine';
+const BUNNY_API_KEY = '4675df05-785b-4fca-a9e84e666981-5a5c-430d';
+const BUNNY_PULL_ZONE = 'https://quiet-medicine.b-cdn.net';
+const BUNNY_HOSTNAME = 'ny.storage.bunnycdn.com';
 
 // ─── SITE CONFIG ───
 const SITE_NAME = 'The Quiet Medicine';
 const SITE_DOMAIN = 'https://thequietmedicine.com';
 const AUTHOR_NAME = 'Kalesh';
-const AUTHOR_TITLE = 'Consciousness Teacher & Writer';
 const AUTHOR_LINK = 'https://kalesh.love';
 const AMAZON_TAG = 'spankyspinola-20';
 
@@ -40,152 +57,345 @@ const EXTERNAL_AUTHORITY_SITES = [
   'https://www.apa.org',
 ];
 
-// ─── AMAZON PRODUCT CATALOG ───
-// Every generated article MUST include at least 3 Amazon affiliate links
-// Products should be contextually relevant to the article topic
-// ALL ASINs VERIFIED via HTTP 200 from amazon.com/dp/{ASIN} on 2026-04-16
-const AMAZON_PRODUCTS = [
-  { asin: 'B0885S1766', name: 'precision milligram scale', keywords: ['microdos', 'dose', 'dosage', 'scale', 'measure', 'protocol', 'psilocybin'] },
-  { asin: 'B0CRKX1VV7', name: 'The Psychedelic Integration Journal', keywords: ['integrat', 'journal', 'writing', 'reflect', 'process', 'aftercare', 'insight'] },
-  { asin: '1646119266', name: 'a guided meditation journal', keywords: ['meditat', 'mindful', 'contemplat', 'silence', 'awareness', 'breath'] },
-  { asin: 'B0D2K8N8NR', name: 'a meditation zafu cushion', keywords: ['meditat', 'sit', 'breath', 'mindful', 'practice', 'ceremony', 'ritual'] },
-  { asin: 'B09XS7JWHH', name: 'Sony WH-1000XM5 noise-canceling headphones', keywords: ['music', 'sound', 'listen', 'audio', 'session', 'sensory'] },
-  { asin: 'B078SZX3ML', name: "Lion's Mane mushroom capsules", keywords: ['mushroom', 'adapto', 'supplement', 'stack', 'stamets', 'nootropic'] },
-  { asin: 'B08346DZN9', name: 'an intermittent fasting tracker', keywords: ['fast', 'diet', 'nutrition', 'body', 'preparation', 'cleanse'] },
-  { asin: 'B09VK9S4JB', name: 'a mushroom growing kit', keywords: ['grow', 'mushroom', 'cultivat', 'mycel', 'fungi'] },
-  { asin: '0735224153', name: "How to Change Your Mind by Michael Pollan", keywords: ['pollan', 'book', 'research', 'history', 'science', 'literature'] },
-  { asin: '1594774021', name: "The Psychedelic Explorer's Guide", keywords: ['guide', 'preparation', 'set', 'setting', 'sitter', 'facilitat'] },
-  { asin: '0143127748', name: 'The Body Keeps the Score', keywords: ['trauma', 'body', 'somatic', 'ptsd', 'nervous', 'stress', 'healing'] },
-  { asin: '0062429655', name: 'Stealing Fire', keywords: ['flow', 'consciousness', 'peak', 'altered', 'brain', 'neuroscience'] },
-  { asin: '0451494091', name: 'A Really Good Day by Ayelet Waldman', keywords: ['microdos', 'lsd', 'mood', 'depression', 'anxiety', 'daily'] },
-  { asin: '0525510311', name: 'Entangled Life by Merlin Sheldrake', keywords: ['fungi', 'mushroom', 'mycel', 'network', 'nature', 'biology'] },
-  { asin: 'B0GRTH9B7J', name: 'blue light blocking glasses', keywords: ['sleep', 'light', 'circadian', 'rest', 'recovery', 'night'] },
-  { asin: 'B073429DV2', name: 'a weighted blanket for grounding', keywords: ['sleep', 'anxiety', 'calm', 'nervous', 'relax', 'grounding'] },
-  { asin: 'B01MR4Y0CZ', name: 'an aromatherapy essential oil diffuser', keywords: ['aroma', 'scent', 'essential', 'ceremony', 'ritual', 'setting'] },
-  { asin: 'B08FR8MPCW', name: 'an acupressure mat and pillow set', keywords: ['body', 'somatic', 'tension', 'release', 'physical', 'grounding'] },
-  { asin: 'B0D5HNFKVC', name: 'a natural beeswax candle set', keywords: ['ceremony', 'ritual', 'candle', 'light', 'setting', 'darkness'] },
-  { asin: 'B0FPML7DJC', name: 'a WHOOP HRV monitor', keywords: ['heart', 'hrv', 'nervous', 'vagal', 'biometric', 'stress'] },
-  { asin: 'B0CHVYY8P4', name: 'a therapy journal with guided prompts', keywords: ['therap', 'clinical', 'session', 'treatment', 'mental health'] },
-  { asin: 'B0DK86ZBNJ', name: 'a soft therapy blanket', keywords: ['session', 'comfort', 'clinical', 'therap', 'support'] },
-  { asin: 'B0FWQQGTST', name: 'a gentle meditation timer', keywords: ['timer', 'meditation', 'practice', 'mindful', 'routine'] },
-  { asin: 'B074TBYWGS', name: 'a silk sleep eye mask', keywords: ['sleep', 'eye', 'mask', 'rest', 'dark', 'session'] },
-  { asin: '0060801719', name: 'The Doors of Perception by Aldous Huxley', keywords: ['huxley', 'classic', 'mescaline', 'perception', 'history'] },
-  { asin: '1451636024', name: 'Waking Up by Sam Harris', keywords: ['harris', 'meditation', 'spiritual', 'consciousness', 'mindful'] },
+// ─── VERIFIED ASIN POOL ───
+const ASIN_POOL = [
+  { asin: 'B0885S1766', name: 'precision milligram scale' },
+  { asin: 'B0CRKX1VV7', name: 'The Psychedelic Integration Journal' },
+  { asin: '1646119266', name: 'a guided meditation journal' },
+  { asin: 'B0D2K8N8NR', name: 'a meditation zafu cushion' },
+  { asin: 'B09XS7JWHH', name: 'Sony WH-1000XM5 noise-canceling headphones' },
+  { asin: 'B078SZX3ML', name: "Lion's Mane mushroom capsules" },
+  { asin: 'B08346DZN9', name: 'an intermittent fasting tracker' },
+  { asin: 'B09VK9S4JB', name: 'a mushroom growing kit' },
+  { asin: '0735224153', name: "How to Change Your Mind by Michael Pollan" },
+  { asin: '1594774021', name: "The Psychedelic Explorer's Guide" },
+  { asin: '0143127748', name: 'The Body Keeps the Score' },
+  { asin: '0062429655', name: 'Stealing Fire' },
+  { asin: '0451494091', name: 'A Really Good Day by Ayelet Waldman' },
+  { asin: '0525510311', name: 'Entangled Life by Merlin Sheldrake' },
+  { asin: 'B0GRTH9B7J', name: 'blue light blocking glasses' },
+  { asin: 'B073429DV2', name: 'a weighted blanket for grounding' },
+  { asin: 'B01MR4Y0CZ', name: 'an aromatherapy essential oil diffuser' },
+  { asin: 'B08FR8MPCW', name: 'an acupressure mat and pillow set' },
+  { asin: 'B0D5HNFKVC', name: 'a natural beeswax candle set' },
+  { asin: 'B0FPML7DJC', name: 'a WHOOP HRV monitor' },
+  { asin: 'B0CHVYY8P4', name: 'a therapy journal with guided prompts' },
+  { asin: 'B0DK86ZBNJ', name: 'a soft therapy blanket' },
+  { asin: 'B0FWQQGTST', name: 'a gentle meditation timer' },
+  { asin: 'B074TBYWGS', name: 'a silk sleep eye mask' },
+  { asin: '0060801719', name: 'The Doors of Perception by Aldous Huxley' },
+  { asin: '1451636024', name: 'Waking Up by Sam Harris' },
 ];
 
-// ─── QUALITY STANDARDS FOR GENERATED ARTICLES ───
-// Every article MUST:
-// 1. Be 1200-1800 words
-// 2. Use NO emdashes (use ..., -, or ~ instead)
-// 3. Use NO AI-flagged words (profound, transformative, holistic, nuanced, multifaceted, delve, tapestry)
-// 4. Use NO banned phrases (manifest, lean into, hold space, safe space, sacred container)
-// 5. Include 2 conversational interjections (e.g., "Stay with me here.", "I know, I know.", "Wild, right?")
-// 6. Include at least 1 lived experience marker (e.g., "In my experience,", "I've sat with", "A client once")
-// 7. Include at least 3 Amazon affiliate links with spankyspinola-20 tag, (paid link) label, rel="nofollow sponsored"
-// 8. Be written in Kalesh's voice (consciousness teacher, direct, warm, no spiritual bypassing)
-// 9. Include a health disclaimer card
-// 10. Have article-specific hero + OG images generated and uploaded to Bunny CDN
+// ─── PAUL VOICE GATE ───
+const BANNED_WORDS = /\b(utilize|delve|tapestry|landscape|paradigm|synergy|leverage|unlock|empower|pivotal|embark|underscore|paramount|seamlessly|robust|beacon|foster|elevate|curate|curated|bespoke|resonate|harness|intricate|plethora|myriad|groundbreaking|innovative|cutting-edge|state-of-the-art|game-changer|ever-evolving|rapidly-evolving|stakeholders|navigate|ecosystem|framework|comprehensive|transformative|holistic|nuanced|multifaceted|profound|furthermore)\b/gi;
 
-// ─── AMAZON LINK FORMAT ───
-// <a href="https://www.amazon.com/dp/{ASIN}?tag=spankyspinola-20" rel="nofollow sponsored" target="_blank">{product name} (paid link)</a>
+const BANNED_PHRASES = [
+  "it's important to note that",
+  "it's worth noting that",
+  "in conclusion",
+  "in summary",
+  "a holistic approach",
+  "in the realm of",
+  "dive deep into",
+  "at the end of the day",
+  "in today's fast-paced world",
+  "plays a crucial role",
+];
 
-// ─── HARD RULES (appended to every Anthropic generation prompt) ───
-const HARD_RULES = `
-HARD RULES for this article:
-- 1,600 to 2,000 words (strict)
-- Zero em-dashes. Use commas, periods, colons, or parentheses instead.
-- Never use these words: delve, tapestry, paradigm, synergy, leverage, unlock, empower, utilize, pivotal, embark, underscore, paramount, seamlessly, robust, beacon, foster, elevate, curate, curated, bespoke, resonate, harness, intricate, plethora, myriad, comprehensive, transformative, groundbreaking, innovative, cutting-edge, revolutionary, state-of-the-art, ever-evolving, profound, holistic, nuanced, multifaceted, stakeholders, ecosystem, furthermore, moreover, additionally, consequently, subsequently, thereby, streamline, optimize, facilitate, amplify, catalyze, landscape, realm, sphere, domain, arguably, notably, crucially, importantly, essentially, fundamentally, inherently, intrinsically, substantively, propel, spearhead, orchestrate, navigate, traverse, thusly, wherein, whereby, remarkable, extraordinary, exceptional, unprecedented, unparalleled, game-changing, next-level, world-class.
-- Never use these phrases: "it's important to note," "in conclusion," "in summary," "in the realm of," "dive deep into," "dive into," "delve into," "at the end of the day," "in today's fast-paced world," "plays a crucial role," "a testament to," "when it comes to," "cannot be overstated," "it goes without saying," "needless to say," "last but not least," "first and foremost," "the power of," "the beauty of," "the art of," "the journey of," "serves as a," "stands as a," "acts as a," "has emerged as," "continues to evolve," "speaks volumes."
-- Contractions throughout. You're. Don't. It's. That's. I've. We'll.
-- Vary sentence length aggressively. Some fragments. Some long ones that stretch across a full breath. Some just three words.
-- Direct address ("you") throughout OR first-person ("I / my") throughout. Pick one.
-- Include at least 2 conversational openers somewhere in the piece: "Here's the thing," "Honestly," "Look," "Truth is," "But here's what's interesting," "Think about it," "That said."
+function runPaulVoiceGate(text) {
+  const failures = [];
+
+  // 1. Banned words
+  const wordMatches = text.match(BANNED_WORDS);
+  if (wordMatches) failures.push(`banned-words: ${[...new Set(wordMatches.map(w => w.toLowerCase()))].join(', ')}`);
+
+  // 2. Banned phrases
+  const lowerText = text.toLowerCase();
+  for (const phrase of BANNED_PHRASES) {
+    if (lowerText.includes(phrase.toLowerCase())) failures.push(`banned-phrase: "${phrase}"`);
+  }
+
+  // 3. Em-dashes (auto-replace first)
+  let cleaned = text.replace(/\u2014/g, ' - ').replace(/\u2013/g, ' - ');
+  if (cleaned !== text) {
+    text = cleaned; // use cleaned version going forward
+  }
+  // If any survive after replacement (shouldn't happen, but check)
+  if (/[\u2014\u2013]/.test(text)) failures.push('em-dash-survived');
+
+  // 4. Word count
+  const words = text.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(w => w.length > 0).length;
+  if (words < 1200) failures.push(`word-count-too-low: ${words}`);
+  if (words > 2500) failures.push(`word-count-too-high: ${words}`);
+
+  // 5. Amazon links (exactly 3 or 4)
+  const amazonLinks = (text.match(/amazon\.com\/dp\/[A-Z0-9]{10}/g) || []).length;
+  if (amazonLinks < 3 || amazonLinks > 4) failures.push(`amazon-links: ${amazonLinks} (need 3-4)`);
+
+  return { passed: failures.length === 0, failures, wordCount: words, amazonLinks, text };
+}
+
+// ─── BUNNY CDN IMAGE LIBRARY ───
+async function assignHeroImage(slug) {
+  const sourceFile = `lib-${String(Math.floor(Math.random() * 40) + 1).padStart(2, '0')}.webp`;
+  const destFile = `${slug}.webp`;
+
+  try {
+    const sourceUrl = `${BUNNY_PULL_ZONE}/library/${sourceFile}`;
+    const downloadRes = await fetch(sourceUrl);
+    if (!downloadRes.ok) throw new Error('Download failed');
+    const imageBuffer = await downloadRes.arrayBuffer();
+
+    const uploadUrl = `https://${BUNNY_HOSTNAME}/${BUNNY_STORAGE_ZONE}/images/${destFile}`;
+    const uploadRes = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: { 'AccessKey': BUNNY_API_KEY, 'Content-Type': 'image/webp' },
+      body: imageBuffer,
+    });
+
+    if (!uploadRes.ok) throw new Error('Upload failed');
+    return `${BUNNY_PULL_ZONE}/images/${destFile}`;
+  } catch (err) {
+    console.warn(`[generate] Image assign failed for ${slug}: ${err.message}`);
+    return `${BUNNY_PULL_ZONE}/library/${sourceFile}`;
+  }
+}
+
+// ─── SLUG GENERATOR ───
+function slugify(title) {
+  return title.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 80);
+}
+
+// ─── GENERATION PROMPT ───
+function buildPrompt(topic, category) {
+  const randomAsins = [...ASIN_POOL].sort(() => Math.random() - 0.5).slice(0, 4);
+  const asinList = randomAsins.map(p =>
+    `  ASIN: ${p.asin} — "${p.name}" → format as: <a href="https://www.amazon.com/dp/${p.asin}?tag=${AMAZON_TAG}" target="_blank" rel="nofollow sponsored">${p.name} (paid link)</a>`
+  ).join('\n');
+
+  return `You are Kalesh, a consciousness teacher and writer. You run The Quiet Medicine, a site about psychedelic wellness, microdosing, and conscious healing.
+
+Write a complete article about: "${topic}"
+Category: ${category.name}
+
+VOICE:
+- Direct address ("you") throughout
+- Contractions everywhere (don't, can't, it's, you're, we'll)
+- Compassionate but no spiritual bypassing
+- 2-3 conversational dialogue markers: "Right?!", "Know what I mean?", "Does that land?", "How does that make you feel?", "Here's the thing,", "Honestly,", "Look,", "Truth is,"
 - Concrete specifics over abstractions. A name. A number. A moment.
-- 3 to 4 Amazon product links embedded naturally in prose, each followed by "(paid link)" in plain text. Use only ASINs from the provided catalog.
-- No em-dashes. No em-dashes. No em-dashes.
-`;
+- Vary sentence length aggressively. Some fragments. Some long ones. Some just three words.
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { runQualityGate } from '../src/lib/article-quality-gate.mjs';
+FORMAT:
+- Full HTML article body (no <html>, <head>, <body> tags — just the article content)
+- Use <h2>, <h3>, <p>, <ul>, <li>, <blockquote> tags
+- 1,400 to 2,000 words
+- Include 3 or 4 Amazon affiliate links naturally embedded in prose (use ONLY these):
+${asinList}
+- Include 1 internal link to another article on the site: <a href="/articles/[slug]">text</a>
+- Include 1 external authority link from: ${EXTERNAL_AUTHORITY_SITES.slice(0, 3).join(', ')}
+- Include 1 link to ${AUTHOR_LINK}
+- End with a health disclaimer card: <div class="disclaimer-card"><p><strong>Disclaimer:</strong> This content is for educational purposes only...</p></div>
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+HARD RULES:
+- Zero em-dashes (— or –). Use commas, periods, colons, or parentheses instead.
+- NEVER use these words: utilize, delve, tapestry, landscape, paradigm, synergy, leverage, unlock, empower, pivotal, embark, underscore, paramount, seamlessly, robust, beacon, foster, elevate, curate, curated, bespoke, resonate, harness, intricate, plethora, myriad, groundbreaking, innovative, cutting-edge, state-of-the-art, game-changer, ever-evolving, rapidly-evolving, stakeholders, navigate, ecosystem, framework, comprehensive, transformative, holistic, nuanced, multifaceted, profound, furthermore
+- NEVER use these phrases: "it's important to note that", "it's worth noting that", "in conclusion", "in summary", "a holistic approach", "in the realm of", "dive deep into", "at the end of the day", "in today's fast-paced world", "plays a crucial role"
 
-/** Pick the 3 most relevant products for a given article topic */
-function pickRelevantProducts(title, bodyText) {
-  const combined = (title + ' ' + bodyText).toLowerCase();
-  const scored = AMAZON_PRODUCTS.map(p => {
-    let score = 0;
-    for (const kw of p.keywords) {
-      if (combined.includes(kw)) score++;
-      if (title.toLowerCase().includes(kw)) score += 2; // title match worth more
+Output ONLY the HTML article body. No preamble. No markdown. No code fences.`;
+}
+
+// ─── QUEUE MANAGEMENT ───
+function getQueuedArticles() {
+  const files = fs.readdirSync(contentDir).filter(f => f.endsWith('.json'));
+  const queued = [];
+  for (const file of files) {
+    try {
+      const data = JSON.parse(fs.readFileSync(path.join(contentDir, file), 'utf8'));
+      if (data.status === 'queued') queued.push({ file, data });
+    } catch (e) { /* skip corrupted */ }
+  }
+  // Sort by queued_at (oldest first)
+  queued.sort((a, b) => new Date(a.data.queued_at || 0) - new Date(b.data.queued_at || 0));
+  return queued;
+}
+
+function getPublishedCount() {
+  const files = fs.readdirSync(contentDir).filter(f => f.endsWith('.json'));
+  let count = 0;
+  for (const file of files) {
+    try {
+      const data = JSON.parse(fs.readFileSync(path.join(contentDir, file), 'utf8'));
+      if (data.status === 'published') count++;
+    } catch (e) { /* skip */ }
+  }
+  return count;
+}
+
+// ─── PUBLISH FROM QUEUE ───
+async function publishFromQueue() {
+  const queued = getQueuedArticles();
+  if (queued.length === 0) return false;
+
+  const { file, data } = queued[0];
+  console.log(`[generate] Publishing from queue: ${data.slug}`);
+
+  // Assign hero image from library
+  const heroUrl = await assignHeroImage(data.slug);
+  data.heroImage = heroUrl;
+  data.ogImage = heroUrl;
+  data.status = 'published';
+  data.published_at = new Date().toISOString();
+  data.publishDate = new Date().toISOString().split('T')[0];
+
+  fs.writeFileSync(path.join(contentDir, file), JSON.stringify(data, null, 2));
+  console.log(`[generate] Published: ${data.slug} (hero: ${heroUrl})`);
+
+  await gitCommitAndPush(`Publish: ${data.title}`);
+  return true;
+}
+
+// ─── GENERATE NEW ARTICLE ───
+async function generateNewArticle(topic, category) {
+  const MAX_ATTEMPTS = 4;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    console.log(`[generate] Attempt ${attempt}/${MAX_ATTEMPTS}: "${topic}"`);
+
+    try {
+      const response = await client.chat.completions.create({
+        model: MODEL,
+        messages: [{ role: 'user', content: buildPrompt(topic, category) }],
+        temperature: 0.72,
+      });
+
+      let body = response.choices[0].message.content || '';
+      // Strip code fences if present
+      body = body.replace(/^```html?\n?/i, '').replace(/\n?```$/i, '').trim();
+
+      const gate = runPaulVoiceGate(body);
+      if (gate.passed) {
+        console.log(`[generate] PASSED on attempt ${attempt} (words: ${gate.wordCount}, amazon: ${gate.amazonLinks})`);
+        return gate.text; // return em-dash-cleaned version
+      }
+
+      console.warn(`[generate] FAILED attempt ${attempt}:`, gate.failures);
+    } catch (err) {
+      console.error(`[generate] API error attempt ${attempt}:`, err.message);
     }
-    return { ...p, score };
-  });
-  scored.sort((a, b) => b.score - a.score || Math.random() - 0.5);
-  return scored.slice(0, 3);
+  }
+
+  console.error(`[generate] ABANDONED after ${MAX_ATTEMPTS} attempts: "${topic}"`);
+  return null;
 }
 
-/** Format an Amazon affiliate link */
-function formatAmazonLink(product) {
-  return `<a href="https://www.amazon.com/dp/${product.asin}?tag=${AMAZON_TAG}" rel="nofollow sponsored" target="_blank">${product.name} (paid link)</a>`;
+// ─── GIT COMMIT & PUSH ───
+async function gitCommitAndPush(message) {
+  if (!GH_PAT) {
+    console.warn('[generate] No GH_PAT — skipping push');
+    return;
+  }
+
+  const { execSync } = await import('child_process');
+  try {
+    execSync('git add -A', { cwd: path.join(__dirname, '..'), stdio: 'pipe' });
+    execSync(`git commit -m "${message}" --allow-empty`, { cwd: path.join(__dirname, '..'), stdio: 'pipe' });
+    execSync(`git push https://${GH_PAT}@github.com/${GITHUB_REPO}.git main`, { cwd: path.join(__dirname, '..'), stdio: 'pipe' });
+    console.log(`[generate] Pushed: ${message}`);
+  } catch (err) {
+    console.warn('[generate] Git push failed:', err.message);
+  }
 }
 
+// ─── TOPIC PICKER (for when queue is empty) ───
+const FALLBACK_TOPICS = [
+  'The neuroscience of psilocybin and default mode network disruption',
+  'How microdosing affects creativity and problem-solving',
+  'Building a safe container for your first psychedelic experience',
+  'Integration practices for the week after a ceremony',
+  'The relationship between breathwork and psychedelic states',
+  'Why set and setting matter more than dose',
+  'Microdosing protocols compared: Fadiman vs Stamets vs intuitive',
+  'The role of community in psychedelic healing',
+  'Ketamine therapy: what the clinical research actually shows',
+  'How trauma lives in the body and how psychedelics help release it',
+];
+
+function pickTopic() {
+  // Check which topics have already been used
+  const existingSlugs = new Set(fs.readdirSync(contentDir).map(f => f.replace('.json', '')));
+  for (const topic of FALLBACK_TOPICS) {
+    const slug = slugify(topic);
+    if (!existingSlugs.has(slug)) return topic;
+  }
+  // If all used, pick random with date suffix
+  const topic = FALLBACK_TOPICS[Math.floor(Math.random() * FALLBACK_TOPICS.length)];
+  return `${topic} (${new Date().toISOString().split('T')[0]})`;
+}
+
+// ─── MAIN ───
 async function main() {
   if (!AUTO_GEN_ENABLED) {
     console.log('[generate] AUTO_GEN_ENABLED is false. Exiting.');
     process.exit(0);
   }
 
-  if (!ANTHROPIC_API_KEY || !FAL_KEY || !GH_PAT) {
-    console.error('[generate] Missing required environment variables.');
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('[generate] Missing OPENAI_API_KEY. Exiting.');
     process.exit(1);
   }
 
-  console.log('[generate] Starting article generation...');
-  console.log('[generate] Quality gate: 1200-2500 words, 0 em-dashes, 0 AI words, 3-4 Amazon links, voice signals');
+  const publishedCount = getPublishedCount();
+  console.log(`[generate] Published: ${publishedCount} | Queue check...`);
 
-  // ─── GENERATION WITH QUALITY GATE (3-attempt loop) ───
-  // Step 1: Build prompt with HARD_RULES appended
-  // Step 2: Call Anthropic API to generate article body
-  // Step 3: Run quality gate on generated body
-  // Step 4: If gate fails, log failures and regenerate (up to 3 attempts)
-  // Step 5: If all 3 attempts fail, abandon article (never store broken content)
-  // Step 6: On pass, generate hero + OG images with FAL.ai
-  // Step 7: Process images through image-pipeline.mjs (WebP, <200KB, Bunny CDN)
-  // Step 8: Save article JSON and commit+push to GitHub
-
-  async function generateWithQualityGate(topic, category) {
-    const MAX_ATTEMPTS = 3;
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-      console.log(`[generate] Attempt ${attempt}/${MAX_ATTEMPTS} for: ${topic}`);
-
-      // TODO: Call Anthropic API with HARD_RULES appended to prompt
-      // const body = await callAnthropic(topic, category, HARD_RULES);
-      const body = ''; // placeholder until Anthropic call is wired
-
-      const gate = runQualityGate(body);
-      if (gate.passed) {
-        console.log(`[generate] Quality gate PASSED on attempt ${attempt}`);
-        console.log(`[generate]   Words: ${gate.wordCount}, Amazon: ${gate.amazonLinks}, Voice: contractions=${gate.voice.contractions}, stdDev=${gate.voice.sentenceStdDev}`);
-        return body;
-      }
-
-      console.warn(`[generate] Quality gate FAILED attempt ${attempt}:`, gate.failures);
-    }
-
-    console.error(`[generate] ABANDONED after ${MAX_ATTEMPTS} failed attempts: ${topic}`);
-    return null; // never store a broken article
+  // Try to publish from queue first
+  const published = await publishFromQueue();
+  if (published) {
+    console.log('[generate] Published from queue. Done.');
+    return;
   }
 
-  // TODO: Wire generateWithQualityGate into the full pipeline
-  // 1. Pick topic from editorial calendar
-  // 2. const body = await generateWithQualityGate(topic, category);
-  // 3. if (!body) return; // abandoned
-  // 4. Generate images with FAL.ai -> process through image-pipeline.mjs
-  // 5. Save JSON, commit, push
+  // Queue empty — generate a new article
+  console.log('[generate] Queue empty. Generating new article...');
+  const topic = pickTopic();
+  const category = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+
+  const body = await generateNewArticle(topic, category);
+  if (!body) {
+    console.error('[generate] Failed to generate. Exiting.');
+    process.exit(1);
+  }
+
+  // Build article JSON
+  const slug = slugify(topic);
+  const heroUrl = await assignHeroImage(slug);
+
+  const article = {
+    slug,
+    title: topic.replace(/\s*\(.*?\)\s*$/, ''), // strip date suffix if present
+    categorySlug: category.slug,
+    categoryName: category.name,
+    dateISO: new Date().toISOString(),
+    body,
+    excerpt: body.replace(/<[^>]+>/g, ' ').slice(0, 200).trim() + '...',
+    heroImage: heroUrl,
+    ogImage: heroUrl,
+    heroAlt: `Illustration for ${topic}`,
+    readingTime: Math.ceil(body.replace(/<[^>]+>/g, ' ').split(/\s+/).length / 250),
+    status: 'published',
+    published_at: new Date().toISOString(),
+    publishDate: new Date().toISOString().split('T')[0],
+    wordCount: body.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(w => w.length > 0).length,
+  };
+
+  fs.writeFileSync(path.join(contentDir, `${slug}.json`), JSON.stringify(article, null, 2));
+  console.log(`[generate] Saved: ${slug} (${article.wordCount} words)`);
+
+  await gitCommitAndPush(`New article: ${article.title}`);
 }
 
 main().catch(err => {

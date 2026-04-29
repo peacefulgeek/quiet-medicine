@@ -18,15 +18,11 @@ services:
         value: spankyspinola-20
       - key: AUTO_GEN_ENABLED
         value: "true"
-      - key: ANTHROPIC_API_KEY
+      - key: OPENAI_API_KEY
         sync: false
-      - key: FAL_KEY
-        sync: false
-      - key: BUNNY_STORAGE_ZONE
-        sync: false
-      - key: BUNNY_API_KEY
-        sync: false
-      - key: BUNNY_PULL_ZONE_URL
-        sync: false
+      - key: OPENAI_BASE_URL
+        value: "https://api.deepseek.com"
+      - key: OPENAI_MODEL
+        value: "deepseek-chat"
       - key: GH_PAT
         sync: false

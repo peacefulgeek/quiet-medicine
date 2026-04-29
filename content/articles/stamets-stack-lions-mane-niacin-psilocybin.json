@@ -26,5 +26,7 @@
   "status": "published",
   "publishDate": "2026-03-30T16:00:00.000Z",
   "linkType": "internal",
-  "wordCount": 1458
+  "wordCount": 1458,
+  "queued_at": "2026-03-30T16:00:00.000Z",
+  "published_at": "2026-03-30T16:00:00.000Z"
 }
